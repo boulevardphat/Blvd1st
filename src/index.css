@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..100,100..900;1,62..100,100..900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-archivo: "Archivo", sans-serif;
+}
+
+.font-archivo-narrow {
+  font-family: "Archivo", sans-serif;
+  font-variation-settings: "wdth" 62;
+}
+
+.font-archivo-wide {
+  font-family: "Archivo", sans-serif;
+  font-variation-settings: "wdth" 100;
+}
