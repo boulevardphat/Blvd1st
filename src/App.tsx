@@ -93,6 +93,15 @@ export default function App() {
   return (
     <main className="relative w-screen h-screen overflow-hidden bg-black flex items-center justify-center select-none" id="main-container">
       
+      {/* Preloaded Background Image (Always active at z-0, hidden behind black scenes 1-3, visible in scenes 4-6 and main app) */}
+      <img
+        id="reference-image"
+        src="https://i.ibb.co/vy4ykmw/vespertine.png"
+        alt="Boulevard1st Background"
+        referrerPolicy="no-referrer"
+        className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center] z-0"
+      />
+
       {/* KC1: Start Screen ("phát") */}
       {scene === 'intro-play' && (
         <div 
@@ -155,11 +164,11 @@ export default function App() {
       {scene === 'intro-image-1' && (
         <div 
           id="scene-intro-image-1"
-          className="absolute inset-0 flex items-center justify-center bg-black z-20 select-none"
+          className="absolute inset-0 z-20 select-none pointer-events-none"
         >
-          {/* Background Image */}
+          {/* Sibling image to ensure perfect mix-blend-mode rendering */}
           <img
-            src="/main.png"
+            src="https://i.ibb.co/vy4ykmw/vespertine.png"
             alt="Intro Background Reference 1"
             referrerPolicy="no-referrer"
             className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center]"
@@ -174,11 +183,11 @@ export default function App() {
       {scene === 'intro-image-2' && (
         <div 
           id="scene-intro-image-2"
-          className="absolute inset-0 flex items-center justify-center bg-black z-15 select-none"
+          className="absolute inset-0 z-15 select-none pointer-events-none"
         >
-          {/* Background Image */}
+          {/* Sibling image to ensure perfect mix-blend-mode rendering */}
           <img
-            src="/main.png"
+            src="https://i.ibb.co/vy4ykmw/vespertine.png"
             alt="Intro Background Reference 2"
             referrerPolicy="no-referrer"
             className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center]"
@@ -193,11 +202,11 @@ export default function App() {
       {scene === 'intro-image-3' && (
         <div 
           id="scene-intro-image-3"
-          className="absolute inset-0 flex items-center justify-center bg-black z-10 select-none"
+          className="absolute inset-0 z-10 select-none pointer-events-none"
         >
-          {/* Background Image */}
+          {/* Sibling image to ensure perfect mix-blend-mode rendering */}
           <img
-            src="/main.png"
+            src="https://i.ibb.co/vy4ykmw/vespertine.png"
             alt="Intro Background Reference 3"
             referrerPolicy="no-referrer"
             className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center]"
@@ -210,11 +219,11 @@ export default function App() {
 
       {/* Main App Screen (Background Image & Interactive Interface Layouts) */}
       {scene === 'main-app' && (
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center z-10">
           {/* Background Image */}
           <img
             id="reference-image"
-            src="/main.png"
+            src="https://i.ibb.co/vy4ykmw/vespertine.png"
             alt="Vespertine Design Reference"
             referrerPolicy="no-referrer"
             className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center]"
