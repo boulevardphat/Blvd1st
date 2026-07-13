@@ -159,7 +159,7 @@ export default function App() {
         >
           {/* Background Image */}
           <img
-            src="https://i.ibb.co/vy4ykmw/vespertine.png"
+            src="/main.png"
             alt="Intro Background Reference 1"
             referrerPolicy="no-referrer"
             className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center]"
@@ -178,7 +178,7 @@ export default function App() {
         >
           {/* Background Image */}
           <img
-            src="https://i.ibb.co/vy4ykmw/vespertine.png"
+            src="/main.png"
             alt="Intro Background Reference 2"
             referrerPolicy="no-referrer"
             className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center]"
@@ -197,7 +197,7 @@ export default function App() {
         >
           {/* Background Image */}
           <img
-            src="https://i.ibb.co/vy4ykmw/vespertine.png"
+            src="/main.png"
             alt="Intro Background Reference 3"
             referrerPolicy="no-referrer"
             className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center]"
@@ -214,7 +214,7 @@ export default function App() {
           {/* Background Image */}
           <img
             id="reference-image"
-            src="https://i.ibb.co/vy4ykmw/vespertine.png"
+            src="/main.png"
             alt="Vespertine Design Reference"
             referrerPolicy="no-referrer"
             className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center]"
