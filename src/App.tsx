@@ -24,14 +24,14 @@ export default function App() {
         <div className="flex justify-between items-start w-full">
           <button 
             id="btn-contact-landscape" 
-            className="pointer-events-auto text-white/90 hover:text-white hover:italic transition-all duration-300 font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight"
+            className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight"
           >
             contact
           </button>
           
           <button 
             id="btn-history-landscape" 
-            className="pointer-events-auto text-white/90 hover:text-white hover:italic transition-all duration-300 font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight"
+            className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight"
           >
             his-tory
           </button>
@@ -41,7 +41,7 @@ export default function App() {
         <div className="relative flex justify-between items-baseline w-full">
           <button 
             id="btn-info-landscape" 
-            className="pointer-events-auto text-white/90 hover:text-white hover:italic transition-all duration-300 font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight"
+            className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight"
           >
             info
           </button>
@@ -61,7 +61,7 @@ export default function App() {
 
           <button 
             id="btn-archive-landscape" 
-            className="pointer-events-auto text-white/90 hover:text-white hover:italic transition-all duration-300 font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight"
+            className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight"
           >
             archive
           </button>
@@ -78,13 +78,13 @@ export default function App() {
           <div className="flex justify-between items-end w-full">
             <button 
               id="btn-contact-portrait" 
-              className="text-white/90 hover:text-white hover:italic transition-all duration-300 font-archivo-narrow font-extralight text-[clamp(1.4rem,5.5vw,3rem)] leading-none cursor-pointer tracking-tight"
+              className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.4rem,5.5vw,3rem)] leading-none cursor-pointer tracking-tight"
             >
               contact
             </button>
             <button 
               id="btn-history-portrait" 
-              className="text-white/90 hover:text-white hover:italic transition-all duration-300 font-archivo-narrow font-extralight text-[clamp(1.4rem,5.5vw,3rem)] leading-none cursor-pointer tracking-tight"
+              className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.4rem,5.5vw,3rem)] leading-none cursor-pointer tracking-tight"
             >
               his-tory
             </button>
@@ -104,13 +104,13 @@ export default function App() {
           <div className="flex justify-between items-start w-full">
             <button 
               id="btn-info-portrait" 
-              className="text-white/90 hover:text-white hover:italic transition-all duration-300 font-archivo-narrow font-extralight text-[clamp(1.4rem,5.5vw,3rem)] leading-none cursor-pointer tracking-tight"
+              className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.4rem,5.5vw,3rem)] leading-none cursor-pointer tracking-tight"
             >
               info
             </button>
             <button 
               id="btn-archive-portrait" 
-              className="text-white/90 hover:text-white hover:italic transition-all duration-300 font-archivo-narrow font-extralight text-[clamp(1.4rem,5.5vw,3rem)] leading-none cursor-pointer tracking-tight"
+              className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.4rem,5.5vw,3rem)] leading-none cursor-pointer tracking-tight"
             >
               archive
             </button>
