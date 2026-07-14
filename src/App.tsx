@@ -97,7 +97,21 @@ export default function App() {
       id="main-container"
     >
       
-      {/* Preloaded Background Image (Always active at z-0, hidden behind black scenes 1-3, visible in scenes 4-6 and main app) */}
+      {/* Preloaded Background Images (Always active at z-0, hidden behind black scenes 1-3, visible in scenes 4-6 and main app) */}
+      <img
+        id="preload-ultrayoung"
+        src="https://i.ibb.co/tP3rK5bg/ultrayoung.jpg"
+        alt="Boulevard1st Ultrayoung Background"
+        referrerPolicy="no-referrer"
+        className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center] z-0 opacity-0 pointer-events-none"
+      />
+      <img
+        id="preload-young"
+        src="https://i.ibb.co/Nd6BpwZ2/young.jpg"
+        alt="Boulevard1st Young Background"
+        referrerPolicy="no-referrer"
+        className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center] z-0 opacity-0 pointer-events-none"
+      />
       <img
         id="reference-image"
         src="https://i.ibb.co/vy4ykmw/vespertine.png"
@@ -164,7 +178,7 @@ export default function App() {
         </div>
       )}
 
-      {/* KC4: Background Image with #89CC04 tint */}
+      {/* KC4: Background Image with #8375B3 tint */}
       {scene === 'intro-image-1' && (
         <div 
           id="scene-intro-image-1"
@@ -172,14 +186,14 @@ export default function App() {
         >
           {/* Sibling image to ensure perfect mix-blend-mode rendering */}
           <img
-            src="https://i.ibb.co/vy4ykmw/vespertine.png"
+            src="https://i.ibb.co/tP3rK5bg/ultrayoung.jpg"
             alt="Intro Background Reference 1"
             referrerPolicy="no-referrer"
             className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center]"
           />
-          {/* #89CC04 Tint Overlays */}
-          <div className="absolute inset-0 bg-[#89CC04] mix-blend-color opacity-95 pointer-events-none" />
-          <div className="absolute inset-0 bg-[#89CC04]/35 mix-blend-multiply pointer-events-none" />
+          {/* #8375B3 Tint Overlays */}
+          <div className="absolute inset-0 bg-[#8375B3] mix-blend-color opacity-95 pointer-events-none" />
+          <div className="absolute inset-0 bg-[#8375B3]/35 mix-blend-multiply pointer-events-none" />
         </div>
       )}
 
@@ -191,7 +205,7 @@ export default function App() {
         >
           {/* Sibling image to ensure perfect mix-blend-mode rendering */}
           <img
-            src="https://i.ibb.co/vy4ykmw/vespertine.png"
+            src="https://i.ibb.co/Nd6BpwZ2/young.jpg"
             alt="Intro Background Reference 2"
             referrerPolicy="no-referrer"
             className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center]"
@@ -202,7 +216,7 @@ export default function App() {
         </div>
       )}
 
-      {/* KC6: Background Image with #8375B3 tint */}
+      {/* KC6: Background Image with #89CC04 tint */}
       {scene === 'intro-image-3' && (
         <div 
           id="scene-intro-image-3"
@@ -215,9 +229,9 @@ export default function App() {
             referrerPolicy="no-referrer"
             className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center]"
           />
-          {/* #8375B3 Tint Overlays */}
-          <div className="absolute inset-0 bg-[#8375B3] mix-blend-color opacity-95 pointer-events-none" />
-          <div className="absolute inset-0 bg-[#8375B3]/35 mix-blend-multiply pointer-events-none" />
+          {/* #89CC04 Tint Overlays */}
+          <div className="absolute inset-0 bg-[#89CC04] mix-blend-color opacity-95 pointer-events-none" />
+          <div className="absolute inset-0 bg-[#89CC04]/35 mix-blend-multiply pointer-events-none" />
         </div>
       )}
 
@@ -343,48 +357,48 @@ export default function App() {
               id="app-footer"
               className="relative w-full min-h-[15vh] bg-black border-t border-white/10 shrink-0 z-20 flex items-center justify-center py-6 shadow-[0_-8px_30px_rgba(0,0,0,0.9)]"
             >
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8 px-6">
-                {/* Logo 1: BlvdGuestBook (bó hết các góc bo tròn, vuông vức, font Arial chuẩn) */}
+              <div className="flex flex-row flex-wrap items-center justify-center gap-6 md:gap-8 px-6 max-w-5xl w-full">
+                {/* Logo 1: BlvdGuestBook (Kích thước thống nhất, font Arial Medium chuẩn) */}
                 <a 
                   id="footer-logo-guestbook"
                   href="https://blvdguestbook.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-4 py-2 bg-white border-[3px] border-black rounded-none shadow-[3px_3px_0px_0px_#8ace00] hover:shadow-[4px_4px_0px_0px_#8ace00] hover:-translate-x-[1px] hover:-translate-y-[1px] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-150 select-none cursor-pointer"
+                  className="flex items-center justify-center w-[240px] h-[54px] bg-white border-2 border-black rounded-none shadow-[3px_3px_0px_0px_#8ace00] hover:shadow-[4px_4px_0px_0px_#8ace00] hover:-translate-x-[1px] hover:-translate-y-[1px] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-150 select-none cursor-pointer"
                 >
                   <span 
-                    className="text-base font-black uppercase tracking-tighter text-black whitespace-nowrap"
-                    style={{ fontFamily: "'Arial Narrow', 'Arial', sans-serif" }}
+                    className="text-xl font-medium text-black tracking-tighter leading-none select-none"
+                    style={{ fontFamily: "Arial, sans-serif" }}
                   >
-                    Blvd<span className="bg-black text-[#8ace00] px-1.5 py-0.5 ml-1 rounded-none text-sm">GuestBook</span>
+                    BlvdGuestBook
                   </span>
                 </a>
 
-                {/* Logo 2: Boulevard1st (nền trắng text đen, khung vuông vức, ở giữa) */}
+                {/* Logo 2: Boulevard1st (nền trắng text đen, khung vuông vức, ở giữa, kích thước thống nhất) */}
                 <a 
                   id="footer-logo-blvd1st"
                   href="https://boulevard1st.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-5 py-2.5 bg-white border border-white rounded-none cursor-pointer select-none transition-all duration-300 hover:bg-black group"
+                  className="flex items-center justify-center w-[240px] h-[54px] bg-white border-2 border-black rounded-none cursor-pointer select-none transition-all duration-300 hover:bg-black group"
                 >
                   <span 
-                    className="font-archivo text-black font-black text-lg tracking-tighter leading-none whitespace-nowrap group-hover:text-white transition-colors duration-300"
+                    className="font-archivo text-black font-black text-xl tracking-tighter leading-none whitespace-nowrap group-hover:text-white transition-colors duration-300"
                   >
                     Boulevard1st
                   </span>
                 </a>
 
-                {/* Logo 3: BlvdMusicSpace (Hiệu ứng đèn LED đa trạng thái chuẩn, vuông vức) */}
+                {/* Logo 3: BlvdMusicSpace (Hiệu ứng đèn LED đa trạng thái chuẩn, vuông vức, kích thước thống nhất) */}
                 <a 
                   id="footer-logo-musicspace"
                   href="https://blvdmusicspace.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center bg-white px-5 py-2.5 rounded-none border border-white/95 transition-all duration-300 ease-out hover:bg-slate-950 hover:border-[#0066ff] hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-[0_0_25px_rgba(0,102,255,0.9),0_0_50px_rgba(0,102,255,0.5)] group cursor-pointer animate-led-flicker select-none"
+                  className="flex items-center justify-center w-[240px] h-[54px] bg-white rounded-none border-2 border-white/95 transition-all duration-300 ease-out hover:bg-slate-950 hover:border-[#0066ff] hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-[0_0_25px_rgba(0,102,255,0.9),0_0_50px_rgba(0,102,255,0.5)] group cursor-pointer animate-led-flicker select-none"
                 >
                   <h1 
-                    className="text-base font-black text-black tracking-tighter leading-none text-center transition-colors duration-300 group-hover:text-white group-hover:drop-shadow-[0_0_8px_rgba(0,102,255,0.8)] font-be-vietnam whitespace-nowrap"
+                    className="text-lg font-black text-black tracking-tighter leading-none text-center transition-colors duration-300 group-hover:text-white group-hover:drop-shadow-[0_0_8px_rgba(0,102,255,0.8)] font-be-vietnam whitespace-nowrap"
                     style={{ fontFamily: "'Be Vietnam Pro', sans-serif" }}
                   >
                     BlvdMusicSpace
