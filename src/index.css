@@ -86,5 +86,16 @@
   animation: ledFlicker 4s infinite alternate;
 }
 
+/* Styling for the split-flap board */
+hotfx-split-flap {
+  font-family: 'JetBrains Mono', 'Courier New', Courier, monospace;
+  font-size: 32px !important;
+  display: block !important;
+  width: fit-content !important;
+  height: fit-content !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 
 

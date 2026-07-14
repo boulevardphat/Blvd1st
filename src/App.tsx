@@ -5,12 +5,119 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
+import { LedDotBoard } from './components/LedDotBoard';
+
+interface SplitFlapProps {
+  id?: string;
+  width?: string | number;
+  height?: string | number;
+  duration?: string | number;
+  children?: React.ReactNode;
+}
+
+const SplitFlapBoard: React.FC<SplitFlapProps> = ({ id, width, height, duration, children }) => {
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const innerRef = React.useRef<HTMLDivElement>(null);
+  const flapRef = React.useRef<HTMLElement>(null);
+  const [scale, setScale] = React.useState({ x: 1, y: 1, ready: false });
+
+  React.useEffect(() => {
+    if (flapRef.current) {
+      if (width !== undefined) {
+        flapRef.current.setAttribute('width', String(width));
+      }
+      if (height !== undefined) {
+        flapRef.current.setAttribute('height', String(height));
+      }
+      if (duration !== undefined) {
+        flapRef.current.setAttribute('duration', String(duration));
+      }
+    }
+  }, [width, height, duration, children]);
+
+  React.useEffect(() => {
+    let active = true;
+
+    const updateScale = () => {
+      if (!active) return;
+      if (!containerRef.current || !innerRef.current) return;
+
+      const containerWidth = containerRef.current.clientWidth;
+      const containerHeight = containerRef.current.clientHeight;
+
+      const innerWidth = innerRef.current.offsetWidth;
+      const innerHeight = innerRef.current.offsetHeight;
+
+      if (containerWidth > 0 && containerHeight > 0 && innerWidth > 10 && innerHeight > 10) {
+        const scaleX = containerWidth / innerWidth;
+        const scaleY = containerHeight / innerHeight;
+        setScale({ x: scaleX, y: scaleY, ready: true });
+      } else {
+        // If not measured yet, retry next frame
+        requestAnimationFrame(updateScale);
+      }
+    };
+
+    updateScale();
+
+    // Use ResizeObserver on both the container (screen resizing) and the inner container (when custom elements load)
+    const observer = new ResizeObserver(() => {
+      updateScale();
+    });
+
+    if (containerRef.current) observer.observe(containerRef.current);
+    if (innerRef.current) observer.observe(innerRef.current);
+
+    window.addEventListener('resize', updateScale);
+
+    // Run some delayed updates to catch shadow DOM initialization
+    const timers = [
+      setTimeout(updateScale, 50),
+      setTimeout(updateScale, 150),
+      setTimeout(updateScale, 300),
+      setTimeout(updateScale, 600),
+    ];
+
+    return () => {
+      active = false;
+      observer.disconnect();
+      window.removeEventListener('resize', updateScale);
+      timers.forEach(clearTimeout);
+    };
+  }, [children]);
+
+  return (
+    <div 
+      ref={containerRef} 
+      className="w-full h-full flex items-center justify-center overflow-hidden relative"
+    >
+      <div
+        ref={innerRef}
+        style={{
+          display: 'block',
+          width: 'fit-content',
+          height: 'fit-content',
+          transform: `scale(${scale.x}, ${scale.y})`,
+          transformOrigin: 'center center',
+          opacity: scale.ready ? 1 : 0,
+          transition: scale.ready ? 'opacity 0.2s ease-out' : 'none',
+        }}
+      >
+        {React.createElement('hotfx-split-flap', { 
+          id, 
+          ref: flapRef,
+        } as any, children)}
+      </div>
+    </div>
+  );
+};
 
 type SceneState = 'intro-play' | 'intro-blvd' | 'intro-clock' | 'intro-image-1' | 'intro-image-2' | 'intro-image-3' | 'main-app';
 
 export default function App() {
   const [scene, setScene] = useState<SceneState>('intro-play');
   const [timeStr, setTimeStr] = useState('');
+  const [showInfo, setShowInfo] = useState(false);
 
   useEffect(() => {
     // Disable right-click context menu globally
@@ -276,6 +383,7 @@ export default function App() {
                 <div className="relative flex justify-between items-baseline w-full">
                   <button 
                     id="btn-info-landscape" 
+                    onClick={() => setShowInfo(true)}
                     className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
                   >
                     info
@@ -337,6 +445,7 @@ export default function App() {
                   <div className="absolute bottom-0 left-0 right-0 flex justify-between items-start">
                     <button 
                       id="btn-info-portrait" 
+                      onClick={() => setShowInfo(true)}
                       className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
                     >
                       info
@@ -407,6 +516,17 @@ export default function App() {
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Info Screen: LED Dot Matrix board, clicking anywhere exits */}
+      {showInfo && (
+        <div 
+          id="info-led-screen"
+          className="fixed inset-0 bg-black z-50 cursor-pointer select-none"
+          onClick={() => setShowInfo(false)}
+        >
+          <LedDotBoard />
         </div>
       )}
     </main>
