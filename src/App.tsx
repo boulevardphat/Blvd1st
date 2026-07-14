@@ -3,7 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { motion } from 'motion/react';
 
 type SceneState = 'intro-play' | 'intro-blvd' | 'intro-clock' | 'intro-image-1' | 'intro-image-2' | 'intro-image-3' | 'main-app';
 
@@ -91,7 +92,10 @@ export default function App() {
   }, [scene]);
 
   return (
-    <main className="relative w-screen h-screen overflow-hidden bg-black flex items-center justify-center select-none" id="main-container">
+    <main 
+      className="relative w-screen h-screen overflow-hidden bg-black flex items-center justify-center select-none" 
+      id="main-container"
+    >
       
       {/* Preloaded Background Image (Always active at z-0, hidden behind black scenes 1-3, visible in scenes 4-6 and main app) */}
       <img
@@ -219,115 +223,170 @@ export default function App() {
 
       {/* Main App Screen (Background Image & Interactive Interface Layouts) */}
       {scene === 'main-app' && (
-        <div className="absolute inset-0 flex items-center justify-center z-10">
-          {/* Background Image */}
-          <img
-            id="reference-image"
-            src="https://i.ibb.co/vy4ykmw/vespertine.png"
-            alt="Vespertine Design Reference"
-            referrerPolicy="no-referrer"
-            className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center]"
-          />
+        <div className="absolute inset-0 z-10 overflow-y-auto no-scrollbar scroll-smooth">
+          <div className="w-full flex flex-col">
+            {/* The 100vh Main Screen View */}
+            <div className="relative w-full h-screen shrink-0 flex items-center justify-center overflow-hidden">
+              {/* Background Image */}
+              <img
+                id="reference-image"
+                src="https://i.ibb.co/vy4ykmw/vespertine.png"
+                alt="Vespertine Design Reference"
+                referrerPolicy="no-referrer"
+                className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center]"
+              />
 
-          {/* Landscape Layout (Visible only in landscape / horizontal viewports) */}
-          <div 
-            id="safezone-overlay-landscape" 
-            className="hidden landscape:flex absolute inset-0 flex-col justify-between p-[6.5%] pointer-events-none"
-          >
-            {/* Top Row */}
-            <div className="flex justify-between items-start w-full">
-              <button 
-                id="btn-contact-landscape" 
-                className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
-              >
-                contact
-              </button>
-              
-              <button 
-                id="btn-history-landscape" 
-                className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
-              >
-                his-tory
-              </button>
-            </div>
-
-            {/* Bottom Row */}
-            <div className="relative flex justify-between items-baseline w-full">
-              <button 
-                id="btn-info-landscape" 
-                className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
-              >
-                info
-              </button>
-
-              {/* Centered Logo aligned with bottom baseline */}
+              {/* Landscape Layout (Visible only in landscape / horizontal viewports) */}
               <div 
-                id="logo-container"
-                className="absolute left-1/2 bottom-0 -translate-x-1/2 flex items-end justify-center pointer-events-auto"
+                id="safezone-overlay-landscape" 
+                className="hidden landscape:flex absolute inset-0 flex-col justify-between p-[6.5%] pointer-events-none"
               >
-                <h1 
-                  id="logo-text-landscape"
-                  className="font-archivo text-white font-black text-[clamp(2rem,7.6vw,9.125rem)] leading-[0.85] tracking-tighter select-none whitespace-nowrap"
-                >
-                  Boulevard1st
-                </h1>
+                {/* Top Row */}
+                <div className="flex justify-between items-start w-full">
+                  <button 
+                    id="btn-contact-landscape" 
+                    className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
+                  >
+                    contact
+                  </button>
+                  
+                  <button 
+                    id="btn-history-landscape" 
+                    className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
+                  >
+                    his-tory
+                  </button>
+                </div>
+
+                {/* Bottom Row */}
+                <div className="relative flex justify-between items-baseline w-full">
+                  <button 
+                    id="btn-info-landscape" 
+                    className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
+                  >
+                    info
+                  </button>
+
+                  {/* Centered Logo aligned with bottom baseline */}
+                  <div 
+                    id="logo-container"
+                    className="absolute left-1/2 bottom-0 -translate-x-1/2 flex items-end justify-center pointer-events-auto"
+                  >
+                    <h1 
+                      id="logo-text-landscape"
+                      className="font-archivo text-white font-black text-[clamp(2rem,7.6vw,9.125rem)] leading-[0.85] tracking-tighter select-none whitespace-nowrap"
+                    >
+                      Boulevard1st
+                    </h1>
+                  </div>
+
+                  <button 
+                    id="btn-archive-landscape" 
+                    className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
+                  >
+                    archive
+                  </button>
+                </div>
               </div>
 
-              <button 
-                id="btn-archive-landscape" 
-                className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
+              {/* Portrait Layout (Visible only in portrait / vertical viewports) */}
+              <div 
+                id="safezone-overlay-portrait" 
+                className="hidden portrait:flex absolute inset-0 flex-col items-center justify-end pb-[18vh] p-[6%] pointer-events-none"
               >
-                archive
-              </button>
+                <div className="relative w-fit pointer-events-auto flex flex-col justify-center pt-[clamp(2rem,7.5vw,3.8rem)] pb-[clamp(2rem,7.5vw,3.8rem)]">
+                  {/* Top Row */}
+                  <div className="absolute top-0 left-0 right-0 flex justify-between items-end">
+                    <button 
+                      id="btn-contact-portrait" 
+                      className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
+                    >
+                      contact
+                    </button>
+                    <button 
+                      id="btn-history-portrait" 
+                      className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"
+                    >
+                      his-tory
+                    </button>
+                  </div>
+
+                  {/* Centered Logo (defines width of parent) */}
+                  <h1 
+                    id="logo-text-portrait"
+                    className="font-archivo text-white font-black text-[clamp(2.5rem,11.5vw,6rem)] leading-[0.8] tracking-tighter select-none whitespace-nowrap"
+                  >
+                    Boulevard1st
+                  </h1>
+
+                  {/* Bottom Row */}
+                  <div className="absolute bottom-0 left-0 right-0 flex justify-between items-start">
+                    <button 
+                      id="btn-info-portrait" 
+                      className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
+                    >
+                      info
+                    </button>
+                    <button 
+                      id="btn-archive-portrait" 
+                      className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"
+                    >
+                      archive
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* Portrait Layout (Visible only in portrait / vertical viewports) */}
-          <div 
-            id="safezone-overlay-portrait" 
-            className="hidden portrait:flex absolute inset-0 flex-col items-center justify-end pb-[18vh] p-[6%] pointer-events-none"
-          >
-            <div className="w-fit flex flex-col items-stretch gap-2.5 pointer-events-auto">
-              {/* Top Row */}
-              <div className="flex justify-between items-end w-full">
-                <button 
-                  id="btn-contact-portrait" 
-                  className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.4rem,5.5vw,3rem)] leading-none cursor-pointer tracking-tight select-none"
+            {/* Flat Solid Black Footer (Thinner, tight, black layout with snug logos and prominent dark black hint shadow) */}
+            <div
+              id="app-footer"
+              className="relative w-full min-h-[15vh] bg-black border-t border-white/10 shrink-0 z-20 flex items-center justify-center py-6 shadow-[0_-8px_30px_rgba(0,0,0,0.9)]"
+            >
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8 px-6">
+                {/* Logo 1: BlvdGuestBook (bó hết các góc bo tròn, vuông vức) */}
+                <a 
+                  id="footer-logo-guestbook"
+                  href="https://blvdguestbook.vercel.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block px-3.5 py-1.5 bg-white border-[3px] border-black rounded-none shadow-[3px_3px_0px_0px_#8ace00] hover:shadow-[4px_4px_0px_0px_#8ace00] hover:-translate-x-[1px] hover:-translate-y-[1px] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-150 select-none cursor-pointer"
                 >
-                  contact
-                </button>
-                <button 
-                  id="btn-history-portrait" 
-                  className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.4rem,5.5vw,3rem)] leading-none cursor-pointer tracking-tight select-none"
-                >
-                  his-tory
-                </button>
-              </div>
+                  <span className="font-sans text-base font-black uppercase tracking-tighter text-black">
+                    Blvd<span className="bg-black text-[#8ace00] px-1 py-0.5 ml-1 rounded-none text-sm">GuestBook</span>
+                  </span>
+                </a>
 
-              {/* Centered Logo */}
-              <div className="flex items-center justify-center w-full">
-                <h1 
-                  id="logo-text-portrait"
-                  className="font-archivo text-white font-black text-[clamp(2.5rem,11.5vw,6rem)] leading-[0.8] tracking-tighter select-none whitespace-nowrap"
+                {/* Logo 2: Boulevard1st (nền trắng text đen, khung vuông vức, ở giữa) */}
+                <a 
+                  id="footer-logo-blvd1st"
+                  href="https://boulevard1st.vercel.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center px-5 py-2.5 bg-white border border-white rounded-none cursor-pointer select-none transition-all duration-300 hover:bg-black group"
                 >
-                  Boulevard1st
-                </h1>
-              </div>
+                  <span 
+                    className="font-archivo text-black font-black text-lg tracking-tighter leading-none whitespace-nowrap group-hover:text-white transition-colors duration-300"
+                  >
+                    Boulevard1st
+                  </span>
+                </a>
 
-              {/* Bottom Row */}
-              <div className="flex justify-between items-start w-full">
-                <button 
-                  id="btn-info-portrait" 
-                  className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.4rem,5.5vw,3rem)] leading-none cursor-pointer tracking-tight select-none"
+                {/* Logo 3: BlvdMusicSpace (Hiệu ứng đèn LED đa trạng thái chuẩn, vuông vức) */}
+                <a 
+                  id="footer-logo-musicspace"
+                  href="https://blvdmusicspace.vercel.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center bg-white px-5 py-2.5 rounded-none border border-white/95 transition-all duration-300 ease-out hover:bg-slate-950 hover:border-[#0066ff] hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-[0_0_25px_rgba(0,102,255,0.9),0_0_50px_rgba(0,102,255,0.5)] group cursor-pointer animate-led-flicker select-none"
                 >
-                  info
-                </button>
-                <button 
-                  id="btn-archive-portrait" 
-                  className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.4rem,5.5vw,3rem)] leading-none cursor-pointer tracking-tight select-none"
-                >
-                  archive
-                </button>
+                  <h1 
+                    className="text-base font-black text-black tracking-tighter leading-none text-center transition-colors duration-300 group-hover:text-white group-hover:drop-shadow-[0_0_8px_rgba(0,102,255,0.8)] font-be-vietnam"
+                    style={{ fontFamily: "'Be Vietnam Pro', sans-serif" }}
+                  >
+                    BlvdMusicSpace
+                  </h1>
+                </a>
               </div>
             </div>
           </div>
