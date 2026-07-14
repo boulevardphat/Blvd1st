@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-// 5x7 Font Bitmap representation for A-Z, 0-9, and symbols.
+// 5x7 Font Bitmap representation for A-Z, a-z, 0-9, and symbols.
 // Each character is 5 dots wide and 7 dots tall.
 const LED_FONT: Record<string, number[][]> = {
   'A': [
@@ -237,6 +237,240 @@ const LED_FONT: Record<string, number[][]> = {
     [1,0,0,0,0],
     [1,1,1,1,1]
   ],
+  'a': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [0,1,1,1,0],
+    [0,0,0,0,1],
+    [0,1,1,1,1],
+    [1,0,0,0,1],
+    [0,1,1,1,1]
+  ],
+  'b': [
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+    [1,1,1,1,0],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,1,1,1,0]
+  ],
+  'c': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [0,1,1,1,0],
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+    [0,1,1,1,0]
+  ],
+  'd': [
+    [0,0,0,0,1],
+    [0,0,0,0,1],
+    [0,1,1,1,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [0,1,1,1,1]
+  ],
+  'e': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [0,1,1,1,0],
+    [1,0,0,0,1],
+    [1,1,1,1,1],
+    [1,0,0,0,0],
+    [0,1,1,1,0]
+  ],
+  'f': [
+    [0,0,1,1,0],
+    [0,1,0,0,0],
+    [1,1,1,0,0],
+    [0,1,0,0,0],
+    [0,1,0,0,0],
+    [0,1,0,0,0],
+    [0,1,0,0,0]
+  ],
+  'g': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [0,1,1,1,1],
+    [1,0,0,0,1],
+    [0,1,1,1,1],
+    [0,0,0,0,1],
+    [0,1,1,1,0]
+  ],
+  'h': [
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+    [1,1,1,1,0],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1]
+  ],
+  'i': [
+    [0,0,1,0,0],
+    [0,0,0,0,0],
+    [0,1,1,0,0],
+    [0,0,1,0,0],
+    [0,0,1,0,0],
+    [0,0,1,0,0],
+    [0,1,1,1,0]
+  ],
+  'j': [
+    [0,0,0,1,0],
+    [0,0,0,0,0],
+    [0,0,1,1,0],
+    [0,0,0,1,0],
+    [0,0,0,1,0],
+    [1,0,0,1,0],
+    [0,1,1,0,0]
+  ],
+  'k': [
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+    [1,0,0,1,0],
+    [1,0,1,0,0],
+    [1,1,0,0,0],
+    [1,0,1,0,0],
+    [1,0,0,1,0]
+  ],
+  'l': [
+    [0,1,1,0,0],
+    [0,0,1,0,0],
+    [0,0,1,0,0],
+    [0,0,1,0,0],
+    [0,0,1,0,0],
+    [0,0,1,0,0],
+    [0,0,0,1,1]
+  ],
+  'm': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [1,1,0,1,0],
+    [1,0,1,0,1],
+    [1,0,1,0,1],
+    [1,0,1,0,1],
+    [1,0,1,0,1]
+  ],
+  'n': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [1,1,1,1,0],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1]
+  ],
+  'o': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [0,1,1,1,0],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [0,1,1,1,0]
+  ],
+  'p': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [1,1,1,1,0],
+    [1,0,0,0,1],
+    [1,1,1,1,0],
+    [1,0,0,0,0],
+    [1,0,0,0,0]
+  ],
+  'q': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [0,1,1,1,1],
+    [1,0,0,0,1],
+    [0,1,1,1,1],
+    [0,0,0,0,1],
+    [0,0,0,0,1]
+  ],
+  'r': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [1,0,1,1,0],
+    [1,1,0,0,1],
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+    [1,0,0,0,0]
+  ],
+  's': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [0,1,1,1,1],
+    [1,0,0,0,0],
+    [0,1,1,1,0],
+    [0,0,0,0,1],
+    [1,1,1,1,0]
+  ],
+  't': [
+    [0,0,1,0,0],
+    [0,0,1,0,0],
+    [1,1,1,1,1],
+    [0,0,1,0,0],
+    [0,0,1,0,0],
+    [0,0,1,0,1],
+    [0,0,0,1,1]
+  ],
+  'u': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,1,1],
+    [0,1,1,0,1]
+  ],
+  'v': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [0,1,0,1,0],
+    [0,0,1,0,0]
+  ],
+  'w': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [1,0,0,0,1],
+    [1,0,1,0,1],
+    [1,0,1,0,1],
+    [1,1,0,1,1],
+    [1,0,0,0,1]
+  ],
+  'x': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [1,0,0,0,1],
+    [0,1,0,1,0],
+    [0,0,1,0,0],
+    [0,1,0,1,0],
+    [1,0,0,0,1]
+  ],
+  'y': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [0,1,1,1,1],
+    [0,0,0,0,1],
+    [0,1,1,1,0]
+  ],
+  'z': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [1,1,1,1,1],
+    [0,0,0,1,0],
+    [0,0,1,0,0],
+    [0,1,0,0,0],
+    [1,1,1,1,1]
+  ],
   '0': [
     [0,1,1,1,0],
     [1,0,0,0,1],
@@ -358,8 +592,7 @@ const LED_FONT: Record<string, number[][]> = {
 
 // Return standard 5x7 bitmap.
 const getCharBitmap = (char: string): number[][] => {
-  const c = char.toUpperCase();
-  return LED_FONT[c] || LED_FONT[' '];
+  return LED_FONT[char] || LED_FONT[char.toUpperCase()] || LED_FONT[' '];
 };
 
 // Horizontal font scaling helper to widen ("rộng ra, không béo ra") characters.
@@ -438,75 +671,6 @@ export const LedDotBoard: React.FC = () => {
     const cols = isPortrait ? 64 : 112;
     const rows = isPortrait ? 72 : 40;
 
-    // Define the final target text lines (broadened, left-aligned)
-    const finalLines = isPortrait 
-      ? [
-          "PHAT NGUYEN THUAN",
-          "26/09/2008",
-          "LIBRA",
-          "INFP-T"
-        ]
-      : [
-          "PHAT NGUYEN THUAN",
-          "26/09/2008",
-          "LIBRA",
-          "INFP-T"
-        ];
-
-    // Build the final main screen text grid
-    const mainGrid = Array.from({ length: rows }, () => new Uint8Array(cols));
-
-    // To broaden the font nicely without bloating it:
-    // We scale each character to 8 columns wide and 7 columns tall! (This spreads/widens the glyph perfectly)
-    const charW = 8;
-    const charH = 7;
-    const spacingX = charW + 1; // 1 column spacing between characters
-    const leftMargin = isPortrait ? 4 : 8;
-
-    if (isPortrait) {
-      // Centered or spaced vertically
-      const rowOffsets = [12, 24, 36, 48];
-      finalLines.forEach((line, lineIdx) => {
-        const lineRow = rowOffsets[lineIdx];
-        for (let charIdx = 0; charIdx < line.length; charIdx++) {
-          const char = line[charIdx];
-          const bitmap = getScaledBitmap(char, charW, charH);
-          const charCol = leftMargin + charIdx * spacingX;
-
-          for (let r = 0; r < charH; r++) {
-            for (let c = 0; c < charW; c++) {
-              const gridRow = lineRow + r;
-              const gridCol = charCol + c;
-              if (gridRow < rows && gridCol < cols) {
-                mainGrid[gridRow][gridCol] = bitmap[r][c];
-              }
-            }
-          }
-        }
-      });
-    } else {
-      // Landscape rows
-      const rowOffsets = [6, 14, 22, 30];
-      finalLines.forEach((line, lineIdx) => {
-        const lineRow = rowOffsets[lineIdx];
-        for (let charIdx = 0; charIdx < line.length; charIdx++) {
-          const char = line[charIdx];
-          const bitmap = getScaledBitmap(char, charW, charH);
-          const charCol = leftMargin + charIdx * spacingX;
-
-          for (let r = 0; r < charH; r++) {
-            for (let c = 0; c < charW; c++) {
-              const gridRow = lineRow + r;
-              const gridCol = charCol + c;
-              if (gridRow < rows && gridCol < cols) {
-                mainGrid[gridRow][gridCol] = bitmap[r][c];
-              }
-            }
-          }
-        }
-      });
-    }
-
     // Resize canvas handler
     const resizeCanvas = () => {
       const rect = containerRef.current?.getBoundingClientRect();
@@ -524,33 +688,35 @@ export const LedDotBoard: React.FC = () => {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Dynamic generator for randomized KC3 positions (flexible sized "phat" words)
-    const kc3Words: Array<{ x: number; y: number; text: string; scaleW: number; scaleH: number }> = [];
-    for (let i = 0; i < 8; i++) {
-      kc3Words.push({
-        x: Math.floor(Math.random() * (cols - 25)),
-        y: Math.floor(Math.random() * (rows - 10)),
-        text: "PHAT",
-        scaleW: 4 + Math.floor(Math.random() * 8), // 4 to 11 width
-        scaleH: 5 + Math.floor(Math.random() * 5)  // 5 to 9 height
-      });
-    }
+    // Predetermined 8 states for KC3 to ensure exactly 1 lowercase "phat" flickering in different corners with custom sizes
+    const kc3States = [
+      { scaleW: 6, scaleH: 7, xPct: 0.1, yPct: 0.2 },
+      { scaleW: 8, scaleH: 9, xPct: 0.6, yPct: 0.5 },
+      { scaleW: 5, scaleH: 6, xPct: 0.25, yPct: 0.75 },
+      { scaleW: 9, scaleH: 10, xPct: 0.05, yPct: 0.4 },
+      { scaleW: 7, scaleH: 8, xPct: 0.5, yPct: 0.1 },
+      { scaleW: 10, scaleH: 12, xPct: 0.15, yPct: 0.6 },
+      { scaleW: 5, scaleH: 5, xPct: 0.7, yPct: 0.15 },
+      { scaleW: 8, scaleH: 8, xPct: 0.35, yPct: 0.35 }
+    ];
 
     // Main render loop
     const render = (time: number) => {
       const elapsed = time - startTime;
 
-      // 4 Keyframes transition timeline precisely aligned with requirements:
-      // KC1: 0ms - 250ms (0.25s) -> "phat" nhỏ centered
-      // KC2: 250ms - 500ms (0.25s) -> "BLVD" to, đậm rỗng, fill screen
-      // KC3: 500ms - 1000ms (0.5s) -> "phat" nhỏ, chớp nháy loạn xạ khắp màn hình, size linh hoạt
-      // KC4: 1000ms - 1500ms (0.5s) -> "BLVD" to, đậm rỗng, chạy ngang màn hình
-      // Main App: 1500ms+ -> Final content fades in smoothly (no linked flying animation)
+      // New Keyframes transition timeline precisely aligned with instructions:
+      // KC1: 0ms - 400ms (400ms) -> chữ "phat" viết thường, nhỏ, nằm giữa màn hình
+      // KC2: 400ms - 800ms (400ms) -> "BLVD" to, đậm, rỗng, fill cả màn hình
+      // KC3: 800ms - 1600ms (800ms) -> đúng 1 chữ "phat" viết thường, nháy nhiều góc, size thay đổi liên tục
+      // KC4: 1600ms - 3400ms (1800ms) -> "BLVD" to, đậm, rỗng, tự quyết thời gian chạy từ trái qua phải (lâu hơn, 1.8s)
+      // KC5: 3400ms - 4600ms (1200ms) -> chữ "name", "birth", "zodiac", "mbti" nhỏ mono viết thường, chớp nháy liên tục ở vị trí tương ứng để báo hiệu
+      // Main Content: 4600ms+ -> từ từ xuất hiện (fade in), căn lề trái, chính giữa màn hình, tự động wrap để hiển thị đủ trên giao diện dọc/tab
 
-      const kc1_end = 250;
-      const kc2_end = 500;
-      const kc3_end = 1000;
-      const kc4_end = 1500;
+      const kc1_end = 400;
+      const kc2_end = 800;
+      const kc3_end = 1600;
+      const kc4_end = 3400;
+      const kc5_end = 4600;
 
       const w = canvas.width / window.devicePixelRatio;
       const h = canvas.height / window.devicePixelRatio;
@@ -563,11 +729,91 @@ export const LedDotBoard: React.FC = () => {
       const activeGrid = Array.from({ length: rows }, () => new Uint8Array(cols));
       let currentScreenOpacity = 1;
 
+      // ==========================================
+      // LAYOUT CALCULATION: Shared across KC5 & MAIN CONTENT
+      // ==========================================
+      let linesToDraw = [
+        "Phat Nguyen Thuan",
+        "26/09/2008",
+        "Libra",
+        "INFP-T"
+      ];
+
+      // Responsive formatting to avoid overflow on Portrait or narrow layout
+      if (isPortrait) {
+        // Portrait has rows = 72 and cols = 64.
+        // Break "Phat Nguyen Thuan" into three distinct lines so it is narrow and wide!
+        linesToDraw = [
+          "Phat",
+          "Nguyen",
+          "Thuan",
+          "26/09/2008",
+          "Libra",
+          "INFP-T"
+        ];
+      } else {
+        // Landscape has rows = 40 and cols = 112.
+        // If cols < 110, break "Phat Nguyen Thuan" into two lines so we can keep the font wide!
+        if (cols < 110) {
+          linesToDraw = [
+            "Phat Nguyen",
+            "Thuan",
+            "26/09/2008",
+            "Libra",
+            "INFP-T"
+          ];
+        }
+      }
+
+      const maxLen = Math.max(...linesToDraw.map(l => l.length));
+      
+      // Dynamically compute the maximum available character width to stretch/widen it perfectly!
+      let charW = Math.floor((cols - 6) / maxLen) - 1;
+      if (charW < 5) charW = 5;
+      if (charW > 9) charW = 9; // Cap maximum width so it stays classy and legible
+
+      const charH = 7;
+      
+      // Dynamically compute perfect row spacing to fill height without overflowing
+      let rowGap = Math.floor((rows - (linesToDraw.length * charH)) / (linesToDraw.length - 1));
+      if (rowGap < 1) rowGap = 1;
+      if (rowGap > 5) rowGap = 5;
+
+      const blockWidth = maxLen * (charW + 1) - 1;
+      const blockHeight = linesToDraw.length * charH + (linesToDraw.length - 1) * rowGap;
+
+      // Horizontally center the entire block, but lines themselves are left-aligned inside!
+      const startX = Math.floor((cols - blockWidth) / 2);
+      const startY = Math.floor((rows - blockHeight) / 2);
+
+      // Mapping utility to associate a layout line index with a label name, birth, zodiac or mbti
+      const getLabelForLineIndex = (index: number) => {
+        if (isPortrait) {
+          if (index === 0) return "name";
+          if (index === 3) return "birth";
+          if (index === 4) return "zodiac";
+          if (index === 5) return "mbti";
+        } else {
+          if (cols < 110) {
+            if (index === 0) return "name";
+            if (index === 2) return "birth";
+            if (index === 3) return "zodiac";
+            if (index === 4) return "mbti";
+          } else {
+            if (index === 0) return "name";
+            if (index === 1) return "birth";
+            if (index === 2) return "zodiac";
+            if (index === 3) return "mbti";
+          }
+        }
+        return null;
+      };
+
       if (elapsed < kc1_end) {
         // ==========================================
-        // KC1: "PHAT" nhỏ style mono, nằm giữa màn hình (0.25s)
+        // KC1: chữ "phat" viết thường nhỏ, nằm giữa màn hình (400ms)
         // ==========================================
-        const word = "PHAT";
+        const word = "phat";
         const w_width = word.length * 6 - 1;
         const startCol = Math.floor((cols - w_width) / 2);
         const startRow = Math.floor((rows - 7) / 2);
@@ -582,7 +828,7 @@ export const LedDotBoard: React.FC = () => {
               if (bitmap[r][c] === 1) {
                 const gr = startRow + r;
                 const gc = colOffset + c;
-                if (gr < rows && gc < cols) {
+                if (gr >= 0 && gr < rows && gc >= 0 && gc < cols) {
                   activeGrid[gr][gc] = 1;
                 }
               }
@@ -592,10 +838,9 @@ export const LedDotBoard: React.FC = () => {
 
       } else if (elapsed < kc2_end) {
         // ==========================================
-        // KC2: "BLVD" to, đậm nhưng rỗng (hollow/outline), fill cả màn hình (0.25s)
+        // KC2: "BLVD" to, đậm nhưng rỗng (hollow), fill cả màn hình (400ms)
         // ==========================================
         const word = "BLVD";
-        // To fill screen, let's make characters super giant
         const giantW = Math.floor(cols / 5);
         const giantH = Math.floor(rows * 0.7);
         const startRow = Math.floor((rows - giantH) / 2);
@@ -622,36 +867,31 @@ export const LedDotBoard: React.FC = () => {
 
       } else if (elapsed < kc3_end) {
         // ==========================================
-        // KC3: chữ "phat" nhỏ chớp nháy loạn xạ khắp màn hình, size linh hoạt (0.5s)
+        // KC3: đúng 1 chữ "phat" viết thường nháy nhiều góc, size thay đổi liên tục (800ms)
         // ==========================================
-        // Render 4-5 randomly sized words per frame cycle (rapid flickering)
-        const frameSeed = Math.floor(elapsed / 80); // shift positions every 80ms for natural rapid flicker
-        const seededRandom = (seed: number) => {
-          const x = Math.sin(seed) * 10000;
-          return x - Math.floor(x);
-        };
+        const step = Math.floor((elapsed - kc2_end) / 100);
+        const state = kc3States[Math.abs(step) % kc3States.length];
+        
+        const word = "phat";
+        const scaleW = state.scaleW;
+        const scaleH = state.scaleH;
+        
+        const wordWidth = word.length * (scaleW + 1) - 1;
+        const startCol = Math.floor(state.xPct * (cols - wordWidth));
+        const startRow = Math.floor(state.yPct * (rows - scaleH));
 
-        for (let i = 0; i < 6; i++) {
-          const rSeed = frameSeed * 10 + i;
-          const randW = 4 + Math.floor(seededRandom(rSeed) * 10); // 4 to 13 cols
-          const randH = 5 + Math.floor(seededRandom(rSeed + 1) * 7);  // 5 to 11 rows
-          const randX = Math.floor(seededRandom(rSeed + 2) * (cols - randW * 4 - 4));
-          const randY = Math.floor(seededRandom(rSeed + 3) * (rows - randH - 2));
+        for (let charIdx = 0; charIdx < word.length; charIdx++) {
+          const char = word[charIdx];
+          const bitmap = getScaledBitmap(char, scaleW, scaleH);
+          const colOffset = startCol + charIdx * (scaleW + 1);
 
-          const word = "PHAT";
-          for (let charIdx = 0; charIdx < word.length; charIdx++) {
-            const char = word[charIdx];
-            const bitmap = getScaledBitmap(char, randW, randH);
-            const colOffset = randX + charIdx * (randW + 1);
-
-            for (let r = 0; r < randH; r++) {
-              for (let c = 0; c < randW; c++) {
-                if (bitmap[r][c] === 1) {
-                  const gr = randY + r;
-                  const gc = colOffset + c;
-                  if (gr >= 0 && gr < rows && gc >= 0 && gc < cols) {
-                    activeGrid[gr][gc] = 1;
-                  }
+          for (let r = 0; r < scaleH; r++) {
+            for (let c = 0; c < scaleW; c++) {
+              if (bitmap[r][c] === 1) {
+                const gr = startRow + r;
+                const gc = colOffset + c;
+                if (gr >= 0 && gr < rows && gc >= 0 && gc < cols) {
+                  activeGrid[gr][gc] = 1;
                 }
               }
             }
@@ -660,24 +900,25 @@ export const LedDotBoard: React.FC = () => {
 
       } else if (elapsed < kc4_end) {
         // ==========================================
-        // KC4: chữ "BLVD" to, đậm nhưng rỗng, chạy ngang qua màn hình (0.5s)
+        // KC4: chữ "BLVD" to, đậm nhưng rỗng, chạy ngang từ trái qua phải (1.8s)
         // ==========================================
         const word = "BLVD";
         const giantW = Math.floor(cols / 5);
         const giantH = Math.floor(rows * 0.75);
         const startRow = Math.floor((rows - giantH) / 2);
 
-        // Compute horizontal scroll offset based on elapsed progress (moving right to left or left to right)
         const progress = (elapsed - kc3_end) / (kc4_end - kc3_end);
-        // Scroll from right to left fully
-        const scrollWidth = giantW * 4 + 30;
-        const scrollX = Math.floor(cols - progress * (cols + scrollWidth));
+        const spacing = 3;
+        const wordWidth = giantW * 4 + spacing * 3;
+        
+        // Fully scrolling left-to-right (from -wordWidth fully out to cols fully offscreen)
+        const scrollX = Math.floor(-wordWidth + progress * (cols + wordWidth));
 
         for (let charIdx = 0; charIdx < word.length; charIdx++) {
           const char = word[charIdx];
           const scaled = getScaledBitmap(char, giantW, giantH);
           const outline = getOutlineBitmap(scaled);
-          const colOffset = scrollX + charIdx * (giantW + 3);
+          const colOffset = scrollX + charIdx * (giantW + spacing);
 
           for (let r = 0; r < giantH; r++) {
             for (let c = 0; c < giantW; c++) {
@@ -692,17 +933,75 @@ export const LedDotBoard: React.FC = () => {
           }
         }
 
+      } else if (elapsed < kc5_end) {
+        // ==========================================
+        // KC5: name, birth, zodiac, mbti chữ thường nhỏ mono, chớp nháy liên tục (1200ms)
+        // ==========================================
+        // Continuous flashing state (e.g., every 120ms)
+        const isFlashOn = Math.floor((elapsed - kc4_end) / 120) % 2 === 0;
+
+        if (isFlashOn) {
+          linesToDraw.forEach((_, lineIdx) => {
+            const labelText = getLabelForLineIndex(lineIdx);
+            if (!labelText) return;
+
+            const lineRow = startY + lineIdx * (charH + rowGap);
+            
+            // Render label text with small standard 5x7 mono characters
+            for (let charIdx = 0; charIdx < labelText.length; charIdx++) {
+              const char = labelText[charIdx];
+              const bitmap = getCharBitmap(char);
+              const charCol = startX + charIdx * 6; // standard 5 columns wide + 1 column spacing
+
+              for (let r = 0; r < 7; r++) {
+                for (let c = 0; c < 5; c++) {
+                  if (bitmap[r][c] === 1) {
+                    const gr = lineRow + r;
+                    const gc = charCol + c;
+                    if (gr >= 0 && gr < rows && gc >= 0 && gc < cols) {
+                      activeGrid[gr][gc] = 1;
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }
+
       } else {
         // ==========================================
-        // MAIN APP: final lines fade in gently
+        // MAIN CONTENT: custom responsive left-aligned centered block
         // ==========================================
+        const finalGrid = Array.from({ length: rows }, () => new Uint8Array(cols));
+
+        linesToDraw.forEach((line, lineIdx) => {
+          const lineRow = startY + lineIdx * (charH + rowGap);
+          for (let charIdx = 0; charIdx < line.length; charIdx++) {
+            const char = line[charIdx];
+            const bitmap = getScaledBitmap(char, charW, charH);
+            const charCol = startX + charIdx * (charW + 1);
+
+            for (let r = 0; r < charH; r++) {
+              for (let c = 0; c < charW; c++) {
+                const gridRow = lineRow + r;
+                const gridCol = charCol + c;
+                if (gridRow >= 0 && gridRow < rows && gridCol >= 0 && gridCol < cols) {
+                  finalGrid[gridRow][gridCol] = bitmap[r][c];
+                }
+              }
+            }
+          }
+        });
+
+        // Copy final grid over
         for (let r = 0; r < rows; r++) {
           for (let c = 0; c < cols; c++) {
-            activeGrid[r][c] = mainGrid[r][c];
+            activeGrid[r][c] = finalGrid[r][c];
           }
         }
+
         // Smooth fade-in over 600ms
-        currentScreenOpacity = Math.min(1, (elapsed - kc4_end) / 600);
+        currentScreenOpacity = Math.min(1, (elapsed - kc5_end) / 600);
       }
 
       // Render the LED grid
@@ -717,8 +1016,8 @@ export const LedDotBoard: React.FC = () => {
 
       const gridW = cols * cellW;
       const gridH = rows * cellH;
-      const startX = marginX + (availableW - gridW) / 2 + cellW / 2;
-      const startY = marginY + (availableH - gridH) / 2 + cellH / 2;
+      const startXDraw = marginX + (availableW - gridW) / 2 + cellW / 2;
+      const startYDraw = marginY + (availableH - gridH) / 2 + cellH / 2;
 
       // Render faint, structured backplate grid holes
       ctx.fillStyle = '#101010';
@@ -726,8 +1025,8 @@ export const LedDotBoard: React.FC = () => {
       ctx.lineWidth = 0.5;
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
-          const cx = startX + c * cellW;
-          const cy = startY + r * cellH;
+          const cx = startXDraw + c * cellW;
+          const cy = startYDraw + r * cellH;
           ctx.beginPath();
           ctx.arc(cx, cy, dotRadius, 0, Math.PI * 2);
           ctx.fill();
@@ -739,8 +1038,8 @@ export const LedDotBoard: React.FC = () => {
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
           if (activeGrid[r][c] === 1) {
-            const cx = startX + c * cellW;
-            const cy = startY + r * cellH;
+            const cx = startXDraw + c * cellW;
+            const cy = startYDraw + r * cellH;
 
             ctx.save();
             ctx.beginPath();
