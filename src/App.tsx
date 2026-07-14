@@ -344,16 +344,19 @@ export default function App() {
               className="relative w-full min-h-[15vh] bg-black border-t border-white/10 shrink-0 z-20 flex items-center justify-center py-6 shadow-[0_-8px_30px_rgba(0,0,0,0.9)]"
             >
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8 px-6">
-                {/* Logo 1: BlvdGuestBook (bó hết các góc bo tròn, vuông vức) */}
+                {/* Logo 1: BlvdGuestBook (bó hết các góc bo tròn, vuông vức, font Arial chuẩn) */}
                 <a 
                   id="footer-logo-guestbook"
                   href="https://blvdguestbook.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center w-[220px] sm:w-auto px-3.5 py-1.5 bg-white border-[3px] border-black rounded-none shadow-[3px_3px_0px_0px_#8ace00] hover:shadow-[4px_4px_0px_0px_#8ace00] hover:-translate-x-[1px] hover:-translate-y-[1px] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-150 select-none cursor-pointer"
+                  className="inline-flex items-center justify-center px-4 py-2 bg-white border-[3px] border-black rounded-none shadow-[3px_3px_0px_0px_#8ace00] hover:shadow-[4px_4px_0px_0px_#8ace00] hover:-translate-x-[1px] hover:-translate-y-[1px] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-150 select-none cursor-pointer"
                 >
-                  <span className="font-sans text-base font-black uppercase tracking-tighter text-black">
-                    Blvd<span className="bg-black text-[#8ace00] px-1 py-0.5 ml-1 rounded-none text-sm">GuestBook</span>
+                  <span 
+                    className="text-base font-black uppercase tracking-tighter text-black whitespace-nowrap"
+                    style={{ fontFamily: "'Arial Narrow', 'Arial', sans-serif" }}
+                  >
+                    Blvd<span className="bg-black text-[#8ace00] px-1.5 py-0.5 ml-1 rounded-none text-sm">GuestBook</span>
                   </span>
                 </a>
 
@@ -363,7 +366,7 @@ export default function App() {
                   href="https://boulevard1st.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center w-[220px] sm:w-auto px-5 py-2.5 bg-white border border-white rounded-none cursor-pointer select-none transition-all duration-300 hover:bg-black group"
+                  className="inline-flex items-center justify-center px-5 py-2.5 bg-white border border-white rounded-none cursor-pointer select-none transition-all duration-300 hover:bg-black group"
                 >
                   <span 
                     className="font-archivo text-black font-black text-lg tracking-tighter leading-none whitespace-nowrap group-hover:text-white transition-colors duration-300"
@@ -378,10 +381,10 @@ export default function App() {
                   href="https://blvdmusicspace.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center w-[220px] sm:w-auto bg-white px-5 py-2.5 rounded-none border border-white/95 transition-all duration-300 ease-out hover:bg-slate-950 hover:border-[#0066ff] hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-[0_0_25px_rgba(0,102,255,0.9),0_0_50px_rgba(0,102,255,0.5)] group cursor-pointer animate-led-flicker select-none"
+                  className="inline-flex items-center justify-center bg-white px-5 py-2.5 rounded-none border border-white/95 transition-all duration-300 ease-out hover:bg-slate-950 hover:border-[#0066ff] hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-[0_0_25px_rgba(0,102,255,0.9),0_0_50px_rgba(0,102,255,0.5)] group cursor-pointer animate-led-flicker select-none"
                 >
                   <h1 
-                    className="text-base font-black text-black tracking-tighter leading-none text-center transition-colors duration-300 group-hover:text-white group-hover:drop-shadow-[0_0_8px_rgba(0,102,255,0.8)] font-be-vietnam"
+                    className="text-base font-black text-black tracking-tighter leading-none text-center transition-colors duration-300 group-hover:text-white group-hover:drop-shadow-[0_0_8px_rgba(0,102,255,0.8)] font-be-vietnam whitespace-nowrap"
                     style={{ fontFamily: "'Be Vietnam Pro', sans-serif" }}
                   >
                     BlvdMusicSpace
