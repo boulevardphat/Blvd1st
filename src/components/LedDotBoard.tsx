@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Volume2, VolumeX } from 'lucide-react';
 
 // 5x7 Font Bitmap representation for A-Z, a-z, 0-9, and symbols.
 // Each character is 5 dots wide and 7 dots tall.
@@ -77,13 +76,13 @@ const LED_FONT: Record<string, number[][]> = {
     [1,0,0,0,1]
   ],
   'I': [
-    [0,1,1,1,0],
+    [1,1,1,1,1],
     [0,0,1,0,0],
     [0,0,1,0,0],
     [0,0,1,0,0],
     [0,0,1,0,0],
     [0,0,1,0,0],
-    [0,1,1,1,0]
+    [1,1,1,1,1]
   ],
   'J': [
     [0,0,1,1,1],
@@ -653,7 +652,7 @@ const getOutlineBitmap = (bitmap: number[][]): number[][] => {
 // Custom Web Audio API Synthesizer for high-quality vintage digital sounds
 class LEDAudioSynthesizer {
   private ctx: AudioContext | null = null;
-  public isMuted: boolean = true;
+  public isMuted: boolean = false;
   private ambientOsc: OscillatorNode | null = null;
   private ambientGain: GainNode | null = null;
 
@@ -901,7 +900,6 @@ export const LedDotBoard: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const synthRef = useRef<LEDAudioSynthesizer | null>(null);
   const [isPortrait, setIsPortrait] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
 
   // Track orientation dynamically
   useEffect(() => {
@@ -927,6 +925,22 @@ export const LedDotBoard: React.FC = () => {
     if (!synthRef.current) {
       synthRef.current = new LEDAudioSynthesizer();
     }
+    // Proactively initialize and unmute within the synchronous user gesture call stack (triggered by click on info button)
+    try {
+      synthRef.current.init();
+      synthRef.current.setMute(false);
+    } catch (e) {
+      console.warn("Autoplay block or gesture context not ready yet:", e);
+    }
+
+    const handleGesture = () => {
+      if (synthRef.current) {
+        synthRef.current.init();
+        synthRef.current.setMute(false);
+      }
+    };
+    window.addEventListener('click', handleGesture);
+    window.addEventListener('touchstart', handleGesture);
 
     // Audio sync tracking states
     let lastPhase = -1;
@@ -977,15 +991,78 @@ export const LedDotBoard: React.FC = () => {
       // KC1: 0ms - 400ms (400ms) -> chữ "phat" viết thường, nhỏ, nằm giữa màn hình
       // KC2: 400ms - 800ms (400ms) -> "BLVD" to, đậm, rỗng, fill cả màn hình
       // KC3: 800ms - 1600ms (800ms) -> đúng 1 chữ "phat" viết thường, nháy nhiều góc, size thay đổi liên tục
-      // KC4: 1600ms - 3400ms (1800ms) -> "BLVD" to, đậm, rỗng, tự quyết thời gian chạy từ trái qua phải (lâu hơn, 1.8s)
-      // KC5: 3400ms - 4600ms (1200ms) -> chữ "name", "birth", "zodiac", "mbti" nhỏ mono viết thường, chớp nháy liên tục ở vị trí tương ứng để báo hiệu
-      // Main Content: 4600ms+ -> từ từ xuất hiện (fade in), căn lề trái, chính giữa màn hình, tự động wrap để hiển thị đủ trên giao diện dọc/tab
+      // KC4: 1600ms - 2500ms (900ms) -> "BLVD" to, đậm, rỗng, chạy ngang từ trái qua phải (nhanh gấp 2 lần, 0.9s)
+      // KC5: 2500ms - 3700ms (1200ms) -> chữ "name", "birth", "zodiac", "mbti" nhỏ mono viết thường, chớp nháy liên tục ở vị trí tương ứng để báo hiệu
+      // Main Content: 3700ms+ -> từ từ xuất hiện (fade in), căn lề trái, chính giữa màn hình, tự động wrap để hiển thị đủ trên giao diện dọc/tab
 
       const kc1_end = 400;
       const kc2_end = 800;
       const kc3_end = 1600;
-      const kc4_end = 3400;
-      const kc5_end = 4600;
+      const kc4_end = 2500;
+      const kc5_end = 3700;
+
+      // Color Cycle Helpers
+      const getGroupForLineIndex = (index: number, linesCount: number) => {
+        if (linesCount === 7) { // Portrait
+          if (index <= 2) return 'name';
+          if (index === 3) return 'boulevard';
+          if (index === 4) return 'birth';
+          if (index === 5) return 'libra';
+          return 'mbti';
+        } else if (linesCount === 6) { // Landscape < 110 cols
+          if (index <= 1) return 'name';
+          if (index === 2) return 'boulevard';
+          if (index === 3) return 'birth';
+          if (index === 4) return 'libra';
+          return 'mbti';
+        } else { // Landscape >= 110 cols (5 lines)
+          if (index === 0) return 'name';
+          if (index === 1) return 'boulevard';
+          if (index === 2) return 'birth';
+          if (index === 3) return 'libra';
+          return 'mbti';
+        }
+      };
+
+      const getLineColor = (group: string, mainElapsed: number) => {
+        const cyclePeriod = 12000; // 12 seconds per cycle
+        const currentProgress = mainElapsed % cyclePeriod;
+
+        if (currentProgress < 4000) {
+          // Phase A: Boulevard & Libra are green (#89CC04), rest are white
+          if (group === 'boulevard' || group === 'libra') {
+            return '#89CC04';
+          }
+          return '#FFFFFF';
+        } else if (currentProgress < 8000) {
+          // Phase B: Boulevard & Libra return to white.
+          // 3 remaining lines: Purple (#8375B3), Pink (#C54EAA), Purple (#8375B3) from top to bottom
+          if (group === 'boulevard' || group === 'libra') {
+            return '#FFFFFF';
+          }
+          if (group === 'name') {
+            return '#8375B3'; // Purple
+          }
+          if (group === 'birth') {
+            return '#C54EAA'; // Pink
+          }
+          if (group === 'mbti') {
+            return '#8375B3'; // Purple
+          }
+          return '#FFFFFF';
+        } else {
+          // Phase C: All lines return to white
+          return '#FFFFFF';
+        }
+      };
+
+      const hexToRgb = (hex: string) => {
+        const cleanHex = hex.replace('#', '');
+        const r = parseInt(cleanHex.substring(0, 2), 16);
+        const g = parseInt(cleanHex.substring(2, 4), 16);
+        const b = parseInt(cleanHex.substring(4, 6), 16);
+        return { r, g, b };
+      };
 
       // Sync Phase Audio Triggers
       let currentPhase = 0;
@@ -1045,6 +1122,7 @@ export const LedDotBoard: React.FC = () => {
       // ==========================================
       let linesToDraw = [
         "Phat Nguyen Thuan",
+        "Boulevard",
         "26/09/2008",
         "Libra ♎",
         "INFP-T"
@@ -1058,6 +1136,7 @@ export const LedDotBoard: React.FC = () => {
           "Phat",
           "Nguyen",
           "Thuan",
+          "Boulevard",
           "26/09/2008",
           "Libra ♎",
           "INFP-T"
@@ -1069,6 +1148,7 @@ export const LedDotBoard: React.FC = () => {
           linesToDraw = [
             "Phat Nguyen",
             "Thuan",
+            "Boulevard",
             "26/09/2008",
             "Libra ♎",
             "INFP-T"
@@ -1101,20 +1181,23 @@ export const LedDotBoard: React.FC = () => {
       const getLabelForLineIndex = (index: number) => {
         if (isPortrait) {
           if (index === 0) return "name";
-          if (index === 3) return "birth";
-          if (index === 4) return "zodiac";
-          if (index === 5) return "mbti";
+          if (index === 3) return "blvd";
+          if (index === 4) return "birth";
+          if (index === 5) return "zodiac";
+          if (index === 6) return "mbti";
         } else {
           if (cols < 110) {
             if (index === 0) return "name";
+            if (index === 2) return "blvd";
+            if (index === 3) return "birth";
+            if (index === 4) return "zodiac";
+            if (index === 5) return "mbti";
+          } else {
+            if (index === 0) return "name";
+            if (index === 1) return "blvd";
             if (index === 2) return "birth";
             if (index === 3) return "zodiac";
             if (index === 4) return "mbti";
-          } else {
-            if (index === 0) return "name";
-            if (index === 1) return "birth";
-            if (index === 2) return "zodiac";
-            if (index === 3) return "mbti";
           }
         }
         return null;
@@ -1313,7 +1396,7 @@ export const LedDotBoard: React.FC = () => {
                 const gridRow = lineRow + r;
                 const gridCol = charCol + c;
                 if (gridRow >= 0 && gridRow < rows && gridCol >= 0 && gridCol < cols) {
-                  finalGrid[gridRow][gridCol] = bitmap[r][c];
+                  finalGrid[gridRow][gridCol] = bitmap[r][c] ? (lineIdx + 1) : 0;
                 }
               }
             }
@@ -1362,30 +1445,93 @@ export const LedDotBoard: React.FC = () => {
       }
 
       // Render glowing White LEDs
+      const isIdleState = elapsed >= kc5_end;
+      const breathing = isIdleState ? 0.88 + Math.sin(elapsed * 0.0013) * 0.12 : 1.0;
+      
+      const sweepPeriod = 6000; // 6 seconds per sweep
+      const sweepTime = elapsed % sweepPeriod;
+      const sweepProgress = sweepTime / sweepPeriod;
+      const sweepX = sweepProgress * (cols + 24) - 12;
+
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
-          if (activeGrid[r][c] === 1) {
-            const cx = startXDraw + c * cellW;
-            const cy = startYDraw + r * cellH;
+          const cx = startXDraw + c * cellW;
+          const cy = startYDraw + r * cellH;
 
+          // Pseudo-random value based on position (deterministic, state-free)
+          const seed = Math.sin(r * 12.9898 + c * 78.233) * 43758.5453123;
+          const randomVal = seed - Math.floor(seed);
+
+          let finalAlpha = 0;
+          let isDrawing = false;
+          let isBackgroundSparkle = false;
+          let activeSweepBoost = 0;
+          let pixelColor = '#FFFFFF';
+
+          const pixelVal = activeGrid[r][c];
+          if (pixelVal > 0) {
+            isDrawing = true;
+            let flicker = 0.94 + Math.random() * 0.06;
+
+            // Individual/multi-dot rapid flickering when idle to emulate retro hardware irregularities
+            if (isIdleState) {
+              const timeStep = Math.floor(elapsed / 80);
+              const pointSeed = Math.sin(r * 43.12 + c * 29.58 + timeStep * 0.73) * 43758.5453;
+              const pointNoise = pointSeed - Math.floor(pointSeed);
+              
+              if (pointNoise > 0.999) { // Extremely rare (0.1% chance per dot)
+                if (pointNoise > 0.9995) {
+                  flicker = 0.45; // Subtle dimming
+                } else {
+                  flicker = 1.20; // Subtle bright pop
+                }
+              }
+
+              // Color cycle logic
+              const lineIdx = pixelVal - 1;
+              const group = getGroupForLineIndex(lineIdx, linesToDraw.length);
+              pixelColor = getLineColor(group, elapsed - kc5_end);
+            }
+
+            const distToSweep = Math.abs(c - sweepX);
+            if (isIdleState && distToSweep < 10) {
+              activeSweepBoost = Math.max(0, 1 - (distToSweep / 10)) * 0.38;
+            }
+            const baseAlpha = currentScreenOpacity * flicker * breathing;
+            finalAlpha = Math.min(1.0, baseAlpha + activeSweepBoost);
+          } else if (isIdleState && randomVal > 0.985) {
+            // Faint, slow random background sparkles (cosmic star-dust effect)
+            const individualTime = (elapsed + randomVal * 10000) % 5000;
+            if (individualTime < 1000) {
+              const progress = individualTime / 1000;
+              finalAlpha = Math.sin(progress * Math.PI) * 0.15; // Max 15% brightness
+              isDrawing = true;
+              isBackgroundSparkle = true;
+            }
+          }
+
+          if (isDrawing) {
             ctx.save();
             ctx.beginPath();
             ctx.arc(cx, cy, dotRadius, 0, Math.PI * 2);
 
-            // Calculate organic flicker factor and apply opacity
-            const flicker = 0.94 + Math.random() * 0.06;
-            const finalAlpha = currentScreenOpacity * flicker;
+            if (isBackgroundSparkle) {
+              // Minimal faint star dot without heavy blur for peak aesthetic elegance
+              ctx.fillStyle = `rgba(255, 255, 255, ${finalAlpha})`;
+              ctx.fill();
+            } else {
+              const { r: cr, g: cg, b: cb } = hexToRgb(pixelColor);
+              ctx.fillStyle = `rgba(${cr}, ${cg}, ${cb}, ${finalAlpha})`;
+              ctx.shadowColor = `rgba(${cr}, ${cg}, ${cb}, ${currentScreenOpacity * 0.9 * finalAlpha})`;
+              ctx.shadowBlur = dotRadius * (2.2 + activeSweepBoost * 2.5);
+              ctx.fill();
 
-            ctx.fillStyle = `rgba(255, 255, 255, ${finalAlpha})`;
-            ctx.shadowColor = `rgba(255, 255, 255, ${currentScreenOpacity * 0.9})`;
-            ctx.shadowBlur = dotRadius * 2.2;
-            ctx.fill();
-
-            // Inner hot center
-            ctx.beginPath();
-            ctx.arc(cx, cy, dotRadius * 0.4, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 255, 255, ${finalAlpha})`;
-            ctx.fill();
+              // Inner hot center
+              ctx.beginPath();
+              ctx.arc(cx, cy, dotRadius * 0.4, 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(${cr}, ${cg}, ${cb}, ${finalAlpha})`;
+              ctx.fill();
+            }
 
             ctx.restore();
           }
@@ -1400,6 +1546,8 @@ export const LedDotBoard: React.FC = () => {
     return () => {
       cancelAnimationFrame(animationId);
       window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('click', handleGesture);
+      window.removeEventListener('touchstart', handleGesture);
       if (synthRef.current) {
         synthRef.current.destroy();
         synthRef.current = null;
@@ -1416,23 +1564,6 @@ export const LedDotBoard: React.FC = () => {
         ref={canvasRef} 
         className="block w-full h-full"
       />
-      
-      {/* Speaker Toggle Button */}
-      <button
-        onClick={() => {
-          const nextMuted = !isMuted;
-          setIsMuted(nextMuted);
-          synthRef.current?.setMute(nextMuted);
-        }}
-        className="absolute top-6 right-6 p-3 rounded-full bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 text-white/50 hover:text-white transition-all flex items-center justify-center cursor-pointer shadow-lg backdrop-blur-md"
-        title={isMuted ? "Bật âm thanh" : "Tắt âm thanh"}
-      >
-        {isMuted ? (
-          <VolumeX className="w-5 h-5" />
-        ) : (
-          <Volume2 className="w-5 h-5 animate-pulse text-white" />
-        )}
-      </button>
     </div>
   );
 };

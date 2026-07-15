@@ -118,6 +118,8 @@ export default function App() {
   const [scene, setScene] = useState<SceneState>('intro-play');
   const [timeStr, setTimeStr] = useState('');
   const [showInfo, setShowInfo] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [showArchive, setShowArchive] = useState(false);
 
   useEffect(() => {
     // Disable right-click context menu globally
@@ -139,9 +141,115 @@ export default function App() {
     };
   }, []);
 
+// Handle high-speed clock ticking for Scene 3 (KC3)
+class ClockAudio {
+  private ctx: AudioContext | null = null;
+
+  public init() {
+    if (this.ctx) return;
+    try {
+      const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
+      if (AudioCtxClass) {
+        this.ctx = new AudioCtxClass();
+      }
+    } catch (e) {
+      console.error("Failed to initialize clock audio context", e);
+    }
+  }
+
+  public resume() {
+    if (this.ctx && this.ctx.state === 'suspended') {
+      this.ctx.resume().catch(() => {});
+    }
+  }
+
+  public playHungUpTick(isTock: boolean) {
+    if (!this.ctx) {
+      this.init();
+    }
+    this.resume();
+    if (!this.ctx || this.ctx.state === 'suspended') return;
+
+    try {
+      const t = this.ctx.currentTime;
+      
+      // 1. High-frequency crisp metallic bandpassed noise (the spring escapement action)
+      const bufferSize = this.ctx.sampleRate * 0.02; // 20ms of noise
+      const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+      
+      const noise = this.ctx.createBufferSource();
+      noise.buffer = buffer;
+      
+      const noiseFilter = this.ctx.createBiquadFilter();
+      noiseFilter.type = 'bandpass';
+      noiseFilter.frequency.setValueAtTime(isTock ? 4200 : 5200, t);
+      noiseFilter.Q.setValueAtTime(12, t); // High resonance for crisp metallic click
+      
+      const noiseGain = this.ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.18, t); // Audible gain level
+      noiseGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.008); // Sharp 8ms decay
+      
+      noise.connect(noiseFilter);
+      noiseFilter.connect(noiseGain);
+      noiseGain.connect(this.ctx.destination);
+      noise.start(t);
+      
+      // 2. High frequency micro ring/tinkle (escapement tooth impact)
+      const osc = this.ctx.createOscillator();
+      const oscGain = this.ctx.createGain();
+      
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(isTock ? 2400 : 3100, t);
+      
+      oscGain.gain.setValueAtTime(0.12, t); // Audible sine click
+      oscGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.015); // Fast 15ms decay for bright, distinct tinkle
+      
+      osc.connect(oscGain);
+      oscGain.connect(this.ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.02);
+
+      // 3. Wooden escapement hollow body resonance click (adds body & fullness to the tick so it's not thin)
+      const bodyOsc = this.ctx.createOscillator();
+      const bodyGain = this.ctx.createGain();
+      
+      bodyOsc.type = 'triangle';
+      bodyOsc.frequency.setValueAtTime(isTock ? 600 : 850, t);
+      
+      bodyGain.gain.setValueAtTime(0.15, t);
+      bodyGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.01); // 10ms body decay
+      
+      bodyOsc.connect(bodyGain);
+      bodyGain.connect(this.ctx.destination);
+      bodyOsc.start(t);
+      bodyOsc.stop(t + 0.015);
+
+    } catch (e) {
+      // Catch blocks for initial gesture requirements
+    }
+  }
+}
+
   // Handle high-speed clock ticking for Scene 3 (KC3)
   useEffect(() => {
     if (scene !== 'intro-clock') return;
+
+    const clockAudio = new ClockAudio();
+    clockAudio.init();
+
+    // Setup interactive events to resume the context safely
+    const handleInteraction = () => {
+      clockAudio.init();
+      clockAudio.resume();
+    };
+    window.addEventListener('click', handleInteraction, { passive: true });
+    window.addEventListener('touchstart', handleInteraction, { passive: true });
+
+    let lastTickStep = -1;
 
     const updateClock = () => {
       const now = new Date();
@@ -150,12 +258,26 @@ export default function App() {
       const secs = String(now.getSeconds()).padStart(2, '0');
       const ms = String(now.getMilliseconds()).padStart(3, '0');
       setTimeStr(`${hrs} : ${mins} : ${secs} : ${ms}`);
+
+      // Rapid mechanical stopwatch ticking: every 125ms (8 ticks per second) for a frantic, high-beat retro gear aesthetic
+      const nowMs = now.getTime();
+      const currentTickStep = Math.floor(nowMs / 125);
+
+      if (currentTickStep !== lastTickStep) {
+        lastTickStep = currentTickStep;
+        const isTock = (currentTickStep % 2 === 1);
+        clockAudio.playHungUpTick(isTock);
+      }
     };
 
     updateClock();
     const interval = setInterval(updateClock, 16); // ~60fps high speed update
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('click', handleInteraction);
+      window.removeEventListener('touchstart', handleInteraction);
+    };
   }, [scene]);
 
   // Handle automatic transitions between scenes (Custom sequence timing)
@@ -373,6 +495,7 @@ export default function App() {
                   
                   <button 
                     id="btn-history-landscape" 
+                    onClick={() => setShowHistory(true)}
                     className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
                   >
                     his-tory
@@ -404,6 +527,7 @@ export default function App() {
 
                   <button 
                     id="btn-archive-landscape" 
+                    onClick={() => setShowArchive(true)}
                     className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
                   >
                     archive
@@ -427,6 +551,7 @@ export default function App() {
                     </button>
                     <button 
                       id="btn-history-portrait" 
+                      onClick={() => setShowHistory(true)}
                       className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"
                     >
                       his-tory
@@ -452,6 +577,7 @@ export default function App() {
                     </button>
                     <button 
                       id="btn-archive-portrait" 
+                      onClick={() => setShowArchive(true)}
                       className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"
                     >
                       archive
@@ -528,6 +654,24 @@ export default function App() {
         >
           <LedDotBoard />
         </div>
+      )}
+
+      {/* History Screen: Completely blank black screen */}
+      {showHistory && (
+        <div 
+          id="history-screen"
+          className="fixed inset-0 bg-black z-50 cursor-pointer"
+          onClick={() => setShowHistory(false)}
+        />
+      )}
+
+      {/* Archive Screen: Completely blank black screen */}
+      {showArchive && (
+        <div 
+          id="archive-screen"
+          className="fixed inset-0 bg-black z-50 cursor-pointer"
+          onClick={() => setShowArchive(false)}
+        />
       )}
     </main>
   );
