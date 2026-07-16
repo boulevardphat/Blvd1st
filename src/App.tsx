@@ -6,6 +6,344 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { LedDotBoard } from './components/LedDotBoard';
+import { Facebook, Instagram, AtSign, Check, Copy } from 'lucide-react';
+
+// --- Decrypted Text Component ---
+const CHARS = '!<>-_\\/[]{}—=+*^?#________';
+
+const DecryptedText = ({ text, delay = 0 }: { text: string, delay?: number }) => {
+  const [display, setDisplay] = useState('');
+
+  useEffect(() => {
+    let interval: any;
+    const maxIterations = 20;
+    let iterations = 0;
+
+    const timeout = setTimeout(() => {
+      interval = setInterval(() => {
+        if (iterations >= maxIterations) {
+          clearInterval(interval);
+          setDisplay(text);
+        } else {
+          setDisplay(text.split('').map((char, index) => {
+            if (char === ' ') return ' ';
+            if (index < (iterations / maxIterations) * text.length) return text[index];
+            return CHARS[Math.floor(Math.random() * CHARS.length)];
+          }).join(''));
+        }
+        iterations++;
+      }, 30);
+    }, delay);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, [text, delay]);
+
+  return <span>{display || '\u00A0'}</span>;
+};
+
+// --- Landscape Contact Menu ---
+const LandscapeContactMenu = () => {
+  const [copiedPersonal, setCopiedPersonal] = useState(false);
+  const [copiedSchool, setCopiedSchool] = useState(false);
+
+  const handleCopy = (email: string, type: 'personal' | 'school') => {
+    navigator.clipboard.writeText(email).then(() => {
+      if (type === 'personal') {
+        setCopiedPersonal(true);
+        setTimeout(() => setCopiedPersonal(false), 2000);
+      } else {
+        setCopiedSchool(true);
+        setTimeout(() => setCopiedSchool(false), 2000);
+      }
+    });
+  };
+
+  return (
+    <div 
+      className="absolute top-[103%] left-0 flex flex-col gap-[clamp(0.2rem,0.4vw,0.5rem)] select-none z-50 w-[clamp(150px,16.8vw,208px)] pointer-events-auto"
+    >
+      {/* Social Card */}
+      <div className="bg-black border border-white/20 shadow-lg rounded-md flex flex-row justify-center items-center gap-[clamp(0.75rem,1.1vw,1.25rem)] px-[clamp(0.5rem,0.8vw,1rem)] py-[clamp(0.4rem,0.6vw,0.75rem)] w-full">
+        <a 
+          href="https://www.facebook.com/hellothisisBLVD17/" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-white hover:text-white/80 transition-colors cursor-pointer"
+        >
+          <Facebook strokeWidth={2} className="w-[clamp(14px,1.4vw,18px)] h-[clamp(14px,1.4vw,18px)]" />
+        </a>
+        <a 
+          href="https://www.instagram.com/endenogatai_dah" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-white hover:text-white/80 transition-colors cursor-pointer"
+        >
+          <Instagram strokeWidth={2} className="w-[clamp(14px,1.4vw,18px)] h-[clamp(14px,1.4vw,18px)]" />
+        </a>
+        <a 
+          href="https://www.threads.com/@endenogatai_dah" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-white hover:text-white/80 transition-colors cursor-pointer"
+        >
+          <AtSign strokeWidth={2} className="w-[clamp(14px,1.4vw,18px)] h-[clamp(14px,1.4vw,18px)]" />
+        </a>
+      </div>
+
+      {/* Email Cá Nhân Card */}
+      <button
+        onClick={() => handleCopy('thuanphat26092008@gmail.com', 'personal')}
+        className="bg-black border border-white/20 shadow-lg rounded-md flex items-center justify-between gap-2 px-[clamp(0.5rem,0.8vw,1rem)] py-[clamp(0.4rem,0.6vw,0.75rem)] hover:border-white/40 hover:bg-white/10 transition-colors cursor-pointer text-left w-full"
+      >
+        <span className="text-white font-sans font-medium text-[clamp(0.75rem,0.85vw,0.95rem)] tracking-wide whitespace-nowrap">
+          Email cá nhân
+        </span>
+        <span className="text-white">
+          {copiedPersonal ? (
+            <Check className="w-[clamp(12px,1.3vw,16px)] h-[clamp(12px,1.3vw,16px)] text-white" />
+          ) : (
+            <Copy className="w-[clamp(12px,1.3vw,16px)] h-[clamp(12px,1.3vw,16px)] text-white" />
+          )}
+        </span>
+      </button>
+
+      {/* Email Học Tập Card */}
+      <button
+        onClick={() => handleCopy('phatnt.a2.2326@gmail.com', 'school')}
+        className="bg-black border border-white/20 shadow-lg rounded-md flex items-center justify-between gap-2 px-[clamp(0.5rem,0.8vw,1rem)] py-[clamp(0.4rem,0.6vw,0.75rem)] hover:border-white/40 hover:bg-white/10 transition-colors cursor-pointer text-left w-full"
+      >
+        <span className="text-white font-sans font-medium text-[clamp(0.75rem,0.85vw,0.95rem)] tracking-wide whitespace-nowrap">
+          Email học tập
+        </span>
+        <span className="text-white">
+          {copiedSchool ? (
+            <Check className="w-[clamp(12px,1.3vw,16px)] h-[clamp(12px,1.3vw,16px)] text-white" />
+          ) : (
+            <Copy className="w-[clamp(12px,1.3vw,16px)] h-[clamp(12px,1.3vw,16px)] text-white" />
+          )}
+        </span>
+      </button>
+    </div>
+  );
+};
+
+// --- Portrait Contact Screen Component (Split Screen Horizontal Effect) ---
+const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
+  const [copyFeedback, setCopyFeedback] = useState<string | null>(null);
+
+  const handleCopy = (email: string, label: string) => {
+    navigator.clipboard.writeText(email).then(() => {
+      setCopyFeedback(label);
+      setTimeout(() => setCopyFeedback(null), 2000);
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 mountaineer-overlay z-[100] bg-black items-center justify-center hidden portrait:flex">
+      {/* Background container that is pure black to show through the gap */}
+      <div className="absolute inset-0 bg-black z-0" onClick={onClose} />
+
+      {/* Middle black band with social and email icons (revealed when screen tears) */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="absolute inset-x-0 top-[66.5vh] -translate-y-1/2 h-[9.5vh] bg-black border-y border-white/10 flex flex-col justify-center items-center z-10 select-none"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Copy Notification Toast */}
+        <div className="absolute -top-10 left-1/2 -translate-x-1/2 h-8 flex items-center justify-center pointer-events-none">
+          {copyFeedback && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="bg-white text-black text-[11px] font-mono tracking-widest px-4 py-1.5 uppercase font-bold rounded-sm whitespace-nowrap"
+            >
+              ĐÃ SAO CHÉP {copyFeedback}
+            </motion.div>
+          )}
+        </div>
+
+        {/* Icons Row */}
+        <div className="flex items-center gap-10 px-8">
+          {/* Social MXH Group */}
+          <div className="flex items-center gap-6">
+            <a 
+              href="https://www.facebook.com/hellothisisBLVD17/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              onClick={(e) => e.stopPropagation()}
+              className="text-white hover:scale-115 transition-transform active:scale-95 cursor-pointer"
+            >
+              <Facebook strokeWidth={1.5} size={28} />
+            </a>
+            <a 
+              href="https://www.instagram.com/endenogatai_dah" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              onClick={(e) => e.stopPropagation()}
+              className="text-white hover:scale-115 transition-transform active:scale-95 cursor-pointer"
+            >
+              <Instagram strokeWidth={1.5} size={28} />
+            </a>
+            <a 
+              href="https://www.threads.com/@endenogatai_dah" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              onClick={(e) => e.stopPropagation()}
+              className="text-white hover:scale-115 transition-transform active:scale-95 cursor-pointer"
+            >
+              <AtSign strokeWidth={1.5} size={28} />
+            </a>
+          </div>
+
+          {/* Elegant Divider */}
+          <div className="w-[1px] h-8 bg-white/20" />
+
+          {/* Email Group */}
+          <div className="flex items-center gap-6">
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                handleCopy('thuanphat26092008@gmail.com', 'EMAIL CÁ NHÂN');
+              }}
+              className="text-white hover:scale-115 transition-transform active:scale-95 cursor-pointer flex flex-col items-center"
+            >
+              <Copy strokeWidth={1.5} size={28} />
+            </button>
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                handleCopy('phatnt.a2.2326@gmail.com', 'EMAIL HỌC TẬP');
+              }}
+              className="text-white hover:scale-115 transition-transform active:scale-95 cursor-pointer flex flex-col items-center"
+            >
+              <Copy strokeWidth={1.5} size={28} className="rotate-12" />
+            </button>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Top Half of the Split (Displays precisely the top 66.5% of the screen containing top-row buttons) */}
+      <motion.div
+        initial={{ y: 0 }}
+        animate={{ y: '-4.75vh' }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        onClick={onClose}
+        style={{ clipPath: 'inset(0px 0px 33.5% 0px)' }}
+        className="absolute inset-0 overflow-hidden z-20 cursor-pointer"
+      >
+        <div className="absolute inset-0">
+          <img
+            src="https://i.ibb.co/vy4ykmw/vespertine.png"
+            className="w-full h-full object-cover object-[49%_center]"
+          />
+          {/* #89CC04 Tint Overlays to match scene background */}
+          <div className="absolute inset-0 bg-[#89CC04] mix-blend-color opacity-95 pointer-events-none" />
+          <div className="absolute inset-0 bg-[#89CC04]/35 mix-blend-multiply pointer-events-none" />
+          
+          {/* Subtle border line at the split edge */}
+          <div className="absolute top-[66.5vh] left-0 right-0 border-b border-white/10 pointer-events-none" />
+
+          {/* Portrait Layout content aligned precisely with the main app */}
+          <div className="absolute inset-0 pointer-events-none">
+            {/* Anchor point exactly at 66.5vh, centered horizontally */}
+            <div className="absolute left-1/2 -translate-x-1/2 w-fit flex flex-col items-center" style={{ top: '66.5vh' }}>
+              
+              {/* Top Row - positioned absolute above the center */}
+              <div className="absolute bottom-full mb-[3px] w-full flex justify-between items-end">
+                <span className="text-white font-archivo-narrow font-medium hover-italic-transition text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none relative left-[0.1em]">
+                  contact
+                </span>
+                <span className="text-white/40 font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none">
+                  his-tory
+                </span>
+              </div>
+
+              {/* Logo and Bottom Row - normal flow, just pushed down by 3px */}
+              <div className="mt-[3px] flex flex-col w-full">
+                <h1 className="font-archivo text-white font-black text-[clamp(2.5rem,11.5vw,6rem)] leading-none tracking-tighter select-none whitespace-nowrap">
+                  Boulevard1st
+                </h1>
+                
+                {/* Bottom Row - spaced below logo by 6px */}
+                <div className="mt-[6px] w-full flex justify-between items-start">
+                  <span className="text-white/40 font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none relative left-[0.1em]">
+                    info
+                  </span>
+                  <span className="text-white/40 font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none">
+                    archive
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Bottom Half of the Split (Displays precisely the bottom 33.5% of the screen containing the Logo and bottom buttons) */}
+      <motion.div
+        initial={{ y: 0 }}
+        animate={{ y: '4.75vh' }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        onClick={onClose}
+        style={{ clipPath: 'inset(66.5% 0px 0px 0px)' }}
+        className="absolute inset-0 overflow-hidden z-20 cursor-pointer"
+      >
+        <div className="absolute inset-0">
+          <img
+            src="https://i.ibb.co/vy4ykmw/vespertine.png"
+            className="w-full h-full object-cover object-[49%_center]"
+          />
+          {/* #89CC04 Tint Overlays to match scene background */}
+          <div className="absolute inset-0 bg-[#89CC04] mix-blend-color opacity-95 pointer-events-none" />
+          <div className="absolute inset-0 bg-[#89CC04]/35 mix-blend-multiply pointer-events-none" />
+
+          {/* Subtle border line at the split edge */}
+          <div className="absolute top-[66.5vh] left-0 right-0 border-t border-white/10 pointer-events-none" />
+
+          {/* Portrait Layout content aligned precisely with the main app */}
+          <div className="absolute inset-0 pointer-events-none">
+            {/* Anchor point exactly at 66.5vh, centered horizontally */}
+            <div className="absolute left-1/2 -translate-x-1/2 w-fit flex flex-col items-center" style={{ top: '66.5vh' }}>
+              
+              {/* Top Row - positioned absolute above the center */}
+              <div className="absolute bottom-full mb-[3px] w-full flex justify-between items-end">
+                <span className="text-white font-archivo-narrow font-medium hover-italic-transition text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none relative left-[0.1em]">
+                  contact
+                </span>
+                <span className="text-white/40 font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none">
+                  his-tory
+                </span>
+              </div>
+
+              {/* Logo and Bottom Row - normal flow, just pushed down by 3px */}
+              <div className="mt-[3px] flex flex-col w-full">
+                <h1 className="font-archivo text-white font-black text-[clamp(2.5rem,11.5vw,6rem)] leading-none tracking-tighter select-none whitespace-nowrap">
+                  Boulevard1st
+                </h1>
+                
+                {/* Bottom Row - spaced below logo by 6px */}
+                <div className="mt-[6px] w-full flex justify-between items-start">
+                  <span className="text-white/40 font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none relative left-[0.1em]">
+                    info
+                  </span>
+                  <span className="text-white/40 font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none">
+                    archive
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
 
 interface SplitFlapProps {
   id?: string;
@@ -120,6 +458,28 @@ export default function App() {
   const [showInfo, setShowInfo] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [showArchive, setShowArchive] = useState(false);
+  const [showContactLandscape, setShowContactLandscape] = useState(false);
+  const [showContactPortrait, setShowContactPortrait] = useState(false);
+  
+  const bgAudioRef = React.useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    if (scene === 'main-app' && bgAudioRef.current) {
+      bgAudioRef.current.volume = 0.6;
+      bgAudioRef.current.play().catch(() => {});
+    } else if (scene !== 'main-app' && bgAudioRef.current) {
+      bgAudioRef.current.pause();
+      bgAudioRef.current.currentTime = 0;
+    }
+  }, [scene]);
+
+  const handleBgAudioEnded = () => {
+    setTimeout(() => {
+      if (bgAudioRef.current && scene === 'main-app') {
+        bgAudioRef.current.play().catch(() => {});
+      }
+    }, 5000);
+  };
 
   useEffect(() => {
     // Disable right-click context menu globally
@@ -266,7 +626,7 @@ class ClockAudio {
       if (currentTickStep !== lastTickStep) {
         lastTickStep = currentTickStep;
         const isTock = (currentTickStep % 2 === 1);
-        clockAudio.playHungUpTick(isTock);
+        // clockAudio.playHungUpTick(isTock); // Removed clock tick audio per user request
       }
     };
 
@@ -325,6 +685,11 @@ class ClockAudio {
       className="relative w-screen h-screen overflow-hidden bg-black flex items-center justify-center select-none" 
       id="main-container"
     >
+      <audio 
+        ref={bgAudioRef}
+        src="https://files.catbox.moe/op8yd3.mp3"
+        onEnded={handleBgAudioEnded}
+      />
       
       {/* Preloaded Background Images (Always active at z-0, hidden behind black scenes 1-3, visible in scenes 4-6 and main app) */}
       <img
@@ -486,12 +851,16 @@ class ClockAudio {
               >
                 {/* Top Row */}
                 <div className="flex justify-between items-start w-full">
-                  <button 
-                    id="btn-contact-landscape" 
-                    className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
-                  >
-                    contact
-                  </button>
+                  <div className="relative pointer-events-auto">
+                    <button 
+                      id="btn-contact-landscape" 
+                      onClick={() => setShowContactLandscape(!showContactLandscape)}
+                      className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
+                    >
+                      contact
+                    </button>
+                    {showContactLandscape && <LandscapeContactMenu />}
+                  </div>
                   
                   <button 
                     id="btn-history-landscape" 
@@ -538,17 +907,22 @@ class ClockAudio {
               {/* Portrait Layout (Visible only in portrait / vertical viewports) */}
               <div 
                 id="safezone-overlay-portrait" 
-                className="hidden portrait:flex absolute inset-0 flex-col items-center justify-end pb-[18vh] p-[6%] pointer-events-none"
+                className="hidden portrait:flex absolute inset-0 pointer-events-none"
               >
-                <div className="relative w-fit pointer-events-auto flex flex-col justify-center pt-[clamp(2rem,7.5vw,3.8rem)] pb-[clamp(2rem,7.5vw,3.8rem)]">
-                  {/* Top Row */}
-                  <div className="absolute top-0 left-0 right-0 flex justify-between items-end">
-                    <button 
-                      id="btn-contact-portrait" 
-                      className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
-                    >
-                      contact
-                    </button>
+                {/* Anchor point exactly at 66.5vh, centered horizontally */}
+                <div className="absolute left-1/2 -translate-x-1/2 w-fit pointer-events-auto flex flex-col items-center" style={{ top: '66.5vh' }}>
+                  
+                  {/* Top Row - positioned absolute above the center */}
+                  <div className="absolute bottom-full mb-[3px] w-full flex justify-between items-end">
+                    <div className="relative pointer-events-auto">
+                      <button 
+                        id="btn-contact-portrait" 
+                        onClick={() => setShowContactPortrait(true)}
+                        className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
+                      >
+                        contact
+                      </button>
+                    </div>
                     <button 
                       id="btn-history-portrait" 
                       onClick={() => setShowHistory(true)}
@@ -558,30 +932,32 @@ class ClockAudio {
                     </button>
                   </div>
 
-                  {/* Centered Logo (defines width of parent) */}
-                  <h1 
-                    id="logo-text-portrait"
-                    className="font-archivo text-white font-black text-[clamp(2.5rem,11.5vw,6rem)] leading-[0.8] tracking-tighter select-none whitespace-nowrap"
-                  >
-                    Boulevard1st
-                  </h1>
-
-                  {/* Bottom Row */}
-                  <div className="absolute bottom-0 left-0 right-0 flex justify-between items-start">
-                    <button 
-                      id="btn-info-portrait" 
-                      onClick={() => setShowInfo(true)}
-                      className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
+                  {/* Logo and Bottom Row - normal flow, just pushed down by 3px */}
+                  <div className="mt-[3px] flex flex-col w-full">
+                    <h1 
+                      id="logo-text-portrait"
+                      className="font-archivo text-white font-black text-[clamp(2.5rem,11.5vw,6rem)] leading-none tracking-tighter select-none whitespace-nowrap"
                     >
-                      info
-                    </button>
-                    <button 
-                      id="btn-archive-portrait" 
-                      onClick={() => setShowArchive(true)}
-                      className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"
-                    >
-                      archive
-                    </button>
+                      Boulevard1st
+                    </h1>
+                    
+                    {/* Bottom Row - spaced below logo by 6px */}
+                    <div className="mt-[6px] w-full flex justify-between items-start">
+                      <button 
+                        id="btn-info-portrait" 
+                        onClick={() => setShowInfo(true)}
+                        className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
+                      >
+                        info
+                      </button>
+                      <button 
+                        id="btn-archive-portrait" 
+                        onClick={() => setShowArchive(true)}
+                        className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"
+                      >
+                        archive
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -640,6 +1016,8 @@ class ClockAudio {
                   </h1>
                 </a>
               </div>
+              {/* Portrait Contact Overlay */}
+              {showContactPortrait && <PortraitContactScreen onClose={() => setShowContactPortrait(false)} />}
             </div>
           </div>
         </div>
