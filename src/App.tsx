@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { LedDotBoard } from './components/LedDotBoard';
 import { Facebook, Instagram, AtSign, Check, Copy } from 'lucide-react';
 
@@ -44,88 +44,167 @@ const DecryptedText = ({ text, delay = 0 }: { text: string, delay?: number }) =>
   return <span>{display || '\u00A0'}</span>;
 };
 
-// --- Landscape Contact Menu ---
-const LandscapeContactMenu = () => {
-  const [copiedPersonal, setCopiedPersonal] = useState(false);
-  const [copiedSchool, setCopiedSchool] = useState(false);
+// --- Landscape Contact Screen Component (Split Screen Vertical Effect) ---
+const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
+  const [copyFeedback, setCopyFeedback] = useState<string | null>(null);
 
-  const handleCopy = (email: string, type: 'personal' | 'school') => {
+  const handleCopy = (email: string, label: string) => {
     navigator.clipboard.writeText(email).then(() => {
-      if (type === 'personal') {
-        setCopiedPersonal(true);
-        setTimeout(() => setCopiedPersonal(false), 2000);
-      } else {
-        setCopiedSchool(true);
-        setTimeout(() => setCopiedSchool(false), 2000);
-      }
+      setCopyFeedback(label);
+      setTimeout(() => setCopyFeedback(null), 2000);
     });
   };
 
+  const cutPosition = '20vw';
+  const barWidth = '6vw';
+  const rightInset = '80vw'; // 100 - 20
+
   return (
-    <div 
-      className="absolute top-[103%] left-0 flex flex-col gap-[clamp(0.2rem,0.4vw,0.5rem)] select-none z-50 w-[clamp(150px,16.8vw,208px)] pointer-events-auto"
-    >
-      {/* Social Card */}
-      <div className="bg-black border border-white/20 shadow-lg rounded-md flex flex-row justify-center items-center gap-[clamp(0.75rem,1.1vw,1.25rem)] px-[clamp(0.5rem,0.8vw,1rem)] py-[clamp(0.4rem,0.6vw,0.75rem)] w-full">
-        <a 
-          href="https://www.facebook.com/hellothisisBLVD17/" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="text-white hover:text-white/80 transition-colors cursor-pointer"
-        >
-          <Facebook strokeWidth={2} className="w-[clamp(14px,1.4vw,18px)] h-[clamp(14px,1.4vw,18px)]" />
-        </a>
-        <a 
-          href="https://www.instagram.com/endenogatai_dah" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="text-white hover:text-white/80 transition-colors cursor-pointer"
-        >
-          <Instagram strokeWidth={2} className="w-[clamp(14px,1.4vw,18px)] h-[clamp(14px,1.4vw,18px)]" />
-        </a>
-        <a 
-          href="https://www.threads.com/@endenogatai_dah" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="text-white hover:text-white/80 transition-colors cursor-pointer"
-        >
-          <AtSign strokeWidth={2} className="w-[clamp(14px,1.4vw,18px)] h-[clamp(14px,1.4vw,18px)]" />
-        </a>
+    <div className="fixed inset-0 z-[100] bg-black items-center justify-center hidden landscape:flex">
+      {/* Background container that is pure black to show through the gap */}
+      <div className="absolute inset-0 bg-black z-0" onClick={onClose} />
+
+      {/* The Contact Info revealed in the gap */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="absolute inset-y-0 flex flex-col justify-center items-center z-10 select-none border-x border-white/10"
+        style={{ left: cutPosition, width: barWidth }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Copy Notification Toast */}
+        <div className="absolute top-[20%] left-1/2 -translate-x-1/2 h-8 flex items-center justify-center pointer-events-none">
+          {copyFeedback && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="bg-white text-black text-[11px] font-mono tracking-widest px-4 py-1.5 uppercase font-bold rounded-sm whitespace-nowrap"
+            >
+              ĐÃ SAO CHÉP {copyFeedback}
+            </motion.div>
+          )}
+        </div>
+
+        {/* Icons Column */}
+        <div className="flex flex-col items-center gap-8">
+          {/* Social MXH Group */}
+          <div className="flex flex-col items-center gap-5">
+            <a href="https://www.facebook.com/hellothisisBLVD17/" target="_blank" rel="noopener noreferrer" className="text-white hover:scale-115 transition-transform active:scale-95 cursor-pointer"><Facebook strokeWidth={1.5} size={28} /></a>
+            <a href="https://www.instagram.com/endenogatai_dah" target="_blank" rel="noopener noreferrer" className="text-white hover:scale-115 transition-transform active:scale-95 cursor-pointer"><Instagram strokeWidth={1.5} size={28} /></a>
+            <a href="https://www.threads.com/@endenogatai_dah" target="_blank" rel="noopener noreferrer" className="text-white hover:scale-115 transition-transform active:scale-95 cursor-pointer"><AtSign strokeWidth={1.5} size={28} /></a>
+          </div>
+
+          {/* Elegant Divider */}
+          <div className="w-8 h-[1px] bg-white/20" />
+
+          {/* Email Group */}
+          <div className="flex flex-col items-center gap-5">
+            <button onClick={(e) => { e.stopPropagation(); handleCopy('thuanphat26092008@gmail.com', 'EMAIL CÁ NHÂN'); }} className="text-white hover:scale-115 transition-transform active:scale-95 cursor-pointer"><Copy strokeWidth={1.5} size={28} /></button>
+            <button onClick={(e) => { e.stopPropagation(); handleCopy('phatnt.a2.2326@gmail.com', 'EMAIL HỌC TẬP'); }} className="text-white hover:scale-115 transition-transform active:scale-95 cursor-pointer"><Copy strokeWidth={1.5} size={28} className="rotate-12" /></button>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Left Half (0 to 30vw) - Stays fixed */}
+      <motion.div
+        style={{ clipPath: `inset(0px ${rightInset} 0px 0px)` }}
+        onClick={onClose}
+        className="absolute inset-0 overflow-hidden z-20 cursor-pointer"
+      >
+        <div className="absolute inset-0">
+          <img
+            src="https://i.ibb.co/vy4ykmw/vespertine.png"
+            className="w-full h-full object-cover portrait:object-[49%_center]"
+          />
+          {/* Tint Overlays */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.95 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-0 bg-[#89CC04] mix-blend-color pointer-events-none"
+          />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.35 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-0 bg-[#89CC04] mix-blend-multiply pointer-events-none"
+          />
+          
+          <div className="absolute inset-0 flex-col justify-between p-[6.5%] pointer-events-none flex">
+            <div className="flex justify-between items-start w-full">
+              <span className="text-white font-archivo-narrow font-extralight hover-italic-transition text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none tracking-tight select-none">
+                contact
+              </span>
+            </div>
+            <div className="relative flex justify-between items-baseline w-full">
+              <span className="text-white/90 font-archivo-narrow font-extralight hover-italic-transition text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none tracking-tight select-none">
+                info
+              </span>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Right Half (30vw to 100vw) - Moves to the right by barWidth */}
+      <motion.div
+        initial={{ x: 0 }}
+        animate={{ x: barWidth }}
+        exit={{ x: 0 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        style={{ clipPath: `inset(0px 0px 0px ${cutPosition})` }}
+        onClick={onClose}
+        className="absolute inset-0 overflow-hidden z-20 cursor-pointer"
+      >
+        <div className="absolute inset-0">
+          <img
+            src="https://i.ibb.co/vy4ykmw/vespertine.png"
+            className="w-full h-full object-cover portrait:object-[49%_center]"
+          />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.95 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-0 bg-[#89CC04] mix-blend-color pointer-events-none"
+          />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.35 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-0 bg-[#89CC04] mix-blend-multiply pointer-events-none"
+          />
+          
+          {/* Logo is intentionally omitted here based on user request */}
+        </div>
+      </motion.div>
+
+      {/* Fixed buttons on top z-index (his-tory, archive) - Unmoving */}
+      <div className="absolute inset-0 flex-col justify-between p-[6.5%] pointer-events-none flex z-30">
+        <div className="flex justify-between items-start w-full">
+          <div /> {/* Spacer */}
+          <span 
+            className="pointer-events-auto cursor-pointer hover:text-white hover-italic-transition text-white/90 font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none tracking-tight select-none"
+            onClick={(e) => { e.stopPropagation(); onClose(); }}
+          >
+            his-tory
+          </span>
+        </div>
+        <div className="relative flex justify-between items-baseline w-full">
+          <div /> {/* Spacer */}
+          <span 
+            className="pointer-events-auto cursor-pointer hover:text-white hover-italic-transition text-white/90 font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none tracking-tight select-none"
+            onClick={(e) => { e.stopPropagation(); onClose(); }}
+          >
+            archive
+          </span>
+        </div>
       </div>
-
-      {/* Email Cá Nhân Card */}
-      <button
-        onClick={() => handleCopy('thuanphat26092008@gmail.com', 'personal')}
-        className="bg-black border border-white/20 shadow-lg rounded-md flex items-center justify-between gap-2 px-[clamp(0.5rem,0.8vw,1rem)] py-[clamp(0.4rem,0.6vw,0.75rem)] hover:border-white/40 hover:bg-white/10 transition-colors cursor-pointer text-left w-full"
-      >
-        <span className="text-white font-sans font-medium text-[clamp(0.75rem,0.85vw,0.95rem)] tracking-wide whitespace-nowrap">
-          Email cá nhân
-        </span>
-        <span className="text-white">
-          {copiedPersonal ? (
-            <Check className="w-[clamp(12px,1.3vw,16px)] h-[clamp(12px,1.3vw,16px)] text-white" />
-          ) : (
-            <Copy className="w-[clamp(12px,1.3vw,16px)] h-[clamp(12px,1.3vw,16px)] text-white" />
-          )}
-        </span>
-      </button>
-
-      {/* Email Học Tập Card */}
-      <button
-        onClick={() => handleCopy('phatnt.a2.2326@gmail.com', 'school')}
-        className="bg-black border border-white/20 shadow-lg rounded-md flex items-center justify-between gap-2 px-[clamp(0.5rem,0.8vw,1rem)] py-[clamp(0.4rem,0.6vw,0.75rem)] hover:border-white/40 hover:bg-white/10 transition-colors cursor-pointer text-left w-full"
-      >
-        <span className="text-white font-sans font-medium text-[clamp(0.75rem,0.85vw,0.95rem)] tracking-wide whitespace-nowrap">
-          Email học tập
-        </span>
-        <span className="text-white">
-          {copiedSchool ? (
-            <Check className="w-[clamp(12px,1.3vw,16px)] h-[clamp(12px,1.3vw,16px)] text-white" />
-          ) : (
-            <Copy className="w-[clamp(12px,1.3vw,16px)] h-[clamp(12px,1.3vw,16px)] text-white" />
-          )}
-        </span>
-      </button>
     </div>
   );
 };
@@ -150,6 +229,7 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.6, delay: 0.2 }}
         className="absolute inset-x-0 top-[66.5vh] -translate-y-1/2 h-[9.5vh] bg-black border-y border-white/10 flex flex-col justify-center items-center z-10 select-none"
         onClick={(e) => e.stopPropagation()}
@@ -232,6 +312,7 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
       <motion.div
         initial={{ y: 0 }}
         animate={{ y: '-4.75vh' }}
+        exit={{ y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         onClick={onClose}
         style={{ clipPath: 'inset(0px 0px 33.5% 0px)' }}
@@ -243,8 +324,20 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
             className="w-full h-full object-cover object-[49%_center]"
           />
           {/* #89CC04 Tint Overlays to match scene background */}
-          <div className="absolute inset-0 bg-[#89CC04] mix-blend-color opacity-95 pointer-events-none" />
-          <div className="absolute inset-0 bg-[#89CC04]/35 mix-blend-multiply pointer-events-none" />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.95 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-0 bg-[#89CC04] mix-blend-color pointer-events-none"
+          />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.35 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-0 bg-[#89CC04] mix-blend-multiply pointer-events-none"
+          />
           
           {/* Subtle border line at the split edge */}
           <div className="absolute top-[66.5vh] left-0 right-0 border-b border-white/10 pointer-events-none" />
@@ -289,6 +382,7 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
       <motion.div
         initial={{ y: 0 }}
         animate={{ y: '4.75vh' }}
+        exit={{ y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         onClick={onClose}
         style={{ clipPath: 'inset(66.5% 0px 0px 0px)' }}
@@ -300,9 +394,21 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
             className="w-full h-full object-cover object-[49%_center]"
           />
           {/* #89CC04 Tint Overlays to match scene background */}
-          <div className="absolute inset-0 bg-[#89CC04] mix-blend-color opacity-95 pointer-events-none" />
-          <div className="absolute inset-0 bg-[#89CC04]/35 mix-blend-multiply pointer-events-none" />
-
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.95 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-0 bg-[#89CC04] mix-blend-color pointer-events-none"
+          />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.35 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-0 bg-[#89CC04] mix-blend-multiply pointer-events-none"
+          />
+          
           {/* Subtle border line at the split edge */}
           <div className="absolute top-[66.5vh] left-0 right-0 border-t border-white/10 pointer-events-none" />
 
@@ -854,12 +960,11 @@ class ClockAudio {
                   <div className="relative pointer-events-auto">
                     <button 
                       id="btn-contact-landscape" 
-                      onClick={() => setShowContactLandscape(!showContactLandscape)}
+                      onClick={() => setShowContactLandscape(true)}
                       className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
                     >
                       contact
                     </button>
-                    {showContactLandscape && <LandscapeContactMenu />}
                   </div>
                   
                   <button 
@@ -1016,8 +1121,14 @@ class ClockAudio {
                   </h1>
                 </a>
               </div>
+              {/* Landscape Contact Overlay */}
+              <AnimatePresence>
+                {showContactLandscape && <LandscapeContactScreen onClose={() => setShowContactLandscape(false)} />}
+              </AnimatePresence>
               {/* Portrait Contact Overlay */}
-              {showContactPortrait && <PortraitContactScreen onClose={() => setShowContactPortrait(false)} />}
+              <AnimatePresence>
+                {showContactPortrait && <PortraitContactScreen onClose={() => setShowContactPortrait(false)} />}
+              </AnimatePresence>
             </div>
           </div>
         </div>
