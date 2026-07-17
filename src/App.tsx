@@ -204,7 +204,7 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
   const renderTextContent = () => (
     <div className="absolute inset-0 pointer-events-none">
       {/* Anchor point exactly at 66.5vh, centered horizontally */}
-      <div className="absolute left-1/2 -translate-x-1/2 w-fit flex flex-col items-center" style={{ top: '66.5vh' }}>
+      <div className="absolute left-1/2 -translate-x-1/2 w-fit flex flex-col items-center" style={{ top: 'calc(var(--vh, 1vh) * 66.5)' }}>
         
         {/* Top Row - positioned absolute above the center */}
         <div className="absolute bottom-full mb-[3px] w-full flex justify-between items-end">
@@ -214,7 +214,7 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
             animate="animate"
             exit="initial"
             transition={transitionProps}
-            className="font-archivo hover-italic-transition text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none relative left-[0.1em]"
+            className="font-archivo hover-italic-transition text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none relative left-[0.1em] z-20"
             style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
           >
             contact
@@ -271,8 +271,9 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
   return (
     <motion.div 
       initial={{ opacity: 1 }}
-      exit={{ opacity: 1, transition: { duration: 0.8 } }}
-      className="fixed inset-0 mountaineer-overlay z-[100] items-center justify-center hidden portrait:flex"
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }}
+      className="fixed top-0 left-0 w-full h-[calc(var(--vh,1vh)*100)] mountaineer-overlay z-[100] items-center justify-center hidden portrait:flex"
     >
       {/* Background container that is pure black to show through the gap */}
       <div 
@@ -286,7 +287,7 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className="absolute inset-x-0 top-[66.5vh] -translate-y-1/2 h-[9.5vh] bg-black border-y border-white/10 flex flex-col justify-center items-center z-10 select-none"
+        className="absolute inset-x-0 top-[calc(var(--vh,1vh)*66.5)] -translate-y-1/2 h-[calc(var(--vh,1vh)*9.5)] bg-black border-y border-white/10 flex flex-col justify-center items-center z-10 select-none"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Copy Notification Toast */}
@@ -368,7 +369,7 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
       {/* Top Half of the Split */}
       <motion.div
         initial={{ y: 0 }}
-        animate={{ y: '-4.75vh' }}
+        animate={{ y: 'calc(var(--vh, 1vh) * -4.75)' }}
         exit={{ y: 0 }}
         transition={transitionProps}
         onClick={onClose}
@@ -381,20 +382,8 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
             className="w-full h-full object-cover object-[49%_center]"
           />
           {/* #89CC04 Tint Overlays */}
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.95 }}
-            exit={{ opacity: 0 }}
-            transition={transitionProps}
-            className="absolute inset-0 bg-[#89CC04] mix-blend-color pointer-events-none" 
-          />
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.35 }}
-            exit={{ opacity: 0 }}
-            transition={transitionProps}
-            className="absolute inset-0 bg-[#89CC04] mix-blend-multiply pointer-events-none" 
-          />
+          <div className="absolute inset-0 bg-[#89CC04] mix-blend-color opacity-95 pointer-events-none" />
+          <div className="absolute inset-0 bg-[#89CC04]/35 mix-blend-multiply pointer-events-none" />
           
           {/* Dim Overlay to make the split feel smoother */}
           <motion.div 
@@ -404,19 +393,25 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
             transition={transitionProps}
             className="absolute inset-0 bg-black/60 pointer-events-none"
           />
-          
-          {/* Subtle border line at the split edge */}
-          <div className="absolute top-[66.5vh] left-0 right-0 border-b border-white/10 pointer-events-none" />
 
           {/* Portrait Layout content aligned precisely with the main app */}
           {renderTextContent()}
+          
+          {/* Subtle border line at the split edge */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={transitionProps}
+            className="absolute top-[calc(var(--vh,1vh)*66.5)] left-0 right-0 border-b border-white/10 pointer-events-none" 
+          />
         </div>
       </motion.div>
 
       {/* Bottom Half of the Split */}
       <motion.div
         initial={{ y: 0 }}
-        animate={{ y: '4.75vh' }}
+        animate={{ y: 'calc(var(--vh, 1vh) * 4.75)' }}
         exit={{ y: 0 }}
         transition={transitionProps}
         onClick={onClose}
@@ -429,20 +424,8 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
             className="w-full h-full object-cover object-[49%_center]"
           />
           {/* #89CC04 Tint Overlays */}
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.95 }}
-            exit={{ opacity: 0 }}
-            transition={transitionProps}
-            className="absolute inset-0 bg-[#89CC04] mix-blend-color pointer-events-none" 
-          />
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.35 }}
-            exit={{ opacity: 0 }}
-            transition={transitionProps}
-            className="absolute inset-0 bg-[#89CC04] mix-blend-multiply pointer-events-none" 
-          />
+          <div className="absolute inset-0 bg-[#89CC04] mix-blend-color opacity-95 pointer-events-none" />
+          <div className="absolute inset-0 bg-[#89CC04]/35 mix-blend-multiply pointer-events-none" />
 
           {/* Dim Overlay to make the split feel smoother */}
           <motion.div 
@@ -453,11 +436,17 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
             className="absolute inset-0 bg-black/60 pointer-events-none"
           />
 
-          {/* Subtle border line at the split edge */}
-          <div className="absolute top-[66.5vh] left-0 right-0 border-t border-white/10 pointer-events-none" />
-
           {/* Portrait Layout content aligned precisely with the main app */}
           {renderTextContent()}
+
+          {/* Subtle border line at the split edge */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={transitionProps}
+            className="absolute top-[calc(var(--vh,1vh)*66.5)] left-0 right-0 border-t border-white/10 pointer-events-none" 
+          />
         </div>
       </motion.div>
     </motion.div>
@@ -581,6 +570,20 @@ export default function App() {
   const [showContactPortrait, setShowContactPortrait] = useState(false);
   
   const bgAudioRef = React.useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    let lastWidth = window.innerWidth;
+    const setVh = () => {
+      if (window.innerWidth !== lastWidth || !document.documentElement.style.getPropertyValue('--vh')) {
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+        lastWidth = window.innerWidth;
+      }
+    };
+    setVh();
+    window.addEventListener('resize', setVh);
+    return () => window.removeEventListener('resize', setVh);
+  }, []);
 
   useEffect(() => {
     if (scene === 'main-app' && bgAudioRef.current) {
@@ -801,7 +804,7 @@ class ClockAudio {
 
   return (
     <main 
-      className="relative w-screen h-screen overflow-hidden bg-black flex items-center justify-center select-none" 
+      className="relative w-screen h-[calc(var(--vh,1vh)*100)] overflow-hidden bg-black flex items-center justify-center select-none" 
       id="main-container"
     >
       <audio 
@@ -953,7 +956,7 @@ class ClockAudio {
         <div className="absolute inset-0 z-10 overflow-y-auto no-scrollbar scroll-smooth snap-y snap-mandatory">
           <div className="w-full flex flex-col">
             {/* The 100vh Main Screen View */}
-            <div className="relative w-full h-screen shrink-0 flex items-center justify-center overflow-hidden snap-start snap-always">
+            <div className="relative w-full h-[calc(var(--vh,1vh)*100)] shrink-0 flex items-center justify-center overflow-hidden snap-start snap-always">
               {/* Background Image */}
               <img
                 id="reference-image"
@@ -1029,7 +1032,7 @@ class ClockAudio {
                 className="hidden portrait:flex absolute inset-0 pointer-events-none"
               >
                 {/* Anchor point exactly at 66.5vh, centered horizontally */}
-                <div className="absolute left-1/2 -translate-x-1/2 w-fit pointer-events-auto flex flex-col items-center" style={{ top: '66.5vh' }}>
+                <div className="absolute left-1/2 -translate-x-1/2 w-fit pointer-events-auto flex flex-col items-center" style={{ top: 'calc(var(--vh, 1vh) * 66.5)' }}>
                   
                   {/* Top Row - positioned absolute above the center */}
                   <div className="absolute bottom-full mb-[3px] w-full flex justify-between items-end">
@@ -1037,7 +1040,8 @@ class ClockAudio {
                       <button 
                         id="btn-contact-portrait" 
                         onClick={() => setShowContactPortrait(true)}
-                        className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
+                        className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
+                        style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                       >
                         contact
                       </button>
@@ -1045,7 +1049,8 @@ class ClockAudio {
                     <button 
                       id="btn-history-portrait" 
                       onClick={() => setShowHistory(true)}
-                      className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"
+                      className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"
+                        style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                     >
                       his-tory
                     </button>
@@ -1065,14 +1070,16 @@ class ClockAudio {
                       <button 
                         id="btn-info-portrait" 
                         onClick={() => setShowInfo(true)}
-                        className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
+                        className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
+                        style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                       >
                         info
                       </button>
                       <button 
                         id="btn-archive-portrait" 
                         onClick={() => setShowArchive(true)}
-                        className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"
+                        className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"
+                        style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                       >
                         archive
                       </button>
@@ -1085,7 +1092,7 @@ class ClockAudio {
             {/* Flat Solid Black Footer (Thinner, tight, black layout with snug logos and prominent dark black hint shadow) */}
             <div
               id="app-footer"
-              className="relative w-full min-h-[15vh] bg-black border-t border-white/10 shrink-0 z-20 flex items-center justify-center py-6 shadow-[0_-8px_30px_rgba(0,0,0,0.9)] snap-end snap-always"
+              className="relative w-full min-h-[calc(var(--vh,1vh)*15)] bg-black border-t border-white/10 shrink-0 z-20 flex items-center justify-center py-6 shadow-[0_-8px_30px_rgba(0,0,0,0.9)] snap-end snap-always"
             >
               <div className="flex flex-row flex-nowrap items-center justify-center gap-[clamp(6px,2vw,24px)] px-4 md:px-6 max-w-5xl w-full">
                 {/* Logo 1: BlvdGuestBook (Kích thước thống nhất, font Arial Medium chuẩn) */}

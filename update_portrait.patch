@@ -1,0 +1,120 @@
+--- src/App.tsx
++++ src/App.tsx
+@@ -198,72 +198,39 @@
+   const transitionProps = { duration: 0.8, ease: [0.16, 1, 0.3, 1] };
+ 
+-  const renderTextContent = () => (
+-    <div className="absolute inset-0 pointer-events-none">
+-      {/* Anchor point exactly at 66.5vh, centered horizontally */}
+-      <div className="absolute left-1/2 -translate-x-1/2 w-fit flex flex-col items-center" style={{ top: 'calc(var(--vh, 1vh) * 66.5)' }}>
+-        
+-        {/* Top Row - positioned absolute above the center */}
+-        <div className="absolute bottom-full mb-[3px] w-full flex justify-between items-end">
+-          <motion.span 
+-            variants={contactVariants}
+-            initial="initial"
+-            animate="animate"
+-            exit="initial"
+-            transition={transitionProps}
+-            className="font-archivo hover-italic-transition text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none relative left-[0.1em]"
+-            style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
+-          >
+-            contact
+-          </motion.span>
+-          <motion.span 
+-            variants={otherVariants}
+-            initial="initial"
+-            animate="animate"
+-            exit="initial"
+-            transition={transitionProps}
+-            className="font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none"
+-            style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
+-          >
+-            his-tory
+-          </motion.span>
+-        </div>
+-
+-        {/* Logo and Bottom Row - normal flow, just pushed down by 3px */}
+-        <div className="mt-[3px] flex flex-col w-full">
+-          <h1 className="font-archivo text-white font-black text-[clamp(2.5rem,11.5vw,6rem)] leading-none tracking-tighter select-none whitespace-nowrap">
+-            Boulevard1st
+-          </h1>
+-          
+-          {/* Bottom Row - spaced below logo by 6px */}
+-          <div className="mt-[6px] w-full flex justify-between items-start">
+-            <motion.span 
+-              variants={otherVariants}
+-              initial="initial"
+-              animate="animate"
+-              exit="initial"
+-              transition={transitionProps}
+-              className="font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none relative left-[0.1em]"
+-              style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
+-            >
+-              info
+-            </motion.span>
+-            <motion.span 
+-              variants={otherVariants}
+-              initial="initial"
+-              animate="animate"
+-              exit="initial"
+-              transition={transitionProps}
+-              className="font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none"
+-              style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
+-            >
+-              archive
+-            </motion.span>
+-          </div>
+-        </div>
+-      </div>
+-    </div>
+-  );
++  const renderTopText = () => (
++    <div className="absolute inset-0 pointer-events-none">
++      <div className="absolute left-1/2 -translate-x-1/2 w-fit flex flex-col items-center" style={{ top: 'calc(var(--vh, 1vh) * 66.5)' }}>
++        <div className="absolute bottom-full mb-[3px] w-full flex justify-between items-end">
++          <motion.span variants={contactVariants} initial="initial" animate="animate" exit="initial" transition={transitionProps} className="font-archivo hover-italic-transition text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none relative left-[0.1em]" style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}>contact</motion.span>
++          <motion.span variants={otherVariants} initial="initial" animate="animate" exit="initial" transition={transitionProps} className="font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none" style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}>his-tory</motion.span>
++        </div>
++      </div>
++    </div>
++  );
++
++  const renderBottomText = () => (
++    <div className="absolute inset-0 pointer-events-none">
++      <div className="absolute left-1/2 -translate-x-1/2 w-fit flex flex-col items-center" style={{ top: 'calc(var(--vh, 1vh) * 66.5)' }}>
++        <div className="mt-[3px] flex flex-col w-full">
++          <h1 className="font-archivo text-white font-black text-[clamp(2.5rem,11.5vw,6rem)] leading-none tracking-tighter select-none whitespace-nowrap">
++            Boulevard1st
++          </h1>
++          <div className="mt-[6px] w-full flex justify-between items-start">
++            <motion.span variants={otherVariants} initial="initial" animate="animate" exit="initial" transition={transitionProps} className="font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none relative left-[0.1em]" style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}>info</motion.span>
++            <motion.span variants={otherVariants} initial="initial" animate="animate" exit="initial" transition={transitionProps} className="font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none" style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}>archive</motion.span>
++          </div>
++        </div>
++      </div>
++    </div>
++  );
+ 
+   return (
+     <motion.div 
+       initial={{ opacity: 1 }}
+-      exit={{ opacity: 1, transition: { duration: 0.8 } }}
++      animate={{ opacity: 1 }}
++      exit={{ opacity: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }}
+       className="fixed top-0 left-0 w-full h-[calc(var(--vh,1vh)*100)] mountaineer-overlay z-[100] items-center justify-center hidden portrait:flex"
+     >
+@@ -401,7 +368,7 @@
+ 
+           {/* Portrait Layout content aligned precisely with the main app */}
+-          {renderTextContent()}
++          {renderTopText()}
+         </div>
+       </motion.div>
+@@ -439,7 +406,7 @@
+ 
+           {/* Portrait Layout content aligned precisely with the main app */}
+-          {renderTextContent()}
++          {renderBottomText()}
+         </div>
+       </motion.div>
