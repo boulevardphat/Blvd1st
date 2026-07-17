@@ -44,168 +44,121 @@ const DecryptedText = ({ text, delay = 0 }: { text: string, delay?: number }) =>
   return <span>{display || '\u00A0'}</span>;
 };
 
-// --- Landscape Contact Screen Component (Split Screen Vertical Effect) ---
-const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
-  const [copyFeedback, setCopyFeedback] = useState<string | null>(null);
+// --- Landscape Contact Menu ---
+const LandscapeContactMenu = () => {
+  const [copiedPersonal, setCopiedPersonal] = useState(false);
+  const [copiedSchool, setCopiedSchool] = useState(false);
 
-  const handleCopy = (email: string, label: string) => {
+  const handleCopy = (email: string, type: 'personal' | 'school') => {
     navigator.clipboard.writeText(email).then(() => {
-      setCopyFeedback(label);
-      setTimeout(() => setCopyFeedback(null), 2000);
+      if (type === 'personal') {
+        setCopiedPersonal(true);
+        setTimeout(() => setCopiedPersonal(false), 2000);
+      } else {
+        setCopiedSchool(true);
+        setTimeout(() => setCopiedSchool(false), 2000);
+      }
     });
   };
 
-  const cutPosition = '20vw';
-  const barWidth = '6vw';
-  const rightInset = '80vw'; // 100 - 20
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.05,
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: -12, scale: 0.95 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1,
+      transition: {
+        duration: 0.25,
+        ease: [0.16, 1, 0.3, 1]
+      }
+    }
+  };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black items-center justify-center hidden landscape:flex">
-      {/* Background container that is pure black to show through the gap */}
-      <div className="absolute inset-0 bg-black z-0" onClick={onClose} />
-
-      {/* The Contact Info revealed in the gap */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="absolute inset-y-0 flex flex-col justify-center items-center z-10 select-none border-x border-white/10"
-        style={{ left: cutPosition, width: barWidth }}
-        onClick={(e) => e.stopPropagation()}
+    <motion.div 
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="absolute top-[103%] left-0 flex flex-col gap-[clamp(0.24rem,0.48vw,0.6rem)] select-none z-50 w-[clamp(175px,19.25vw,240px)] pointer-events-auto"
+    >
+      {/* Social Card */}
+      <motion.div 
+        variants={itemVariants}
+        className="bg-black border border-white/20 shadow-lg rounded-md flex flex-row justify-center items-center gap-[clamp(1.0rem,1.5vw,1.8rem)] px-[clamp(0.6rem,0.9vw,1.3rem)] py-[clamp(0.55rem,0.8vw,1.0rem)] w-full"
       >
-        {/* Copy Notification Toast */}
-        <div className="absolute top-[20%] left-1/2 -translate-x-1/2 h-8 flex items-center justify-center pointer-events-none">
-          {copyFeedback && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="bg-white text-black text-[11px] font-mono tracking-widest px-4 py-1.5 uppercase font-bold rounded-sm whitespace-nowrap"
-            >
-              ĐÃ SAO CHÉP {copyFeedback}
-            </motion.div>
+        <a 
+          href="https://www.facebook.com/hellothisisBLVD17/" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-white hover:text-white/80 transition-colors cursor-pointer"
+        >
+          <Facebook strokeWidth={2} className="w-[clamp(21px,2.1vw,27px)] h-[clamp(21px,2.1vw,27px)]" />
+        </a>
+        <a 
+          href="https://www.instagram.com/endenogatai_dah" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-white hover:text-white/80 transition-colors cursor-pointer"
+        >
+          <Instagram strokeWidth={2} className="w-[clamp(21px,2.1vw,27px)] h-[clamp(21px,2.1vw,27px)]" />
+        </a>
+        <a 
+          href="https://www.threads.com/@endenogatai_dah" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-white hover:text-white/80 transition-colors cursor-pointer"
+        >
+          <AtSign strokeWidth={2} className="w-[clamp(21px,2.1vw,27px)] h-[clamp(21px,2.1vw,27px)]" />
+        </a>
+      </motion.div>
+
+      {/* Email Cá Nhân Card */}
+      <motion.button
+        variants={itemVariants}
+        onClick={() => handleCopy('thuanphat26092008@gmail.com', 'personal')}
+        className="bg-black border border-white/20 shadow-lg rounded-md flex items-center justify-between gap-2 px-[clamp(0.6rem,0.9vw,1.3rem)] py-[clamp(0.55rem,0.8vw,1.0rem)] hover:border-white/40 hover:bg-white/10 transition-colors cursor-pointer text-left w-full"
+      >
+        <span className="text-white font-sans font-medium text-[clamp(1.1rem,1.25vw,1.4rem)] tracking-wide whitespace-nowrap">
+          Email cá nhân
+        </span>
+        <span className="text-white">
+          {copiedPersonal ? (
+            <Check className="w-[clamp(18px,2.0vw,24px)] h-[clamp(18px,2.0vw,24px)] text-white" />
+          ) : (
+            <Copy className="w-[clamp(18px,2.0vw,24px)] h-[clamp(18px,2.0vw,24px)] text-white" />
           )}
-        </div>
+        </span>
+      </motion.button>
 
-        {/* Icons Column */}
-        <div className="flex flex-col items-center gap-8">
-          {/* Social MXH Group */}
-          <div className="flex flex-col items-center gap-5">
-            <a href="https://www.facebook.com/hellothisisBLVD17/" target="_blank" rel="noopener noreferrer" className="text-white hover:scale-115 transition-transform active:scale-95 cursor-pointer"><Facebook strokeWidth={1.5} size={28} /></a>
-            <a href="https://www.instagram.com/endenogatai_dah" target="_blank" rel="noopener noreferrer" className="text-white hover:scale-115 transition-transform active:scale-95 cursor-pointer"><Instagram strokeWidth={1.5} size={28} /></a>
-            <a href="https://www.threads.com/@endenogatai_dah" target="_blank" rel="noopener noreferrer" className="text-white hover:scale-115 transition-transform active:scale-95 cursor-pointer"><AtSign strokeWidth={1.5} size={28} /></a>
-          </div>
-
-          {/* Elegant Divider */}
-          <div className="w-8 h-[1px] bg-white/20" />
-
-          {/* Email Group */}
-          <div className="flex flex-col items-center gap-5">
-            <button onClick={(e) => { e.stopPropagation(); handleCopy('thuanphat26092008@gmail.com', 'EMAIL CÁ NHÂN'); }} className="text-white hover:scale-115 transition-transform active:scale-95 cursor-pointer"><Copy strokeWidth={1.5} size={28} /></button>
-            <button onClick={(e) => { e.stopPropagation(); handleCopy('phatnt.a2.2326@gmail.com', 'EMAIL HỌC TẬP'); }} className="text-white hover:scale-115 transition-transform active:scale-95 cursor-pointer"><Copy strokeWidth={1.5} size={28} className="rotate-12" /></button>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Left Half (0 to 30vw) - Stays fixed */}
-      <motion.div
-        style={{ clipPath: `inset(0px ${rightInset} 0px 0px)` }}
-        onClick={onClose}
-        className="absolute inset-0 overflow-hidden z-20 cursor-pointer"
+      {/* Email Học Tập Card */}
+      <motion.button
+        variants={itemVariants}
+        onClick={() => handleCopy('phatnt.a2.2326@gmail.com', 'school')}
+        className="bg-black border border-white/20 shadow-lg rounded-md flex items-center justify-between gap-2 px-[clamp(0.6rem,0.9vw,1.3rem)] py-[clamp(0.55rem,0.8vw,1.0rem)] hover:border-white/40 hover:bg-white/10 transition-colors cursor-pointer text-left w-full"
       >
-        <div className="absolute inset-0">
-          <img
-            src="https://i.ibb.co/vy4ykmw/vespertine.png"
-            className="w-full h-full object-cover portrait:object-[49%_center]"
-          />
-          {/* Tint Overlays */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.95 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-0 bg-[#89CC04] mix-blend-color pointer-events-none"
-          />
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.35 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-0 bg-[#89CC04] mix-blend-multiply pointer-events-none"
-          />
-          
-          <div className="absolute inset-0 flex-col justify-between p-[6.5%] pointer-events-none flex">
-            <div className="flex justify-between items-start w-full">
-              <span className="text-white font-archivo-narrow font-extralight hover-italic-transition text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none tracking-tight select-none">
-                contact
-              </span>
-            </div>
-            <div className="relative flex justify-between items-baseline w-full">
-              <span className="text-white/90 font-archivo-narrow font-extralight hover-italic-transition text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none tracking-tight select-none">
-                info
-              </span>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Right Half (30vw to 100vw) - Moves to the right by barWidth */}
-      <motion.div
-        initial={{ x: 0 }}
-        animate={{ x: barWidth }}
-        exit={{ x: 0 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        style={{ clipPath: `inset(0px 0px 0px ${cutPosition})` }}
-        onClick={onClose}
-        className="absolute inset-0 overflow-hidden z-20 cursor-pointer"
-      >
-        <div className="absolute inset-0">
-          <img
-            src="https://i.ibb.co/vy4ykmw/vespertine.png"
-            className="w-full h-full object-cover portrait:object-[49%_center]"
-          />
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.95 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-0 bg-[#89CC04] mix-blend-color pointer-events-none"
-          />
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.35 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-0 bg-[#89CC04] mix-blend-multiply pointer-events-none"
-          />
-          
-          {/* Logo is intentionally omitted here based on user request */}
-        </div>
-      </motion.div>
-
-      {/* Fixed buttons on top z-index (his-tory, archive) - Unmoving */}
-      <div className="absolute inset-0 flex-col justify-between p-[6.5%] pointer-events-none flex z-30">
-        <div className="flex justify-between items-start w-full">
-          <div /> {/* Spacer */}
-          <span 
-            className="pointer-events-auto cursor-pointer hover:text-white hover-italic-transition text-white/90 font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none tracking-tight select-none"
-            onClick={(e) => { e.stopPropagation(); onClose(); }}
-          >
-            his-tory
-          </span>
-        </div>
-        <div className="relative flex justify-between items-baseline w-full">
-          <div /> {/* Spacer */}
-          <span 
-            className="pointer-events-auto cursor-pointer hover:text-white hover-italic-transition text-white/90 font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none tracking-tight select-none"
-            onClick={(e) => { e.stopPropagation(); onClose(); }}
-          >
-            archive
-          </span>
-        </div>
-      </div>
-    </div>
+        <span className="text-white font-sans font-medium text-[clamp(1.1rem,1.25vw,1.4rem)] tracking-wide whitespace-nowrap">
+          Email học tập
+        </span>
+        <span className="text-white">
+          {copiedSchool ? (
+            <Check className="w-[clamp(18px,2.0vw,24px)] h-[clamp(18px,2.0vw,24px)] text-white" />
+          ) : (
+            <Copy className="w-[clamp(18px,2.0vw,24px)] h-[clamp(18px,2.0vw,24px)] text-white" />
+          )}
+        </span>
+      </motion.button>
+    </motion.div>
   );
 };
 
@@ -220,10 +173,112 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
     });
   };
 
+  const contactVariants = {
+    initial: { 
+      "--font-wght": 200, 
+      "--font-wdth": 62, 
+      color: "rgba(255, 255, 255, 0.9)" 
+    } as any,
+    animate: { 
+      "--font-wght": 600, 
+      "--font-wdth": 100, 
+      color: "rgba(255, 255, 255, 1)" 
+    } as any,
+  };
+
+  const otherVariants = {
+    initial: { 
+      "--font-wght": 200, 
+      "--font-wdth": 62, 
+      color: "rgba(255, 255, 255, 0.9)" 
+    } as any,
+    animate: { 
+      "--font-wght": 100, 
+      "--font-wdth": 62, 
+      color: "rgba(255, 255, 255, 0.4)" 
+    } as any,
+  };
+
+  const transitionProps = { duration: 0.8, ease: [0.16, 1, 0.3, 1] };
+
+  const renderTextContent = () => (
+    <div className="absolute inset-0 pointer-events-none">
+      {/* Anchor point exactly at 66.5vh, centered horizontally */}
+      <div className="absolute left-1/2 -translate-x-1/2 w-fit flex flex-col items-center" style={{ top: '66.5vh' }}>
+        
+        {/* Top Row - positioned absolute above the center */}
+        <div className="absolute bottom-full mb-[3px] w-full flex justify-between items-end">
+          <motion.span 
+            variants={contactVariants}
+            initial="initial"
+            animate="animate"
+            exit="initial"
+            transition={transitionProps}
+            className="font-archivo hover-italic-transition text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none relative left-[0.1em]"
+            style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
+          >
+            contact
+          </motion.span>
+          <motion.span 
+            variants={otherVariants}
+            initial="initial"
+            animate="animate"
+            exit="initial"
+            transition={transitionProps}
+            className="font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none"
+            style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
+          >
+            his-tory
+          </motion.span>
+        </div>
+
+        {/* Logo and Bottom Row - normal flow, just pushed down by 3px */}
+        <div className="mt-[3px] flex flex-col w-full">
+          <h1 className="font-archivo text-white font-black text-[clamp(2.5rem,11.5vw,6rem)] leading-none tracking-tighter select-none whitespace-nowrap">
+            Boulevard1st
+          </h1>
+          
+          {/* Bottom Row - spaced below logo by 6px */}
+          <div className="mt-[6px] w-full flex justify-between items-start">
+            <motion.span 
+              variants={otherVariants}
+              initial="initial"
+              animate="animate"
+              exit="initial"
+              transition={transitionProps}
+              className="font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none relative left-[0.1em]"
+              style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
+            >
+              info
+            </motion.span>
+            <motion.span 
+              variants={otherVariants}
+              initial="initial"
+              animate="animate"
+              exit="initial"
+              transition={transitionProps}
+              className="font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none"
+              style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
+            >
+              archive
+            </motion.span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
-    <div className="fixed inset-0 mountaineer-overlay z-[100] bg-black items-center justify-center hidden portrait:flex">
+    <motion.div 
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 1, transition: { duration: 0.8 } }}
+      className="fixed inset-0 mountaineer-overlay z-[100] items-center justify-center hidden portrait:flex"
+    >
       {/* Background container that is pure black to show through the gap */}
-      <div className="absolute inset-0 bg-black z-0" onClick={onClose} />
+      <div 
+        className="absolute inset-0 bg-black z-0" 
+        onClick={onClose} 
+      />
 
       {/* Middle black band with social and email icons (revealed when screen tears) */}
       <motion.div
@@ -236,16 +291,18 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
       >
         {/* Copy Notification Toast */}
         <div className="absolute -top-10 left-1/2 -translate-x-1/2 h-8 flex items-center justify-center pointer-events-none">
-          {copyFeedback && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="bg-white text-black text-[11px] font-mono tracking-widest px-4 py-1.5 uppercase font-bold rounded-sm whitespace-nowrap"
-            >
-              ĐÃ SAO CHÉP {copyFeedback}
-            </motion.div>
-          )}
+          <AnimatePresence>
+            {copyFeedback && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="bg-white text-black text-[11px] font-mono tracking-widest px-4 py-1.5 uppercase font-bold rounded-sm whitespace-nowrap"
+              >
+                ĐÃ SAO CHÉP {copyFeedback}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Icons Row */}
@@ -308,12 +365,12 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
         </div>
       </motion.div>
 
-      {/* Top Half of the Split (Displays precisely the top 66.5% of the screen containing top-row buttons) */}
+      {/* Top Half of the Split */}
       <motion.div
         initial={{ y: 0 }}
         animate={{ y: '-4.75vh' }}
         exit={{ y: 0 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        transition={transitionProps}
         onClick={onClose}
         style={{ clipPath: 'inset(0px 0px 33.5% 0px)' }}
         className="absolute inset-0 overflow-hidden z-20 cursor-pointer"
@@ -323,67 +380,45 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
             src="https://i.ibb.co/vy4ykmw/vespertine.png"
             className="w-full h-full object-cover object-[49%_center]"
           />
-          {/* #89CC04 Tint Overlays to match scene background */}
-          <motion.div
+          {/* #89CC04 Tint Overlays */}
+          <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.95 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-0 bg-[#89CC04] mix-blend-color pointer-events-none"
+            transition={transitionProps}
+            className="absolute inset-0 bg-[#89CC04] mix-blend-color pointer-events-none" 
           />
-          <motion.div
+          <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.35 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-0 bg-[#89CC04] mix-blend-multiply pointer-events-none"
+            transition={transitionProps}
+            className="absolute inset-0 bg-[#89CC04] mix-blend-multiply pointer-events-none" 
+          />
+          
+          {/* Dim Overlay to make the split feel smoother */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={transitionProps}
+            className="absolute inset-0 bg-black/60 pointer-events-none"
           />
           
           {/* Subtle border line at the split edge */}
           <div className="absolute top-[66.5vh] left-0 right-0 border-b border-white/10 pointer-events-none" />
 
           {/* Portrait Layout content aligned precisely with the main app */}
-          <div className="absolute inset-0 pointer-events-none">
-            {/* Anchor point exactly at 66.5vh, centered horizontally */}
-            <div className="absolute left-1/2 -translate-x-1/2 w-fit flex flex-col items-center" style={{ top: '66.5vh' }}>
-              
-              {/* Top Row - positioned absolute above the center */}
-              <div className="absolute bottom-full mb-[3px] w-full flex justify-between items-end">
-                <span className="text-white font-archivo-narrow font-medium hover-italic-transition text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none relative left-[0.1em]">
-                  contact
-                </span>
-                <span className="text-white/40 font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none">
-                  his-tory
-                </span>
-              </div>
-
-              {/* Logo and Bottom Row - normal flow, just pushed down by 3px */}
-              <div className="mt-[3px] flex flex-col w-full">
-                <h1 className="font-archivo text-white font-black text-[clamp(2.5rem,11.5vw,6rem)] leading-none tracking-tighter select-none whitespace-nowrap">
-                  Boulevard1st
-                </h1>
-                
-                {/* Bottom Row - spaced below logo by 6px */}
-                <div className="mt-[6px] w-full flex justify-between items-start">
-                  <span className="text-white/40 font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none relative left-[0.1em]">
-                    info
-                  </span>
-                  <span className="text-white/40 font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none">
-                    archive
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
+          {renderTextContent()}
         </div>
       </motion.div>
 
-      {/* Bottom Half of the Split (Displays precisely the bottom 33.5% of the screen containing the Logo and bottom buttons) */}
+      {/* Bottom Half of the Split */}
       <motion.div
         initial={{ y: 0 }}
         animate={{ y: '4.75vh' }}
         exit={{ y: 0 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        transition={transitionProps}
         onClick={onClose}
         style={{ clipPath: 'inset(66.5% 0px 0px 0px)' }}
         className="absolute inset-0 overflow-hidden z-20 cursor-pointer"
@@ -393,61 +428,39 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
             src="https://i.ibb.co/vy4ykmw/vespertine.png"
             className="w-full h-full object-cover object-[49%_center]"
           />
-          {/* #89CC04 Tint Overlays to match scene background */}
-          <motion.div
+          {/* #89CC04 Tint Overlays */}
+          <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.95 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-0 bg-[#89CC04] mix-blend-color pointer-events-none"
+            transition={transitionProps}
+            className="absolute inset-0 bg-[#89CC04] mix-blend-color pointer-events-none" 
           />
-          <motion.div
+          <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.35 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-0 bg-[#89CC04] mix-blend-multiply pointer-events-none"
+            transition={transitionProps}
+            className="absolute inset-0 bg-[#89CC04] mix-blend-multiply pointer-events-none" 
           />
-          
+
+          {/* Dim Overlay to make the split feel smoother */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={transitionProps}
+            className="absolute inset-0 bg-black/60 pointer-events-none"
+          />
+
           {/* Subtle border line at the split edge */}
           <div className="absolute top-[66.5vh] left-0 right-0 border-t border-white/10 pointer-events-none" />
 
           {/* Portrait Layout content aligned precisely with the main app */}
-          <div className="absolute inset-0 pointer-events-none">
-            {/* Anchor point exactly at 66.5vh, centered horizontally */}
-            <div className="absolute left-1/2 -translate-x-1/2 w-fit flex flex-col items-center" style={{ top: '66.5vh' }}>
-              
-              {/* Top Row - positioned absolute above the center */}
-              <div className="absolute bottom-full mb-[3px] w-full flex justify-between items-end">
-                <span className="text-white font-archivo-narrow font-medium hover-italic-transition text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none relative left-[0.1em]">
-                  contact
-                </span>
-                <span className="text-white/40 font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none">
-                  his-tory
-                </span>
-              </div>
-
-              {/* Logo and Bottom Row - normal flow, just pushed down by 3px */}
-              <div className="mt-[3px] flex flex-col w-full">
-                <h1 className="font-archivo text-white font-black text-[clamp(2.5rem,11.5vw,6rem)] leading-none tracking-tighter select-none whitespace-nowrap">
-                  Boulevard1st
-                </h1>
-                
-                {/* Bottom Row - spaced below logo by 6px */}
-                <div className="mt-[6px] w-full flex justify-between items-start">
-                  <span className="text-white/40 font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none relative left-[0.1em]">
-                    info
-                  </span>
-                  <span className="text-white/40 font-archivo-narrow font-extralight text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none">
-                    archive
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
+          {renderTextContent()}
         </div>
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -937,10 +950,10 @@ class ClockAudio {
 
       {/* Main App Screen (Background Image & Interactive Interface Layouts) */}
       {scene === 'main-app' && (
-        <div className="absolute inset-0 z-10 overflow-y-auto no-scrollbar scroll-smooth">
+        <div className="absolute inset-0 z-10 overflow-y-auto no-scrollbar scroll-smooth snap-y snap-mandatory">
           <div className="w-full flex flex-col">
             {/* The 100vh Main Screen View */}
-            <div className="relative w-full h-screen shrink-0 flex items-center justify-center overflow-hidden">
+            <div className="relative w-full h-screen shrink-0 flex items-center justify-center overflow-hidden snap-start snap-always">
               {/* Background Image */}
               <img
                 id="reference-image"
@@ -960,11 +973,12 @@ class ClockAudio {
                   <div className="relative pointer-events-auto">
                     <button 
                       id="btn-contact-landscape" 
-                      onClick={() => setShowContactLandscape(true)}
+                      onClick={() => setShowContactLandscape(!showContactLandscape)}
                       className="text-white/90 hover:text-white hover-italic-transition font-archivo-narrow font-extralight text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
                     >
                       contact
                     </button>
+                    {showContactLandscape && <LandscapeContactMenu />}
                   </div>
                   
                   <button 
@@ -1071,19 +1085,19 @@ class ClockAudio {
             {/* Flat Solid Black Footer (Thinner, tight, black layout with snug logos and prominent dark black hint shadow) */}
             <div
               id="app-footer"
-              className="relative w-full min-h-[15vh] bg-black border-t border-white/10 shrink-0 z-20 flex items-center justify-center py-6 shadow-[0_-8px_30px_rgba(0,0,0,0.9)]"
+              className="relative w-full min-h-[15vh] bg-black border-t border-white/10 shrink-0 z-20 flex items-center justify-center py-6 shadow-[0_-8px_30px_rgba(0,0,0,0.9)] snap-end snap-always"
             >
-              <div className="flex flex-row flex-wrap items-center justify-center gap-6 md:gap-8 px-6 max-w-5xl w-full">
+              <div className="flex flex-row flex-nowrap items-center justify-center gap-[clamp(6px,2vw,24px)] px-4 md:px-6 max-w-5xl w-full">
                 {/* Logo 1: BlvdGuestBook (Kích thước thống nhất, font Arial Medium chuẩn) */}
                 <a 
                   id="footer-logo-guestbook"
                   href="https://blvdguestbook.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-[240px] h-[54px] bg-white border-2 border-black rounded-none shadow-[3px_3px_0px_0px_#8ace00] hover:shadow-[4px_4px_0px_0px_#8ace00] hover:-translate-x-[1px] hover:-translate-y-[1px] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-150 select-none cursor-pointer"
+                  className="flex items-center justify-center w-[clamp(96px,28vw,240px)] h-[clamp(32px,8.5vw,54px)] bg-white border border-black md:border-2 rounded-none shadow-[2px_2px_0px_0px_#8ace00] md:shadow-[3px_3px_0px_0px_#8ace00] hover:shadow-[4px_4px_0px_0px_#8ace00] hover:-translate-x-[1px] hover:-translate-y-[1px] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-150 select-none cursor-pointer"
                 >
                   <span 
-                    className="text-xl font-medium text-black tracking-tighter leading-none select-none"
+                    className="text-[clamp(9px,2.5vw,20px)] font-medium text-black tracking-tighter leading-none select-none"
                     style={{ fontFamily: "Arial, sans-serif" }}
                   >
                     BlvdGuestBook
@@ -1096,10 +1110,10 @@ class ClockAudio {
                   href="https://boulevard1st.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-[240px] h-[54px] bg-white border-2 border-black rounded-none cursor-pointer select-none transition-all duration-300 hover:bg-black group"
+                  className="flex items-center justify-center w-[clamp(96px,28vw,240px)] h-[clamp(32px,8.5vw,54px)] bg-white border border-black md:border-2 rounded-none cursor-pointer select-none transition-all duration-300 hover:bg-black group"
                 >
                   <span 
-                    className="font-archivo text-black font-black text-xl tracking-tighter leading-none whitespace-nowrap group-hover:text-white transition-colors duration-300"
+                    className="font-archivo text-black font-black text-[clamp(9px,2.5vw,20px)] tracking-tighter leading-none whitespace-nowrap group-hover:text-white transition-colors duration-300"
                   >
                     Boulevard1st
                   </span>
@@ -1111,20 +1125,16 @@ class ClockAudio {
                   href="https://blvdmusicspace.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-[240px] h-[54px] bg-white rounded-none border-2 border-white/95 transition-all duration-300 ease-out hover:bg-slate-950 hover:border-[#0066ff] hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-[0_0_25px_rgba(0,102,255,0.9),0_0_50px_rgba(0,102,255,0.5)] group cursor-pointer animate-led-flicker select-none"
+                  className="flex items-center justify-center w-[clamp(96px,28vw,240px)] h-[clamp(32px,8.5vw,54px)] bg-white rounded-none border border-white/95 md:border-2 transition-all duration-300 ease-out hover:bg-slate-950 hover:border-[#0066ff] hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-[0_0_25px_rgba(0,102,255,0.9),0_0_50px_rgba(0,102,255,0.5)] group cursor-pointer animate-led-flicker select-none"
                 >
                   <h1 
-                    className="text-lg font-black text-black tracking-tighter leading-none text-center transition-colors duration-300 group-hover:text-white group-hover:drop-shadow-[0_0_8px_rgba(0,102,255,0.8)] font-be-vietnam whitespace-nowrap"
+                    className="text-[clamp(8.5px,2.2vw,18px)] font-black text-black tracking-tighter leading-none text-center transition-colors duration-300 group-hover:text-white group-hover:drop-shadow-[0_0_8px_rgba(0,102,255,0.8)] font-be-vietnam whitespace-nowrap"
                     style={{ fontFamily: "'Be Vietnam Pro', sans-serif" }}
                   >
                     BlvdMusicSpace
                   </h1>
                 </a>
               </div>
-              {/* Landscape Contact Overlay */}
-              <AnimatePresence>
-                {showContactLandscape && <LandscapeContactScreen onClose={() => setShowContactLandscape(false)} />}
-              </AnimatePresence>
               {/* Portrait Contact Overlay */}
               <AnimatePresence>
                 {showContactPortrait && <PortraitContactScreen onClose={() => setShowContactPortrait(false)} />}
