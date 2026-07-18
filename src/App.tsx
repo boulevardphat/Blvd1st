@@ -333,7 +333,7 @@ export default function App() {
         >
           <div
             id="intro-phat-text"
-            className="font-phat text-[clamp(2.5rem,8vw,5rem)] text-white/90 uppercase select-none tracking-[-0.12em]"
+            className="font-sans text-[clamp(2.5rem,8vw,5rem)] text-white/90 select-none tracking-normal font-normal"
           >
             phát
           </div>
@@ -430,8 +430,13 @@ export default function App() {
 
       {/* Main App Screen (Background Image & Interactive Interface Layouts) */}
       {scene === 'main-app' && (
-        <div className="absolute inset-0 z-10 overflow-y-auto no-scrollbar scroll-smooth">
-          <div className="w-full flex flex-col">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="absolute inset-0 z-10 overflow-y-auto overflow-x-hidden no-scrollbar scroll-smooth"
+        >
+          <div className="w-full flex flex-col overflow-x-hidden">
             {/* The 100vh Main Screen View */}
             <div className="relative w-full h-[calc(var(--vh,1vh)*100)] shrink-0 flex items-center justify-center overflow-hidden ">
               {/* Background Image */}
@@ -547,7 +552,7 @@ export default function App() {
 
                     <button 
                       id="btn-booking-portrait"
-                      className="pointer-events-none text-white/50 font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none"
+                      className="absolute left-1/2 -translate-x-1/2 bottom-0 pointer-events-none text-white/50 font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none"
                       style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                     >
                       booking
@@ -586,7 +591,7 @@ export default function App() {
                       <button 
                         id="btn-friends-portrait"
                         onClick={() => setShowFriends(true)}
-                        className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"
+                        className="absolute left-1/2 -translate-x-1/2 top-0 pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"
                         style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                       >
                         friends
@@ -618,7 +623,7 @@ export default function App() {
                 {showContactPortrait && <PortraitContactScreen onClose={() => setShowContactPortrait(false)} />}
               </AnimatePresence>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* Info Screen: LED Dot Matrix board, clicking anywhere exits */}

@@ -64,7 +64,7 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
             animate="animate"
             exit="initial"
             transition={transitionProps}
-            className="font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none"
+            className="absolute left-1/2 -translate-x-1/2 bottom-0 font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none"
             style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
           >
             booking
@@ -107,7 +107,7 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
               animate="animate"
               exit="initial"
               transition={transitionProps}
-              className="font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none"
+              className="absolute left-1/2 -translate-x-1/2 top-0 font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none"
               style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
             >
               friends
@@ -131,9 +131,10 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
 
   return (
     <motion.div 
-      initial={{ opacity: 1 }}
+      initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       className="fixed top-0 left-0 w-full h-[calc(var(--vh,1vh)*100)] mountaineer-overlay z-[100] items-center justify-center hidden portrait:flex"
     >
       {/* Background container that is pure black to show through the gap */}

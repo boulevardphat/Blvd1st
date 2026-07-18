@@ -70,7 +70,7 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
           >
             {/* Card 1: Socials */}
             <motion.div 
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: -15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.15 }}
               className="w-[12.5rem] h-10 bg-black rounded-lg flex items-center justify-center gap-6 border border-white/5 hover:border-white/20 transition-colors"
@@ -103,7 +103,7 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
 
             {/* Card 2: Personal Email */}
             <motion.div 
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: -15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.28 }}
               onClick={() => handleCopy('thuanphat26092008@gmail.com', 'EMAIL CÁ NHÂN')}
@@ -115,7 +115,7 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
 
             {/* Card 3: School Email */}
             <motion.div 
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: -15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.41 }}
               onClick={() => handleCopy('phatnt.a2.2326@gmail.com', 'EMAIL HỌC TẬP')}
@@ -207,9 +207,9 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
 
   return (
     <motion.div 
-      initial={{ "--dummy": 0 } as any}
-      animate={{ "--dummy": 1 } as any}
-      exit={{ "--dummy": 0 } as any}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       className="fixed top-0 left-0 w-full h-[calc(var(--vh,1vh)*100)] z-[100] items-center justify-center hidden landscape:flex pointer-events-none"
     >
