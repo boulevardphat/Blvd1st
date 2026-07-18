@@ -430,12 +430,7 @@ export default function App() {
 
       {/* Main App Screen (Background Image & Interactive Interface Layouts) */}
       {scene === 'main-app' && (
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          className="absolute inset-0 z-10 overflow-y-auto overflow-x-hidden no-scrollbar scroll-smooth"
-        >
+        <div className="absolute inset-0 z-10 overflow-y-auto overflow-x-hidden no-scrollbar scroll-smooth">
           <div className="w-full flex flex-col overflow-x-hidden">
             {/* The 100vh Main Screen View */}
             <div className="relative w-full h-[calc(var(--vh,1vh)*100)] shrink-0 flex items-center justify-center overflow-hidden ">
@@ -623,7 +618,7 @@ export default function App() {
                 {showContactPortrait && <PortraitContactScreen onClose={() => setShowContactPortrait(false)} />}
               </AnimatePresence>
           </div>
-        </motion.div>
+        </div>
       )}
 
       {/* Info Screen: LED Dot Matrix board, clicking anywhere exits */}

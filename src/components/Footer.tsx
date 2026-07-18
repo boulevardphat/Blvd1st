@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 
 const Footer = () => {
   return (
@@ -6,9 +7,17 @@ const Footer = () => {
       {/* Flat Solid Black Footer (Thinner, tight, black layout with snug logos and prominent dark black hint shadow) */}
             <div
               id="app-footer"
-              className="relative w-[150vw] left-1/2 -translate-x-1/2 min-h-[calc(var(--vh,1vh)*15)] bg-black border-t border-white/10 shrink-0 z-20 flex items-center justify-center py-6 shadow-[0_-12px_40px_rgba(0,0,0,1)]"
+              className="relative w-[150vw] left-1/2 -translate-x-1/2 min-h-[calc(var(--vh,1vh)*15)] bg-black border-t border-white/10 shrink-0 z-20 flex items-center justify-center py-6"
             >
-              <div className="flex flex-row flex-nowrap items-center justify-center gap-[clamp(6px,2vw,24px)] px-4 md:px-6 max-w-5xl w-full">
+              {/* Animated shadow overlay for smooth entry */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
+                className="absolute inset-0 pointer-events-none shadow-[0_-12px_40px_rgba(0,0,0,1)] z-10"
+              />
+
+              <div className="flex flex-row flex-nowrap items-center justify-center gap-[clamp(6px,2vw,24px)] px-4 md:px-6 max-w-5xl w-full relative z-20">
                 {/* Logo 1: BlvdGuestBook (Kích thước thống nhất, font Arial Medium chuẩn) */}
                 <a 
                   id="footer-logo-guestbook"
