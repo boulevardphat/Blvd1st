@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import sys
+
+content = """import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Facebook, Instagram, AtSign, Copy } from 'lucide-react';
 
@@ -63,25 +65,19 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.5 }}
-            className="absolute top-[100%] left-[0.1em] mt-2.5 flex flex-col gap-1.5 pointer-events-auto select-none origin-top-left"
-            style={{ scale: 1.2 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="absolute top-[100%] left-[0.1em] mt-4 flex flex-col gap-2.5 pointer-events-auto select-none"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Card 1: Socials */}
-            <motion.div 
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.15 }}
-              className="w-[12.5rem] h-10 bg-black rounded-lg flex items-center justify-center gap-6 border border-white/5 hover:border-white/20 transition-colors"
-            >
+            <div className="w-[15.5rem] h-12 bg-black rounded-lg flex items-center justify-center gap-6 border border-transparent hover:border-white/20 transition-colors">
               <a 
                 href="https://www.facebook.com/hellothisisBLVD17/" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="text-white hover:text-white/80 transition-colors cursor-pointer"
               >
-                <Facebook strokeWidth={1.5} className="w-[18px] h-[18px]" />
+                <Facebook strokeWidth={1.5} className="w-5 h-5" />
               </a>
               <a 
                 href="https://www.instagram.com/endenogatai_dah" 
@@ -89,7 +85,7 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
                 rel="noopener noreferrer" 
                 className="text-white hover:text-white/80 transition-colors cursor-pointer"
               >
-                <Instagram strokeWidth={1.5} className="w-[18px] h-[18px]" />
+                <Instagram strokeWidth={1.5} className="w-5 h-5" />
               </a>
               <a 
                 href="https://www.threads.com/@endenogatai_dah" 
@@ -97,33 +93,27 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
                 rel="noopener noreferrer" 
                 className="text-white hover:text-white/80 transition-colors cursor-pointer"
               >
-                <AtSign strokeWidth={1.5} className="w-[18px] h-[18px]" />
+                <AtSign strokeWidth={1.5} className="w-5 h-5" />
               </a>
-            </motion.div>
+            </div>
 
             {/* Card 2: Personal Email */}
-            <motion.div 
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.28 }}
+            <div 
               onClick={() => handleCopy('thuanphat26092008@gmail.com', 'EMAIL CÁ NHÂN')}
-              className="w-[12.5rem] h-10 bg-black rounded-lg flex items-center justify-between px-4 cursor-pointer border border-white/5 hover:border-[#89CC04] transition-colors group"
+              className="w-[15.5rem] h-12 bg-black rounded-lg flex items-center justify-between px-5 cursor-pointer border border-transparent hover:border-[#89CC04] transition-colors group"
             >
-              <span className="font-sans text-white text-[13px] font-medium tracking-wide">Email cá nhân</span>
-              <Copy strokeWidth={1.5} className="w-[16px] h-[16px] text-white group-hover:text-[#89CC04] transition-colors" />
-            </motion.div>
+              <span className="font-sans text-white text-[15px] font-medium tracking-wide">Email cá nhân</span>
+              <Copy strokeWidth={1.5} className="w-[18px] h-[18px] text-white group-hover:text-[#89CC04] transition-colors" />
+            </div>
 
             {/* Card 3: School Email */}
-            <motion.div 
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.41 }}
+            <div 
               onClick={() => handleCopy('phatnt.a2.2326@gmail.com', 'EMAIL HỌC TẬP')}
-              className="w-[12.5rem] h-10 bg-black rounded-lg flex items-center justify-between px-4 cursor-pointer border border-white/5 hover:border-[#89CC04] transition-colors group"
+              className="w-[15.5rem] h-12 bg-black rounded-lg flex items-center justify-between px-5 cursor-pointer border border-transparent hover:border-[#89CC04] transition-colors group"
             >
-              <span className="font-sans text-white text-[13px] font-medium tracking-wide">Email học tập</span>
-              <Copy strokeWidth={1.5} className="w-[16px] h-[16px] text-white group-hover:text-[#89CC04] transition-colors" />
-            </motion.div>
+              <span className="font-sans text-white text-[15px] font-medium tracking-wide">Email học tập</span>
+              <Copy strokeWidth={1.5} className="w-[18px] h-[18px] text-white group-hover:text-[#89CC04] transition-colors" />
+            </div>
           </motion.div>
         </div>
         
@@ -181,13 +171,12 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
 
   return (
     <motion.div 
-      initial={{ "--dummy": 0 } as any}
-      animate={{ "--dummy": 1 } as any}
-      exit={{ "--dummy": 0 } as any}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      initial={{ opacity: 1 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 1, transition: { duration: 0.8 } }}
       className="fixed top-0 left-0 w-full h-[calc(var(--vh,1vh)*100)] z-[100] items-center justify-center hidden landscape:flex pointer-events-none"
     >
-      {/* Background container with image and overlays */}
+      {/* Background container: Image is solid instantly so it completely covers the old text seamlessly */}
       <div 
         className="absolute inset-0 z-0 cursor-pointer pointer-events-auto"
         onClick={onClose}
@@ -245,3 +234,7 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
 };
 
 export default LandscapeContactScreen;
+"""
+
+with open('src/components/LandscapeContactScreen.tsx', 'w') as f:
+    f.write(content)

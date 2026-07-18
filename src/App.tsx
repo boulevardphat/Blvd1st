@@ -6,78 +6,13 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { LedDotBoard } from './components/LedDotBoard';
-import { Facebook, Instagram, AtSign, Check, Copy } from 'lucide-react';
 import LandscapeContactScreen from './components/LandscapeContactScreen';
 import PortraitContactScreen from './components/PortraitContactScreen';
-import DecryptedText from './components/DecryptedText';
 import Footer from './components/Footer';
 
 
 
 type SceneState = 'intro-play' | 'intro-image-1' | 'intro-image-2' | 'intro-image-3' | 'main-app';
-
-export default function App() {
-  const [scene, setScene] = useState<SceneState>('intro-play');
-  const [timeStr, setTimeStr] = useState('');
-  const [showInfo, setShowInfo] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
-  const [showArchive, setShowArchive] = useState(false);
-  const [showContactLandscape, setShowContactLandscape] = useState(false);
-  const [showContactPortrait, setShowContactPortrait] = useState(false);
-  
-  const bgAudioRef = React.useRef<HTMLAudioElement>(null);
-
-  useEffect(() => {
-    let lastWidth = window.innerWidth;
-    const setVh = () => {
-      if (window.innerWidth !== lastWidth || !document.documentElement.style.getPropertyValue('--vh')) {
-        let vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-        lastWidth = window.innerWidth;
-      }
-    };
-    setVh();
-    window.addEventListener('resize', setVh);
-    return () => window.removeEventListener('resize', setVh);
-  }, []);
-
-  useEffect(() => {
-    if (scene === 'main-app' && bgAudioRef.current) {
-      bgAudioRef.current.volume = 0.6;
-      bgAudioRef.current.play().catch(() => {});
-    } else if (scene !== 'main-app' && bgAudioRef.current) {
-      bgAudioRef.current.pause();
-      bgAudioRef.current.currentTime = 0;
-    }
-  }, [scene]);
-
-  const handleBgAudioEnded = () => {
-    setTimeout(() => {
-      if (bgAudioRef.current && scene === 'main-app') {
-        bgAudioRef.current.play().catch(() => {});
-      }
-    }, 5000);
-  };
-
-  useEffect(() => {
-    // Disable right-click context menu globally
-    const handleContextMenu = (e: MouseEvent) => {
-      e.preventDefault();
-    };
-
-    // Disable text selection globally via JS events for full coverage
-    const handleSelectStart = (e: Event) => {
-      e.preventDefault();
-    };
-
-    window.addEventListener('contextmenu', handleContextMenu);
-    window.addEventListener('selectstart', handleSelectStart);
-
-    return () => {
-      window.removeEventListener('contextmenu', handleContextMenu);
-      window.removeEventListener('selectstart', handleSelectStart);
-    };
-  }, []);
 
 // Handle high-speed clock ticking for Scene 3 (KC3)
 class ClockAudio {
@@ -172,10 +107,10 @@ class ClockAudio {
   }
 }
 
-  // Handle high-speed clock ticking for Scene 3 (KC3)
-  useEffect(() => {
-    if (scene !== 'intro-clock') return;
+const IntroClock = () => {
+  const [timeStr, setTimeStr] = useState('');
 
+  useEffect(() => {
     const clockAudio = new ClockAudio();
     clockAudio.init();
 
@@ -216,7 +151,85 @@ class ClockAudio {
       window.removeEventListener('click', handleInteraction);
       window.removeEventListener('touchstart', handleInteraction);
     };
+  }, []);
+
+  return (
+    <div 
+      id="scene-clock"
+      className="absolute inset-0 flex items-center justify-center bg-black z-30 select-none"
+    >
+      <div 
+        id="clock-display"
+        className="font-archivo font-normal text-[clamp(1.4rem,4.2vw,3.8rem)] text-white/95 tracking-[0.05em] select-none pointer-events-none tabular-nums"
+      >
+        {timeStr}
+      </div>
+    </div>
+  );
+};
+
+export default function App() {
+
+  const [scene, setScene] = useState<SceneState>('intro-play');
+  const [showInfo, setShowInfo] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [showArchive, setShowArchive] = useState(false);
+  const [showContactLandscape, setShowContactLandscape] = useState(false);
+  const [showContactPortrait, setShowContactPortrait] = useState(false);
+  
+  const bgAudioRef = React.useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    let lastWidth = window.innerWidth;
+    const setVh = () => {
+      if (window.innerWidth !== lastWidth || !document.documentElement.style.getPropertyValue('--vh')) {
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+        lastWidth = window.innerWidth;
+      }
+    };
+    setVh();
+    window.addEventListener('resize', setVh);
+    return () => window.removeEventListener('resize', setVh);
+  }, []);
+
+  useEffect(() => {
+    if (scene === 'main-app' && bgAudioRef.current) {
+      bgAudioRef.current.volume = 0.6;
+      bgAudioRef.current.play().catch(() => {});
+    } else if (scene !== 'main-app' && bgAudioRef.current) {
+      bgAudioRef.current.pause();
+      bgAudioRef.current.currentTime = 0;
+    }
   }, [scene]);
+
+  const handleBgAudioEnded = () => {
+    setTimeout(() => {
+      if (bgAudioRef.current && scene === 'main-app') {
+        bgAudioRef.current.play().catch(() => {});
+      }
+    }, 5000);
+  };
+
+  useEffect(() => {
+    // Disable right-click context menu globally
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+
+    // Disable text selection globally via JS events for full coverage
+    const handleSelectStart = (e: Event) => {
+      e.preventDefault();
+    };
+
+    window.addEventListener('contextmenu', handleContextMenu);
+    window.addEventListener('selectstart', handleSelectStart);
+
+    return () => {
+      window.removeEventListener('contextmenu', handleContextMenu);
+      window.removeEventListener('selectstart', handleSelectStart);
+    };
+  }, []);
 
   // Handle automatic transitions between scenes (Custom sequence timing)
   useEffect(() => {
@@ -336,19 +349,7 @@ class ClockAudio {
       )}
 
       {/* KC3: High-frequency live ticking clock */}
-      {scene === 'intro-clock' && (
-        <div 
-          id="scene-clock"
-          className="absolute inset-0 flex items-center justify-center bg-black z-30 select-none"
-        >
-          <div 
-            id="clock-display"
-            className="font-archivo font-normal text-[clamp(1.4rem,4.2vw,3.8rem)] text-white/95 tracking-[0.05em] select-none pointer-events-none tabular-nums"
-          >
-            {timeStr}
-          </div>
-        </div>
-      )}
+      {scene === 'intro-clock' && <IntroClock />}
 
       {/* KC4: Background Image with #8375B3 tint */}
       {scene === 'intro-image-1' && (

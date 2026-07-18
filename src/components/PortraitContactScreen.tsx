@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Facebook, Instagram, AtSign, Copy, Check } from 'lucide-react';
+import { Facebook, Instagram, AtSign, Copy } from 'lucide-react';
 
 const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
   const [copyFeedback, setCopyFeedback] = useState<string | null>(null);
