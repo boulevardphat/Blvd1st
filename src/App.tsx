@@ -174,6 +174,7 @@ export default function App() {
   const [showInfo, setShowInfo] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [showArchive, setShowArchive] = useState(false);
+  const [showFriends, setShowFriends] = useState(false);
   const [showContactLandscape, setShowContactLandscape] = useState(false);
   const [showContactPortrait, setShowContactPortrait] = useState(false);
   
@@ -193,15 +194,34 @@ export default function App() {
     return () => window.removeEventListener('resize', setVh);
   }, []);
 
+  const isAnyPopupOpen = showInfo || showHistory || showArchive || showFriends || showContactLandscape || showContactPortrait;
+
   useEffect(() => {
-    if (scene === 'main-app' && bgAudioRef.current) {
+    if (scene === 'main-app' && !isAnyPopupOpen && bgAudioRef.current) {
       bgAudioRef.current.volume = 0.6;
       bgAudioRef.current.play().catch(() => {});
-    } else if (scene !== 'main-app' && bgAudioRef.current) {
+    } else if (bgAudioRef.current) {
       bgAudioRef.current.pause();
-      bgAudioRef.current.currentTime = 0;
+      if (scene !== 'main-app') {
+        bgAudioRef.current.currentTime = 0;
+      }
     }
-  }, [scene]);
+  }, [scene, isAnyPopupOpen]);
+
+  // Ensure audio plays upon user interaction in main-app
+  useEffect(() => {
+    const handleGlobalInteraction = () => {
+      if (scene === 'main-app' && !isAnyPopupOpen && bgAudioRef.current) {
+        bgAudioRef.current.play().catch(() => {});
+      }
+    };
+    window.addEventListener('click', handleGlobalInteraction, { passive: true });
+    window.addEventListener('touchstart', handleGlobalInteraction, { passive: true });
+    return () => {
+      window.removeEventListener('click', handleGlobalInteraction);
+      window.removeEventListener('touchstart', handleGlobalInteraction);
+    };
+  }, [scene, isAnyPopupOpen]);
 
   const handleBgAudioEnded = () => {
     setTimeout(() => {
@@ -313,7 +333,7 @@ export default function App() {
         >
           <div
             id="intro-phat-text"
-            className="font-phat text-[clamp(1rem,3.2vw,1.4rem)] text-white/90 uppercase select-none tracking-[-0.12em]"
+            className="font-phat text-[clamp(2.5rem,8vw,5rem)] text-white/90 uppercase select-none tracking-[-0.12em]"
           >
             phát
           </div>
@@ -451,6 +471,25 @@ export default function App() {
                   </button>
                 </div>
 
+                {/* Middle Row */}
+                <div className="flex justify-between items-center w-full pointer-events-none">
+                  <button 
+                    id="btn-booking-landscape" 
+                    className="pointer-events-none text-white/50 font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none tracking-tight select-none relative left-[0.1em]"
+                    style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
+                  >
+                    booking
+                  </button>
+                  <button 
+                    id="btn-friends-landscape" 
+                    onClick={() => setShowFriends(true)}
+                    className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
+                    style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
+                  >
+                    friends
+                  </button>
+                </div>
+
                 {/* Bottom Row */}
                 <div className="relative flex justify-between items-baseline w-full">
                   <button 
@@ -493,8 +532,7 @@ export default function App() {
               >
                 {/* Anchor point exactly at 66.5vh, centered horizontally */}
                 <div className="absolute left-1/2 -translate-x-1/2 w-fit pointer-events-auto flex flex-col items-center" style={{ top: 'calc(var(--vh, 1vh) * 66.5)' }}>
-                  
-                  {/* Top Row - positioned absolute above the center */}
+                                  {/* Top Row - positioned absolute above the center */}
                   <div className="absolute bottom-full mb-[3px] w-full flex justify-between items-end">
                     <div className="relative pointer-events-auto">
                       <button 
@@ -506,18 +544,27 @@ export default function App() {
                         contact
                       </button>
                     </div>
+
+                    <button 
+                      id="btn-booking-portrait"
+                      className="pointer-events-none text-white/50 font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none"
+                      style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
+                    >
+                      booking
+                    </button>
+
                     <button 
                       id="btn-history-portrait" 
                       onClick={() => setShowHistory(true)}
-                      className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"
-                        style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
+                      className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"  
+                      style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                     >
                       his-tory
                     </button>
                   </div>
 
                   {/* Logo and Bottom Row - normal flow, just pushed down by 3px */}
-                  <div className="mt-[3px] flex flex-col w-full">
+                  <div className="mt-[3px] flex flex-col w-full relative">
                     <h1 
                       id="logo-text-portrait"
                       className="font-archivo text-white font-black text-[clamp(2.5rem,11.5vw,6rem)] leading-none tracking-tighter select-none whitespace-nowrap"
@@ -526,7 +573,7 @@ export default function App() {
                     </h1>
                     
                     {/* Bottom Row - spaced below logo by 6px */}
-                    <div className="mt-[6px] w-full flex justify-between items-start">
+                    <div className="mt-[6px] w-full flex justify-between items-start relative">
                       <button 
                         id="btn-info-portrait" 
                         onClick={() => setShowInfo(true)}
@@ -535,6 +582,16 @@ export default function App() {
                       >
                         info
                       </button>
+
+                      <button 
+                        id="btn-friends-portrait"
+                        onClick={() => setShowFriends(true)}
+                        className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"
+                        style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
+                      >
+                        friends
+                      </button>
+
                       <button 
                         id="btn-archive-portrait" 
                         onClick={() => setShowArchive(true)}
@@ -590,6 +647,15 @@ export default function App() {
           id="archive-screen"
           className="fixed inset-0 bg-black z-50 cursor-pointer"
           onClick={() => setShowArchive(false)}
+        />
+      )}
+
+      {/* Friends Screen: Completely blank black screen */}
+      {showFriends && (
+        <div 
+          id="friends-screen"
+          className="fixed inset-0 bg-black z-50 cursor-pointer"
+          onClick={() => setShowFriends(false)}
         />
       )}
     </main>

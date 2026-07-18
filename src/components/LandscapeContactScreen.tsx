@@ -34,7 +34,7 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
     animate: { 
       "--font-wght": 100, 
       "--font-wdth": 62, 
-      color: "rgba(255, 255, 255, 0.4)" 
+      color: "rgba(255, 255, 255, 0)" 
     } as any,
   };
 
@@ -138,6 +138,32 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
           style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
         >
           his-tory
+        </motion.span>
+      </div>
+
+      {/* Middle Row */}
+      <div className="flex justify-between items-center w-full">
+        <motion.span 
+          variants={otherVariants}
+          initial="initial"
+          animate="animate"
+          exit="initial"
+          transition={transitionProps}
+          className="block font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none tracking-tight select-none relative left-[0.1em]"
+          style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
+        >
+          booking
+        </motion.span>
+        <motion.span 
+          variants={otherVariants}
+          initial="initial"
+          animate="animate"
+          exit="initial"
+          transition={transitionProps}
+          className="block font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none tracking-tight select-none"
+          style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
+        >
+          friends
         </motion.span>
       </div>
 

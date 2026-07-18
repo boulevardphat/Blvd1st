@@ -34,7 +34,7 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
     animate: { 
       "--font-wght": 100, 
       "--font-wdth": 62, 
-      color: "rgba(255, 255, 255, 0.4)" 
+      color: "rgba(255, 255, 255, 0)" 
     } as any,
   };
 
@@ -67,6 +67,17 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
             className="font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none"
             style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
           >
+            booking
+          </motion.span>
+          <motion.span 
+            variants={otherVariants}
+            initial="initial"
+            animate="animate"
+            exit="initial"
+            transition={transitionProps}
+            className="font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none"
+            style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
+          >
             his-tory
           </motion.span>
         </div>
@@ -89,6 +100,17 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
               style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
             >
               info
+            </motion.span>
+            <motion.span 
+              variants={otherVariants}
+              initial="initial"
+              animate="animate"
+              exit="initial"
+              transition={transitionProps}
+              className="font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none"
+              style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
+            >
+              friends
             </motion.span>
             <motion.span 
               variants={otherVariants}
