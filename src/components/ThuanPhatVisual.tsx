@@ -16,7 +16,7 @@ export const ThuanPhatVisual = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const numRows = isLandscape ? 7 : 13;
+  const numRows = isLandscape ? 7 : 22;
 
   useEffect(() => {
     let t1: NodeJS.Timeout;
@@ -48,7 +48,7 @@ export const ThuanPhatVisual = () => {
   }, [numRows]);
 
   return (
-    <div className="absolute inset-0 flex flex-col justify-center items-center overflow-hidden z-10 pointer-events-none gap-[1.2vh] landscape:gap-[4.5vh]">
+    <div className="absolute inset-0 flex flex-col justify-center items-center overflow-hidden z-10 pointer-events-none gap-[1.8vh] landscape:gap-[4.5vh]">
       {Array.from({ length: numRows }).map((_, index) => {
         // index 0 is top, index numRows - 1 is bottom
         

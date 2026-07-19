@@ -201,3 +201,13 @@ LẦN THAY ĐỔI THỨ 18: TĂNG SỐ DÒNG PORTRAIT, THU HẸP GAP ĐỂ PHỦ
   + Bỏ hoàn toàn hoạt ảnh chuyển cảnh (fade-out) chậm chạp 1.5s của lớp ảnh nền gốc lúc mới tải xong hoặc khi mở giao diện chính bằng cách set `transition={{ duration: 0 }}` trong `VespertineBackground.tsx`.
 - Tham số điều chỉnh: Sửa `numRows` động (`isLandscape ? 7 : 13`), đặt `gap-[1.2vh]` trên portrait, set `MAX_OPACITY = 0.12`, đổi `duration: 0` của fallback background.
 
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 19: PHÁ VỠ GIỚI HẠN SAFEZONE Ở GIAO DIỆN DỌC (PORTRAIT)
+- File ảnh hưởng: /src/components/ThuanPhatVisual.tsx
+- Chi tiết thay đổi:
+  + Giao diện dọc (Portrait): Tăng số dòng hiển thị (`numRows`) từ `13` lên `22` dòng, kết hợp với khoảng cách giữa các hàng `gap-[1.8vh]`.
+  + Sự kết hợp này kéo giãn dải chữ ra toàn bộ chiều cao màn hình, chủ động tràn vượt quá cả mép trên lẫn mép dưới của khung nhìn (viewport), hoàn toàn "phá vỡ" ranh giới safezone và giải quyết triệt để cảm giác "bị kẹt ở giữa" mà người dùng phản hồi.
+- Tham số điều chỉnh: Sửa `numRows` động thành (`isLandscape ? 7 : 22`), tăng gap lên `gap-[1.8vh]`.
+
+
