@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Facebook, Instagram, AtSign, Copy } from 'lucide-react';
+import { VespertineBackground } from './VespertineBackground';
 
 const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
   const [copyFeedback, setCopyFeedback] = useState<string | null>(null);
@@ -38,6 +39,19 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
     } as any,
   };
 
+  const bookingVariants = {
+    initial: { 
+      "--font-wght": 200, 
+      "--font-wdth": 62, 
+      color: "rgba(255, 255, 255, 0.5)" 
+    } as any,
+    animate: { 
+      "--font-wght": 100, 
+      "--font-wdth": 62, 
+      color: "rgba(255, 255, 255, 0)" 
+    } as any,
+  };
+
   const transitionProps = { duration: 0.8, ease: [0.16, 1, 0.3, 1] };
 
   const renderTextContent = () => (
@@ -59,7 +73,7 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
             contact
           </motion.span>
           <motion.span 
-            variants={otherVariants}
+            variants={bookingVariants}
             initial="initial"
             animate="animate"
             exit="initial"
@@ -83,13 +97,13 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
         </div>
 
         {/* Logo and Bottom Row - normal flow, just pushed down by 3px */}
-        <div className="mt-[3px] flex flex-col w-full">
+        <div className="mt-[3px] flex flex-col w-full relative">
           <h1 className="font-archivo text-white font-black text-[clamp(2.5rem,11.5vw,6rem)] leading-none tracking-tighter select-none whitespace-nowrap">
             Boulevard1st
           </h1>
           
           {/* Bottom Row - spaced below logo by 6px */}
-          <div className="mt-[6px] w-full flex justify-between items-start">
+          <div className="mt-[6px] w-full flex justify-between items-start relative">
             <motion.span 
               variants={otherVariants}
               initial="initial"
@@ -131,10 +145,9 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
 
   return (
     <motion.div 
-      initial={{ opacity: 0 }}
+      initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      exit={{ opacity: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }}
       className="fixed top-0 left-0 w-full h-[calc(var(--vh,1vh)*100)] mountaineer-overlay z-[100] items-center justify-center hidden portrait:flex"
     >
       {/* Background container that is pure black to show through the gap */}
@@ -239,10 +252,7 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
         className="absolute inset-0 overflow-hidden z-20 cursor-pointer"
       >
         <div className="absolute inset-0">
-          <img
-            src="https://i.ibb.co/vy4ykmw/vespertine.png"
-            className="w-full h-full object-cover object-[49%_center]"
-          />
+          <VespertineBackground />
           {/* #89CC04 Tint Overlays */}
           <div className="absolute inset-0 bg-[#89CC04] mix-blend-color opacity-95 pointer-events-none" />
           <div className="absolute inset-0 bg-[#89CC04]/35 mix-blend-multiply pointer-events-none" />
@@ -281,10 +291,7 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
         className="absolute inset-0 overflow-hidden z-20 cursor-pointer"
       >
         <div className="absolute inset-0">
-          <img
-            src="https://i.ibb.co/vy4ykmw/vespertine.png"
-            className="w-full h-full object-cover object-[49%_center]"
-          />
+          <VespertineBackground />
           {/* #89CC04 Tint Overlays */}
           <div className="absolute inset-0 bg-[#89CC04] mix-blend-color opacity-95 pointer-events-none" />
           <div className="absolute inset-0 bg-[#89CC04]/35 mix-blend-multiply pointer-events-none" />

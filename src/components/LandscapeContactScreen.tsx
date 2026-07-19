@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Facebook, Instagram, AtSign, Copy } from 'lucide-react';
+import { VespertineBackground } from './VespertineBackground';
 
 const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
   const [copyFeedback, setCopyFeedback] = useState<string | null>(null);
@@ -207,9 +208,9 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
 
   return (
     <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      initial={{ "--dummy": 0 } as any}
+      animate={{ "--dummy": 1 } as any}
+      exit={{ "--dummy": 0 } as any}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       className="fixed top-0 left-0 w-full h-[calc(var(--vh,1vh)*100)] z-[100] items-center justify-center hidden landscape:flex pointer-events-none"
     >
@@ -218,10 +219,7 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
         className="absolute inset-0 z-0 cursor-pointer pointer-events-auto"
         onClick={onClose}
       >
-        <img
-          src="https://i.ibb.co/vy4ykmw/vespertine.png"
-          className="w-full h-full object-cover object-[49%_center]"
-        />
+        <VespertineBackground />
         {/* Overlays fade in smoothly */}
         <motion.div 
           initial={{ opacity: 0 }}

@@ -12,161 +12,11 @@ import Footer from './components/Footer';
 
 
 
+import { IntroClock } from './components/IntroClock';
+
+import { VespertineBackground } from './components/VespertineBackground';
+
 type SceneState = 'intro-play' | 'intro-image-1' | 'intro-image-2' | 'intro-image-3' | 'main-app';
-
-// Handle high-speed clock ticking for Scene 3 (KC3)
-class ClockAudio {
-  private ctx: AudioContext | null = null;
-
-  public init() {
-    if (this.ctx) return;
-    try {
-      const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
-      if (AudioCtxClass) {
-        this.ctx = new AudioCtxClass();
-      }
-    } catch (e) {
-      console.error("Failed to initialize clock audio context", e);
-    }
-  }
-
-  public resume() {
-    if (this.ctx && this.ctx.state === 'suspended') {
-      this.ctx.resume().catch(() => {});
-    }
-  }
-
-  public playHungUpTick(isTock: boolean) {
-    if (!this.ctx) {
-      this.init();
-    }
-    this.resume();
-    if (!this.ctx || this.ctx.state === 'suspended') return;
-
-    try {
-      const t = this.ctx.currentTime;
-      
-      // 1. High-frequency crisp metallic bandpassed noise (the spring escapement action)
-      const bufferSize = this.ctx.sampleRate * 0.02; // 20ms of noise
-      const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) {
-        data[i] = Math.random() * 2 - 1;
-      }
-      
-      const noise = this.ctx.createBufferSource();
-      noise.buffer = buffer;
-      
-      const noiseFilter = this.ctx.createBiquadFilter();
-      noiseFilter.type = 'bandpass';
-      noiseFilter.frequency.setValueAtTime(isTock ? 4200 : 5200, t);
-      noiseFilter.Q.setValueAtTime(12, t); // High resonance for crisp metallic click
-      
-      const noiseGain = this.ctx.createGain();
-      noiseGain.gain.setValueAtTime(0.18, t); // Audible gain level
-      noiseGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.008); // Sharp 8ms decay
-      
-      noise.connect(noiseFilter);
-      noiseFilter.connect(noiseGain);
-      noiseGain.connect(this.ctx.destination);
-      noise.start(t);
-      
-      // 2. High frequency micro ring/tinkle (escapement tooth impact)
-      const osc = this.ctx.createOscillator();
-      const oscGain = this.ctx.createGain();
-      
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(isTock ? 2400 : 3100, t);
-      
-      oscGain.gain.setValueAtTime(0.12, t); // Audible sine click
-      oscGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.015); // Fast 15ms decay for bright, distinct tinkle
-      
-      osc.connect(oscGain);
-      oscGain.connect(this.ctx.destination);
-      osc.start(t);
-      osc.stop(t + 0.02);
-
-      // 3. Wooden escapement hollow body resonance click (adds body & fullness to the tick so it's not thin)
-      const bodyOsc = this.ctx.createOscillator();
-      const bodyGain = this.ctx.createGain();
-      
-      bodyOsc.type = 'triangle';
-      bodyOsc.frequency.setValueAtTime(isTock ? 600 : 850, t);
-      
-      bodyGain.gain.setValueAtTime(0.15, t);
-      bodyGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.01); // 10ms body decay
-      
-      bodyOsc.connect(bodyGain);
-      bodyGain.connect(this.ctx.destination);
-      bodyOsc.start(t);
-      bodyOsc.stop(t + 0.015);
-
-    } catch (e) {
-      // Catch blocks for initial gesture requirements
-    }
-  }
-}
-
-const IntroClock = () => {
-  const [timeStr, setTimeStr] = useState('');
-
-  useEffect(() => {
-    const clockAudio = new ClockAudio();
-    clockAudio.init();
-
-    // Setup interactive events to resume the context safely
-    const handleInteraction = () => {
-      clockAudio.init();
-      clockAudio.resume();
-    };
-    window.addEventListener('click', handleInteraction, { passive: true });
-    window.addEventListener('touchstart', handleInteraction, { passive: true });
-
-    let lastTickStep = -1;
-
-    const updateClock = () => {
-      const now = new Date();
-      const hrs = String(now.getHours()).padStart(2, '0');
-      const mins = String(now.getMinutes()).padStart(2, '0');
-      const secs = String(now.getSeconds()).padStart(2, '0');
-      const ms = String(now.getMilliseconds()).padStart(3, '0');
-      setTimeStr(`${hrs} : ${mins} : ${secs} : ${ms}`);
-
-      // Rapid mechanical stopwatch ticking: every 125ms (8 ticks per second) for a frantic, high-beat retro gear aesthetic
-      const nowMs = now.getTime();
-      const currentTickStep = Math.floor(nowMs / 125);
-
-      if (currentTickStep !== lastTickStep) {
-        lastTickStep = currentTickStep;
-        const isTock = (currentTickStep % 2 === 1);
-        // clockAudio.playHungUpTick(isTock); // Removed clock tick audio per user request
-      }
-    };
-
-    updateClock();
-    const interval = setInterval(updateClock, 16); // ~60fps high speed update
-
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('click', handleInteraction);
-      window.removeEventListener('touchstart', handleInteraction);
-    };
-  }, []);
-
-  return (
-    <div 
-      id="scene-clock"
-      className="absolute inset-0 flex items-center justify-center bg-black z-30 select-none"
-    >
-      <div 
-        id="clock-display"
-        className="font-archivo font-normal text-[clamp(1.4rem,4.2vw,3.8rem)] text-white/95 tracking-[0.05em] select-none pointer-events-none tabular-nums"
-      >
-        {timeStr}
-      </div>
-    </div>
-  );
-};
 
 export default function App() {
 
@@ -317,13 +167,7 @@ export default function App() {
         referrerPolicy="no-referrer"
         className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center] z-0 opacity-0 pointer-events-none"
       />
-      <img
-        id="reference-image"
-        src="https://i.ibb.co/vy4ykmw/vespertine.png"
-        alt="Boulevard1st Background"
-        referrerPolicy="no-referrer"
-        className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center] z-0"
-      />
+      <VespertineBackground />
 
       {/* KC1: Start Screen ("phát") */}
       {scene === 'intro-play' && (
@@ -416,12 +260,7 @@ export default function App() {
           className="absolute inset-0 z-10 select-none pointer-events-none"
         >
           {/* Sibling image to ensure perfect mix-blend-mode rendering */}
-          <img
-            src="https://i.ibb.co/vy4ykmw/vespertine.png"
-            alt="Intro Background Reference 3"
-            referrerPolicy="no-referrer"
-            className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center]"
-          />
+          <VespertineBackground />
           {/* #89CC04 Tint Overlays */}
           <div className="absolute inset-0 bg-[#89CC04] mix-blend-color opacity-95 pointer-events-none" />
           <div className="absolute inset-0 bg-[#89CC04]/35 mix-blend-multiply pointer-events-none" />
@@ -435,14 +274,7 @@ export default function App() {
             {/* The 100vh Main Screen View */}
             <div className="relative w-full h-[calc(var(--vh,1vh)*100)] shrink-0 flex items-center justify-center overflow-hidden ">
               {/* Background Image */}
-              <img
-                id="reference-image"
-                src="https://i.ibb.co/vy4ykmw/vespertine.png"
-                alt="Vespertine Design Reference"
-                referrerPolicy="no-referrer"
-                className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center]"
-              />
-
+              <VespertineBackground />
               {/* Landscape Layout (Visible only in landscape / horizontal viewports) */}
               <div 
                 id="safezone-overlay-landscape" 
@@ -606,7 +438,7 @@ export default function App() {
               </div>
             </div>
 
-            <Footer />
+            <Footer isPopupOpen={isAnyPopupOpen} />
 
               {/* Landscape Contact Overlay */}
               <AnimatePresence>

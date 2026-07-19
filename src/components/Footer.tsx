@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 
-const Footer = () => {
+const Footer = ({ isPopupOpen = false }: { isPopupOpen?: boolean }) => {
   return (
     <>
       {/* Flat Solid Black Footer (Thinner, tight, black layout with snug logos and prominent dark black hint shadow) */}
@@ -12,8 +12,8 @@ const Footer = () => {
               {/* Animated shadow overlay for smooth entry */}
               <motion.div
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
+                animate={{ opacity: isPopupOpen ? 0 : 1 }}
+                transition={{ duration: 1.5, ease: "easeOut", delay: isPopupOpen ? 0 : 0.3 }}
                 className="absolute inset-0 pointer-events-none shadow-[0_-12px_40px_rgba(0,0,0,1)] z-10"
               />
 

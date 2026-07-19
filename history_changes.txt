@@ -73,3 +73,131 @@ LẦN THAY ĐỔI THỨ 5: HIỆU ỨNG XUẤT HIỆN VÀ THOÁT RA CỦA MỤC 
     transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
     ```
 - Tham số điều chỉnh: Thiết lập `initial.opacity = 0`, `animate.opacity = 1`, `exit.opacity = 0` với thời gian `0.8s` giúp quá trình mở và đóng contact diễn ra vô cùng êm ái.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 6: KHÔI PHỤC HOẠT ẢNH CONTACT GỐC VÀ SỬA LỖI GIẬT HÌNH NỀN
+- File ảnh hưởng: /src/components/LandscapeContactScreen.tsx & /src/components/PortraitContactScreen.tsx
+- Chi tiết thay đổi:
+  + Giao diện ngang (/src/components/LandscapeContactScreen.tsx):
+    Khôi phục cơ chế `--dummy` ở thẻ root `motion.div` để loại bỏ hiệu ứng fade-in mờ nhạt bao trùm toàn bộ component, giữ nguyên trạng thái xuất hiện tức thời của ảnh nền giả.
+    Chỉnh sửa vị trí cắt ảnh: `object-[49%_center]` thành `portrait:object-[49%_center]` để đồng bộ tỷ lệ với ảnh gốc trong App.tsx, khắc phục hiện tượng giật/lệch hình khi mở contact.
+  + Giao diện dọc (/src/components/PortraitContactScreen.tsx):
+    Khôi phục `opacity: 1` tĩnh ở thẻ root `motion.div` nhằm đảm bảo hiệu ứng tách đôi màn hình (tearing) vốn dĩ ở 2 nửa trên dưới diễn ra một cách mượt mà và sắc nét nhất (hiệu ứng bóng mờ gốc làm hỏng hiệu ứng tách màn hình).
+    Sửa đồng bộ vị trí ảnh: `object-[49%_center]` thành `portrait:object-[49%_center]` ở 2 nửa mảnh cắt.
+- Tham số điều chỉnh: `initial` và `animate` tại thẻ cha cao nhất được khôi phục về trạng thái hack transition thời gian để duy trì vòng đời exit animation của các thẻ con bên trong mà không làm mờ hình nền tổng thể.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 7: ĐỒNG BỘ HOẠT ẢNH CHO 2 NÚT BOOKING VÀ FRIENDS TRÊN GIAO DIỆN DỌC
+- File ảnh hưởng: /src/components/PortraitContactScreen.tsx
+- Chi tiết thay đổi:
+  + Thêm thuộc tính `relative` vào thẻ div bọc Logo (mt-[3px]) và Bottom Row (mt-[6px]) để thiết lập đúng bối cảnh định vị (positioning context) cho thẻ `absolute` bên trong (nút "friends").
+  + Tạo riêng `bookingVariants` cho nút "booking" với initial color là `rgba(255, 255, 255, 0.5)` thay vì 0.9 để khớp chuẩn xác với độ mờ khởi tạo ban đầu của nút đó trên giao diện App chính (`text-white/50`).
+- Tham số điều chỉnh: Chỉnh sửa CSS layout bằng cách thêm `relative` để nút "friends" không còn bị văng lên trên. Thay đổi tham số `color` trong initial object của biến animation mới `bookingVariants` sang opacity 0.5.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 8: THÊM HIỆU ỨNG XUẤT HIỆN SHADOW CỦA FOOTER VÀ DỌN DẸP CODE
+- File ảnh hưởng: /src/App.tsx, /src/components/Footer.tsx, /src/components/IntroClock.tsx
+- Chi tiết thay đổi:
+  + Thêm biến `isPopupOpen` truyền từ `App.tsx` sang `Footer.tsx` để điều khiển shadow của footer biến mất khi bật contact screen, và từ từ hiện ra lại khi tắt.
+  + Tách toàn bộ logic đồng hồ đếm ngược (`ClockAudio` và `IntroClock`) từ `App.tsx` ra riêng một file `IntroClock.tsx` ở trong thư mục `components`. Rút gọn 160 dòng code bên trong `App.tsx` để chuẩn bị cho việc mở rộng layout.
+- Tham số điều chỉnh: Chỉnh `opacity: isPopupOpen ? 0 : 1` và `delay: isPopupOpen ? 0 : 0.3` cho shadow.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 9: TÁCH LỚP HÌNH ẢNH NỀN CHÍNH THÀNH BACKGROUND VÀ SUBJECT
+- File ảnh hưởng: /src/components/VespertineBackground.tsx (mới), /src/App.tsx, /src/components/LandscapeContactScreen.tsx, /src/components/PortraitContactScreen.tsx
+- Chi tiết thay đổi:
+  + Tạo component mới `VespertineBackground.tsx` để xử lý logic tách lớp hình ảnh nền (vespertine). 
+  + Component này tải 2 lớp hình ảnh mới: lớp nền (`vespertine-bg.png`) và lớp chủ thể (`vespertine-sj.png`), để chừa một `div` trống (`id="middle-layer"`) ở giữa cho các hiệu ứng sau này.
+  + Hình ảnh gốc (`vespertine.png`) vẫn được sử dụng làm "lốp" (fallback) hiển thị ngay lập tức. Sau khi 2 lớp BG và SJ tải xong (`onLoad`), lớp lốp gốc sẽ từ từ mờ đi (`opacity: 0` với `duration: 1.5s`) để lộ ra 2 lớp đã tách một cách mượt mà hoàn hảo.
+  + Thay thế tất cả các thẻ `img` tham chiếu đến `vespertine.png` trong `App.tsx`, `LandscapeContactScreen.tsx`, và `PortraitContactScreen.tsx` bằng component `<VespertineBackground />`.
+- Tham số điều chỉnh: Chỉnh `transition={{ duration: 1.5, ease: 'easeInOut' }}` cho hiệu ứng mờ dần của ảnh lốp.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 10: SỬA LỖI COMPONENT VESPERTINE KHÔNG ĐƯỢC ÁP DỤNG Ở MAIN APP VÀ KHẮC PHỤC HIỆN TƯỢNG XÊ DỊCH
+- File ảnh hưởng: /src/App.tsx, /src/components/VespertineBackground.tsx
+- Chi tiết thay đổi:
+  + Phát hiện `<VespertineBackground />` ở lần sửa trước mới chỉ được thay thế ở lớp ảnh preload ẩn phía dưới, trong khi màn intro thứ 3 (KC6) và màn hình chính (main-app) vẫn đang dùng thẻ `img` cũ trỏ trực tiếp vào ảnh `vespertine.png`. Đã thay thế triệt để các thẻ `img` còn sót lại bằng `<VespertineBackground />`.
+  + Thêm thuộc tính `z-0` và `referrerPolicy="no-referrer"` vào wrapper của `VespertineBackground.tsx` để "tệp" tuyệt đối 100% với cách hiển thị của bản gốc cũ. Thuật toán dịch chuyển tỉ lệ ngang dọc (`portrait:object-[49%_center]`) giờ đây sẽ hoạt động hoàn hảo cho cả hai lớp ảnh background (`bg`) và subject (`sj`).
+- Tham số điều chỉnh: Chỉnh `z-0` và `referrerPolicy="no-referrer"` vào các layer ảnh tách rời.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 11: THÊM HIỆU ỨNG CHẠY CHỮ "THUAN PHAT"
+- File ảnh hưởng: /src/components/ThuanPhatVisual.tsx (mới), /src/components/VespertineBackground.tsx
+- Chi tiết thay đổi:
+  + Tạo component mới `ThuanPhatVisual` với hiệu ứng chữ "THUAN PHAT" đỏ phát sáng mang phong cách club visual.
+  + Chữ được chia thành 12 hàng dọc (`NUM_ROWS = 12`).
+  + Hiệu ứng xuất hiện chạy nhanh liên tục từ hàng dưới cùng (index 11) lên hàng trên cùng (index 0).
+  + Hiệu ứng biến mất chạy nhanh từ hàng trên cùng (index 0) xuống hàng dưới cùng (index 11).
+  + Thêm component này vào giữa thẻ `middle-layer` trong `VespertineBackground.tsx` để chữ xuất hiện phía sau chủ thể và phía trước nền, giống như bản phác thảo.
+- Tham số điều chỉnh: Chỉnh `duration: 0.08` và `delay` dãn cách là `0.06` cho mỗi hàng, font chữ màu `#FF2A2A` kèm shadow phát sáng.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 12: ĐIỀU CHỈNH STYLE VÀ ANIMATION CỦA CHỮ "THUANPHAT"
+- File ảnh hưởng: /src/components/ThuanPhatVisual.tsx
+- Chi tiết thay đổi:
+  + Chữ được thu hẹp khoảng cách các ký tự (`tracking-tighter` thay vì `tracking-widest`).
+  + Các hàng có khoảng cách giãn ra nhờ thuộc tính `gap-[1.5vh]` trên vùng chứa.
+  + Font chữ đậm lên một chút (`font-medium` và `wght 500`).
+  + Màu sắc chuyển từ đỏ phát sáng sang xám tối đơn sắc (`#111111`) và loại bỏ hiệu ứng phát sáng `textShadow`, bỏ `mix-blend-screen`.
+  + Tốc độ hiệu ứng được đẩy lên nhanh hơn (giảm `delay` xuất hiện từng dòng còn `0.03s`, thời gian xuất hiện còn `0.05s`).
+  + Văn bản thay đổi từ "THUAN PHAT" thành "THUANPHAT" không có khoảng trắng.
+  + Tăng kích thước phông chữ lên khoảng 30% nhưng CHỈ ÁP DỤNG TRÊN GIAO DIỆN NGANG (landscape).
+- Tham số điều chỉnh: Kích thước được thêm `landscape:text-[clamp(3.25rem,7.8vw,5.85rem)]`, tốc độ delay giảm từ 0.06 xuống 0.03, thêm `gap-[1.5vh]`.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 13: ĐIỀU CHỈNH LẠI STYLE CHỮ THUANPHAT THEO YÊU CẦU MỚI
+- File ảnh hưởng: /src/components/ThuanPhatVisual.tsx
+- Chi tiết thay đổi:
+  + Giảm số dòng hiển thị (`NUM_ROWS`) từ 12 xuống 7.
+  + Tăng font size ở cả 2 giao diện:
+    * Giao diện dọc (Portrait): `text-[18vw]` để scale trực tiếp theo chiều rộng safe zone giúp chữ nổi bật.
+    * Giao diện ngang (Landscape): `landscape:text-[clamp(4.5rem,10.5vw,8rem)]`.
+  + Ép font chữ "béo" hơn theo chiều dọc bằng CSS transform `scale-y-[0.8] scale-x-[1.05]` cùng `origin-center`.
+  + Chuyển class từ `font-sans` sang `font-archivo` để đồng bộ font Archivo có hỗ trợ các trục weight/width, sử dụng `fontVariationSettings: '"wdth" 100, "wght" 500'`.
+  + Tăng khoảng cách các hàng lên `gap-[3.5vh] landscape:gap-[4.5vh]`.
+  + Ép các chữ cái sát nhau hơn nữa bằng `tracking-[-0.07em]`.
+  + Tốc độ xuất hiện và biến mất được đẩy lên nhanh hơn (`delay = 0.02`, `duration = 0.03`).
+- Tham số điều chỉnh: Chỉnh `scale-y-[0.8]`, `scale-x-[1.05]`, `text-[18vw]`, `tracking-[-0.07em]`, `font-archivo`, `NUM_ROWS = 7`.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 14: TIẾT CHẾ ĐỘ "BÉO" CỦA CHỮ THUANPHAT
+- File ảnh hưởng: /src/components/ThuanPhatVisual.tsx
+- Chi tiết thay đổi:
+  + Giảm mức độ ép ngang/dọc của chữ bằng cách bỏ `scale-x-[1.05]` và đổi `scale-y-[0.8]` thành `scale-y-[0.9]`.
+  + Nới lỏng khoảng cách chữ một chút từ `tracking-[-0.07em]` thành `tracking-[-0.05em]` để phù hợp với tỷ lệ mới.
+- Tham số điều chỉnh: Xóa `scale-x`, chỉnh `scale-y` lên `0.9`, chỉnh tracking thành `-0.05em`.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 15: TIẾP TỤC TIẾT CHẾ ĐỘ "BÉO" CỦA CHỮ THUANPHAT
+- File ảnh hưởng: /src/components/ThuanPhatVisual.tsx
+- Chi tiết thay đổi:
+  + Nâng `scale-y` từ `0.9` lên `0.95` để chữ gần với tỷ lệ gốc hơn nữa, bớt bị lùn và bè.
+  + Nới nhẹ tracking từ `-0.05em` thành `-0.04em`.
+- Tham số điều chỉnh: `scale-y-[0.95]`, `tracking-[-0.04em]`.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 16: CĂN CHỈNH LẠI SAFE ZONE VÀ PHÂN BỔ DỌC
+- File ảnh hưởng: /src/components/ThuanPhatVisual.tsx
+- Chi tiết thay đổi:
+  + Chỉnh font size giao diện dọc từ `18vw` xuống `12.5vw` để nằm gọn trong vùng an toàn (safe zone) tương tự chiều rộng logo Boulevard1st.
+  + Đổi cách dàn hàng ở giao diện dọc sang `justify-between` với padding dọc `py-[8vh]`, giúp các dòng chữ rải đều và kéo giãn khắp màn hình theo đúng tinh thần visual club, tránh tình trạng bị co cụm "kẹt ở giữa".
+- Tham số điều chỉnh: Sửa class bao ngoài thành `justify-between landscape:justify-center py-[8vh] landscape:py-0 landscape:gap-[4.5vh]`, font size thành `text-[12.5vw]`.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 17: TIẾT CHẾ OPACITY, LOẠI BỎ KHỞI TẠO FADE-IN VÀ CĂN CHỈNH GIÃN DÒC GIAO DIỆN DỌC (PORTRAIT)
+- File ảnh hưởng: /src/components/ThuanPhatVisual.tsx
+- Chi tiết thay đổi:
+  + Giảm opacity cực đại (`MAX_OPACITY`) của chuỗi chữ "THUANPHAT" xuống còn `0.25` để chữ ẩn hiện nhẹ nhàng, không lấn át chủ thể (subject layer).
+  + Khắc phục hoàn toàn hiệu ứng fade-in chậm chạp lúc mới khởi tạo ứng dụng: đặt giá trị khởi tạo `phase = 'appearing'` và sử dụng `initial={false}` trên thẻ `motion.div` để chữ xuất hiện tức thì đầy đủ ngay khi mount mà không bị trễ hay mờ dần từ từ, sau đó vòng lặp ẩn hiện vẫn chạy mượt mà.
+  + Giao diện dọc (Portrait): Chuyển đổi cách dàn hàng từ `justify-between py-[8vh]` sang `justify-center` kết hợp `gap-[1.8vh]`, giúp các hàng chữ thu hẹp khoảng cách lại và tập trung ở trung tâm, đem lại trải nghiệm cân đối, đồng đều giống như trên Desktop (Landscape).
+- Tham số điều chỉnh: Chỉnh `MAX_OPACITY = 0.25`, đặt `initial={false}`, đổi `gap-[1.8vh]` và đồng bộ `justify-center` ở cả 2 hướng màn hình.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 18: TĂNG SỐ DÒNG PORTRAIT, THU HẸP GAP ĐỂ PHỦ TOÀN BỘ CHIỀU CAO MÀN HÌNH MÀ KHÔNG BỊ KẸT Ở GIỮA, TIẾT CHẾ THÊM OPACITY, VÀ BỎ HOÀN TOÀN HOẠT ẢNH FADE-IN KHI VÀO GIAO DIỆN CHÍNH
+- File ảnh hưởng: /src/components/ThuanPhatVisual.tsx & /src/components/VespertineBackground.tsx
+- Chi tiết thay đổi:
+  + Giao diện dọc (Portrait): Tăng số dòng hiển thị (`numRows`) lên `13` dòng (so với `7` dòng ở giao diện ngang) và thu hẹp gap xuống `gap-[1.2vh]` để các hàng xếp sát nhau hơn giống như desktop, đồng thời bao phủ đều từ trên xuống dưới toàn bộ chiều cao của màn hình, giải quyết triệt để vấn đề "bị kẹt ở giữa" của 7 dòng trước đó.
+  + Giảm thêm `MAX_OPACITY` từ `0.25` xuống `0.12` để chuỗi chữ "THUANPHAT" mờ ảo cực kỳ tinh tế và hoàn toàn không lấn át lớp nhân vật chính (Subject layer).
+  + Bỏ hoàn toàn hoạt ảnh chuyển cảnh (fade-out) chậm chạp 1.5s của lớp ảnh nền gốc lúc mới tải xong hoặc khi mở giao diện chính bằng cách set `transition={{ duration: 0 }}` trong `VespertineBackground.tsx`.
+- Tham số điều chỉnh: Sửa `numRows` động (`isLandscape ? 7 : 13`), đặt `gap-[1.2vh]` trên portrait, set `MAX_OPACITY = 0.12`, đổi `duration: 0` của fallback background.
+
