@@ -239,3 +239,12 @@ LẦN THAY ĐỔI THỨ 22: ĐẢO NGƯỢC CHIỀU SHADOW VÀ Z-INDEX CHO MENU 
   + Đảo ngược `box-shadow` thành `0 -20px 50px -10px rgba(0, 0, 0, 0.8)` để hướng shadow hắt lên trên (âm trục Y).
   + Đảo ngược phân cấp `z-index` tăng dần cho các thanh (từ 1 lên 10) bằng `:nth-child` để thanh bên dưới sẽ đè shadow lên cạnh dưới (bottom edge) của thanh bên trên nó, tạo đúng cảm giác thanh bên dưới đang lồng và hắt bóng lên thanh liền kề phía trên.
 - Tham số điều chỉnh: `box-shadow: 0 -20px 50px -10px rgba(0, 0, 0, 0.8)`, `:nth-child(n) { z-index: n }`.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 23: TỐI ƯU HÓA TRẢI NGHIỆM HOVER TRÊN MOBILE CHO MENU HISTORY
+- File ảnh hưởng: /src/components/FlowingMenu.tsx
+- Chi tiết thay đổi:
+  + Bổ sung xử lý sự kiện cảm ứng (`onTouchStart`, `onTouchEnd`) trên mobile cho các `menu__item-link`.
+  + Trích xuất vị trí tọa độ `clientX`, `clientY` từ `ev.touches[0]` (đối với onTouchStart) và `ev.changedTouches[0]` (đối với onTouchEnd) để hàm tính toán `findClosestEdge` của FlowingMenu vẫn hoạt động bình thường như trên desktop.
+  + Giải quyết tình trạng phải nhấn giữ rất lâu thiết bị mobile mới nhận diện là trạng thái "hover": giờ đây chỉ cần chạm (touch) là dải marquee sẽ xuất hiện ngay lập tức tương tự như khi lia chuột (mouse enter).
+- Tham số điều chỉnh: Thêm `onTouchStart={handleMouseEnter}` và `onTouchEnd={handleMouseLeave}`, lấy `touches[0].clientX` thay thế.

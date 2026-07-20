@@ -119,8 +119,16 @@ function MenuItem({ link, text, image, onClick, speed, textColor, marqueeBgColor
   const handleMouseEnter = (ev: any) => {
     if (!itemRef.current || !marqueeRef.current || !marqueeInnerRef.current) return;
     const rect = (itemRef.current as any).getBoundingClientRect();
-    const x = ev.clientX - rect.left;
-    const y = ev.clientY - rect.top;
+    let clientX = ev.clientX;
+    let clientY = ev.clientY;
+
+    if (ev.touches && ev.touches.length > 0) {
+      clientX = ev.touches[0].clientX;
+      clientY = ev.touches[0].clientY;
+    }
+
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
     const edge = findClosestEdge(x, y, rect.width, rect.height);
 
     gsap
@@ -133,8 +141,16 @@ function MenuItem({ link, text, image, onClick, speed, textColor, marqueeBgColor
   const handleMouseLeave = (ev: any) => {
     if (!itemRef.current || !marqueeRef.current || !marqueeInnerRef.current) return;
     const rect = (itemRef.current as any).getBoundingClientRect();
-    const x = ev.clientX - rect.left;
-    const y = ev.clientY - rect.top;
+    let clientX = ev.clientX;
+    let clientY = ev.clientY;
+
+    if (ev.changedTouches && ev.changedTouches.length > 0) {
+      clientX = ev.changedTouches[0].clientX;
+      clientY = ev.changedTouches[0].clientY;
+    }
+
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
     const edge = findClosestEdge(x, y, rect.width, rect.height);
 
     gsap
@@ -150,6 +166,8 @@ function MenuItem({ link, text, image, onClick, speed, textColor, marqueeBgColor
         onClick={onClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        onTouchStart={handleMouseEnter}
+        onTouchEnd={handleMouseLeave}
         style={{ color: textColor }}
       >
         <span className="sr-only">{text}</span>
