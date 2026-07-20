@@ -211,3 +211,31 @@ LẦN THAY ĐỔI THỨ 19: PHÁ VỠ GIỚI HẠN SAFEZONE Ở GIAO DIỆN DỌ
 - Tham số điều chỉnh: Sửa `numRows` động thành (`isLandscape ? 7 : 22`), tăng gap lên `gap-[1.8vh]`.
 
 
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 20: TÍCH HỢP GIAO DIỆN HISTORY SỬ DỤNG COMPONENT FLOWINGMENU THEO YÊU CẦU CỦA NGƯỜI DÙNG
+- File ảnh hưởng: /src/App.tsx, /src/components/FlowingMenu.tsx, /src/components/FlowingMenu.css, package.json
+- Chi tiết thay đổi:
+  + Cài đặt thêm thư viện `gsap` và `lucide-react`.
+  + Khởi tạo 2 file mới `/src/components/FlowingMenu.css` và `/src/components/FlowingMenu.tsx` sao chép nguyên mẫu do người dùng cung cấp.
+  + Sửa `App.tsx`: Import `X` từ `lucide-react` và `FlowingMenu`.
+  + Sửa `App.tsx`: Khởi tạo state `showHistoryDetail`.
+  + Sửa `App.tsx`: Thay thế giao diện History màn hình đen bằng popup hoàn chỉnh có sử dụng FlowingMenu với data `items` chuẩn: 'pre-BLVD', '#BLVD15', '#BLVD16', '#BLVD17', '#BLVD18'.
+  + Sửa `App.tsx`: Thêm popup detail blank block `history-detail-screen` cho action onClick của menu.
+- Tham số điều chỉnh: Cài gsap, render FlowingMenu với options `speed={4}`, `textColor="#a6a6a6"`, `marqueeTextColor="#ffffff"`, `marqueeBgColor="#1a1a1a"`, `borderColor="rgba(255,255,255,0.1)"`.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 21: THÊM SHADOW TẠO CHIỀU SÂU CHO CÁC THANH MENU (FLOWING MENU) Ở GIAO DIỆN NGANG
+- File ảnh hưởng: /src/components/FlowingMenu.css
+- Chi tiết thay đổi:
+  + Thêm `box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 1)` cho các `menu__item` ở giao diện ngang (`@media (orientation: landscape)`).
+  + Bổ sung phân cấp `z-index` giảm dần cho các thanh (từ 10 xuống 1) bằng `:nth-child` để đảm bảo thanh bên trên luôn đè (cả content lẫn shadow) lên thanh bên dưới, giúp bóng đổ (drop shadow) rơi đúng xuống thanh liền kề phía dưới. Khi hover và dải marquee (background `#1a1a1a`) xuất hiện, shadow này sẽ in hằn rõ tạo cảm giác không gian 3D và các layer chồng lên nhau.
+- Tham số điều chỉnh: `box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 1)`, `:nth-child(n) { z-index: 11-n }`.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 22: ĐẢO NGƯỢC CHIỀU SHADOW VÀ Z-INDEX CHO MENU (FLOWING MENU) Ở GIAO DIỆN NGANG
+- File ảnh hưởng: /src/components/FlowingMenu.css
+- Chi tiết thay đổi:
+  + Đảo ngược `box-shadow` thành `0 -20px 50px -10px rgba(0, 0, 0, 0.8)` để hướng shadow hắt lên trên (âm trục Y).
+  + Đảo ngược phân cấp `z-index` tăng dần cho các thanh (từ 1 lên 10) bằng `:nth-child` để thanh bên dưới sẽ đè shadow lên cạnh dưới (bottom edge) của thanh bên trên nó, tạo đúng cảm giác thanh bên dưới đang lồng và hắt bóng lên thanh liền kề phía trên.
+- Tham số điều chỉnh: `box-shadow: 0 -20px 50px -10px rgba(0, 0, 0, 0.8)`, `:nth-child(n) { z-index: n }`.

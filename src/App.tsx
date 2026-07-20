@@ -5,6 +5,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { X } from 'lucide-react';
+import FlowingMenu from './components/FlowingMenu';
 import { LedDotBoard } from './components/LedDotBoard';
 import LandscapeContactScreen from './components/LandscapeContactScreen';
 import PortraitContactScreen from './components/PortraitContactScreen';
@@ -23,6 +25,7 @@ export default function App() {
   const [scene, setScene] = useState<SceneState>('intro-play');
   const [showInfo, setShowInfo] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [showHistoryDetail, setShowHistoryDetail] = useState(false);
   const [showArchive, setShowArchive] = useState(false);
   const [showFriends, setShowFriends] = useState(false);
   const [showContactLandscape, setShowContactLandscape] = useState(false);
@@ -464,12 +467,45 @@ export default function App() {
         </div>
       )}
 
-      {/* History Screen: Completely blank black screen */}
+      {/* History Screen */}
       {showHistory && (
         <div 
           id="history-screen"
-          className="fixed inset-0 bg-black z-50 cursor-pointer"
-          onClick={() => setShowHistory(false)}
+          className="fixed inset-0 bg-black z-50 flex items-center justify-center"
+        >
+          <div className="absolute top-[6.5%] right-[6.5%] z-20">
+            <button 
+              onClick={() => setShowHistory(false)}
+              className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white rounded-full p-3 transition-colors shadow-lg border border-white/10"
+            >
+              <X size={24} strokeWidth={2} />
+            </button>
+          </div>
+          <div className="w-full h-full relative">
+            <FlowingMenu
+              items={[
+                { text: 'pre-BLVD', image: 'https://i.ibb.co/vy4ykmw/vespertine.png', onClick: (e: any) => { e.stopPropagation(); setShowHistoryDetail(true); } },
+                { text: '#BLVD15', image: 'https://i.ibb.co/Nd6BpwZ2/young.jpg', onClick: (e: any) => { e.stopPropagation(); setShowHistoryDetail(true); } },
+                { text: '#BLVD16', image: 'https://i.ibb.co/tP3rK5bg/ultrayoung.jpg', onClick: (e: any) => { e.stopPropagation(); setShowHistoryDetail(true); } },
+                { text: '#BLVD17', image: 'https://i.ibb.co/vy4ykmw/vespertine.png', onClick: (e: any) => { e.stopPropagation(); setShowHistoryDetail(true); } },
+                { text: '#BLVD18', image: 'https://i.ibb.co/Nd6BpwZ2/young.jpg', onClick: (e: any) => { e.stopPropagation(); } }
+              ]}
+              speed={4}
+              textColor="#a6a6a6"
+              marqueeTextColor="#ffffff"
+              marqueeBgColor="#1a1a1a"
+              borderColor="rgba(255,255,255,0.1)"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* History Detail Screen: Completely blank black screen */}
+      {showHistoryDetail && (
+        <div 
+          id="history-detail-screen"
+          className="fixed inset-0 bg-black z-[60] cursor-pointer"
+          onClick={() => setShowHistoryDetail(false)}
         />
       )}
 
