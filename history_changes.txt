@@ -248,3 +248,61 @@ LẦN THAY ĐỔI THỨ 23: TỐI ƯU HÓA TRẢI NGHIỆM HOVER TRÊN MOBILE CH
   + Trích xuất vị trí tọa độ `clientX`, `clientY` từ `ev.touches[0]` (đối với onTouchStart) và `ev.changedTouches[0]` (đối với onTouchEnd) để hàm tính toán `findClosestEdge` của FlowingMenu vẫn hoạt động bình thường như trên desktop.
   + Giải quyết tình trạng phải nhấn giữ rất lâu thiết bị mobile mới nhận diện là trạng thái "hover": giờ đây chỉ cần chạm (touch) là dải marquee sẽ xuất hiện ngay lập tức tương tự như khi lia chuột (mouse enter).
 - Tham số điều chỉnh: Thêm `onTouchStart={handleMouseEnter}` và `onTouchEnd={handleMouseLeave}`, lấy `touches[0].clientX` thay thế.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 24: KẾT HỢP CHỮ BLVD STRETCH VÀO THUANPHAT VISUAL VỚI CHU KỲ LUÂN PHIÊN
+- File ảnh hưởng: /src/components/ThuanPhatVisual.tsx
+- Chi tiết thay đổi:
+  + Cấu trúc lại component để hỗ trợ 2 chế độ (mode): `'thuanphat'` và `'blvd'`.
+  + Sau khi chuỗi chữ `THUANPHAT` (chế độ `'thuanphat'`) kết thúc chu kì xuất hiện và biến mất (cộng thêm 600ms delay), component sẽ chuyển sang chế độ `'blvd'`.
+  + Ở chế độ `'blvd'`, một phiên bản tàng hình (invisible) của chữ THUANPHAT được render để thiết lập kích thước chiều dài (width) chuẩn xác tuyệt đối, bọc trong một thẻ flex `h-full`.
+  + Lớp chữ `BLVD` (được vẽ bằng SVG `preserveAspectRatio="none"`) được overlay absolute (`inset-0`) lên trên thẻ tàng hình đó, nhận đúng width của chuỗi THUANPHAT và height của safezone container (sử dụng margin safezone: `py-[8vh] landscape:py-[4.5vh]`). Kết quả là chữ BLVD bị kéo giãn dọc toàn bộ safezone và có chiều rộng khớp y chang khối chữ THUANPHAT (để trải nghiệm được cân mắt).
+  + Chữ BLVD hiện lên trong 1.5s, sau đó mờ dần và chuyển lại sang chu kì THUANPHAT.
+- Tham số điều chỉnh: Bổ sung state `mode`, luân phiên cycle timeout, setup wrapper cấu trúc DOM `flex h-full` và text tàng hình.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 25: ĐIỀU CHỈNH LẠI CHỮ BLVD STRETCH CHO DỄ NHÌN HƠN
+- File ảnh hưởng: /src/components/ThuanPhatVisual.tsx
+- Chi tiết thay đổi:
+  + Tăng độ mờ (opacity) của chữ BLVD từ `0.12` lên `0.35` để nổi bật hơn, do chữ dạng rỗng (hollow) và nằm ở lớp nền (sau nhân vật) rất dễ bị chìm.
+  + Tăng độ dày viền chữ (strokeWidth) từ `3.2` lên `4.5` để tăng độ rõ nét.
+  + Chuyển thuộc tính `fontVariationSettings` vào thẻ `style` hợp lệ của React SVG text.
+- Tham số điều chỉnh: `opacity: 0.35`, `strokeWidth="4.5"`, sửa lỗi attribute `fontVariationSettings`.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 26: KHẮC PHỤC CHỮ BLVD STRETCH KHÔNG HIỂN THỊ & CHUẨN HOÁ VISUAL
+- File ảnh hưởng: /src/components/ThuanPhatVisual.tsx
+- Chi tiết thay đổi:
+  + Áp dụng `w-fit` vào thẻ wrapper của chữ BLVD để giới hạn chiều rộng chính xác với kích thước nội dung, cho phép thẻ SVG `w-full h-full` bên trong bám sát tỷ lệ.
+  + Thêm lớp `scale-y-[0.95]` vào chữ tàng hình (invisible text) để đồng bộ tuyệt đối kích thước với chuỗi chữ THUANPHAT.
+  + Đổi màu stroke của chữ BLVD thành trắng rỗng `rgba(255, 255, 255, 0.95)` với `strokeWidth="3.2"` và `opacity: 1` để giống hệt visual ở màn hình intro theo yêu cầu.
+- Tham số điều chỉnh: `w-fit`, `scale-y-[0.95]`, `stroke="rgba(255, 255, 255, 0.95)"`, `opacity: 1`.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 27: SỬA LỖI VÒNG LẶP CHU KỲ CHỮ VÀ HIỆU ỨNG APPEAR
+- File ảnh hưởng: /src/components/ThuanPhatVisual.tsx
+- Chi tiết thay đổi:
+  + Phát hiện lỗi vòng lặp `useEffect` bị ngắt sớm do dependency `phase` làm trigger cleanup function liên tục. Đã cấu trúc lại bằng cách sử dụng `useRef` để track các timeouts, và chỉ phụ thuộc vào `[mode, numRows]`.
+  + Đổi `initial={{ opacity: 0 }}` cho chữ THUANPHAT để mỗi khi kết thúc vòng lặp BLVD và quay lại THUANPHAT, chuỗi chữ sẽ có hiệu ứng xuất hiện dần từ dưới lên trên, tránh việc bị render giật cục ở `MAX_OPACITY`.
+  + Đảm bảo logic lặp vĩnh viễn (infinite cycle) giữa `'thuanphat'` và `'blvd'` hoạt động trơn tru.
+- Tham số điều chỉnh: Chuyển logic timeouts sang `useRef<NodeJS.Timeout[]>([])`, sửa mảng dependency, `initial={{ opacity: 0 }}`.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 28: KIẾN TRÚC LẠI TIMEOUT LOOP & STRETCH BLVD
+- File ảnh hưởng: /src/components/ThuanPhatVisual.tsx
+- Chi tiết thay đổi:
+  + Phát hiện lỗi vòng lặp phụ thuộc state React `useEffect` dẫn đến việc sau 1 chu kỳ thì render bị hụt. Đã viết lại sử dụng một hàm đệ quy `runSequence()` bên trong `useEffect` với biến cờ `active = true` (không phụ thuộc vào state `mode` hay `phase`). Điều này đảm bảo chu kỳ THUANPHAT -> BLVD sẽ chạy trơn tru vĩnh viễn không bị can thiệp bởi render cycle.
+  + Đã thêm thuộc tính `textLength="400"` và `lengthAdjust="spacingAndGlyphs"` vào thẻ `<text>` SVG của chữ BLVD. Vì vùng viewBox là 400 và SVG wrapper có width đúng bằng chữ THUANPHAT tàng hình, thuộc tính này ép chữ BLVD phải dãn khoảng cách giữa các kí tự ra lấp đầy tuyệt đối 100% không gian (kết quả là 2 chuỗi sẽ dài bằng hệt nhau đến từng pixel).
+  + Bỏ hoàn toàn hiệu ứng fade-in/fade-out của chữ BLVD theo yêu cầu, render trực tiếp thẻ `<svg>` dựa trên điều kiện `phase === 'appearing'`, xuất hiện và biến mất tức thì.
+- Tham số điều chỉnh: Xoá `motion.svg`, dùng `svg` thường, thêm `textLength="400" lengthAdjust="spacingAndGlyphs"`, cấu trúc lại timeout loop bằng đệ quy.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 29: RÚT NGẮN THỜI GIAN CHỜ GIỮA CÁC ANIMATION ĐỂ TĂNG ĐỘ "DỒN DẬP"
+- File ảnh hưởng: /src/components/ThuanPhatVisual.tsx
+- Chi tiết thay đổi:
+  + Giảm `stay duration` của THUANPHAT từ 800ms xuống 300ms.
+  + Giảm thời gian chờ trước khi BLVD xuất hiện từ 600ms xuống 150ms.
+  + Giảm thời gian hiển thị của BLVD từ 1500ms xuống 500ms.
+  + Giảm thời gian chờ trước khi vòng lặp quay lại THUANPHAT từ 600ms xuống 150ms.
+  + Mục tiêu: Tối ưu hoá nhịp độ (pacing) để visual dồn dập, mạnh mẽ và khớp với nhịp độ của intro ban đầu mà không can thiệp vào bất kỳ visual/layout nào hiện tại.
+- Tham số điều chỉnh: Các giá trị delay trong `setTimeout` của hàm `runSequence()`.
