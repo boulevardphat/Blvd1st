@@ -6,7 +6,16 @@ import {defineConfig} from 'vite';
 export default defineConfig(() => {
   return {
     plugins: [react(), tailwindcss()],
+    esbuild: {
+      target: ['es2015', 'safari12'],
+    },
+    optimizeDeps: {
+      esbuildOptions: {
+        target: ['es2015', 'safari12'],
+      },
+    },
     build: {
+      target: ['es2015', 'safari12'],
       chunkSizeWarningLimit: 1000,
       rollupOptions: {
         output: {

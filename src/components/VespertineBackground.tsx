@@ -9,18 +9,18 @@ export const VespertineBackground = () => {
   const isLoaded = bgLoaded && sjLoaded;
 
   return (
-    <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
+    <div className="absolute top-0 right-0 bottom-0 left-0 w-full h-full pointer-events-none z-0">
       {/* Background Layer */}
       <img
         src="https://i.ibb.co/JFvk9wzr/vespertine-bg.png"
         alt="Background layer"
         referrerPolicy="no-referrer"
-        className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center] pointer-events-none"
+        className="absolute top-0 right-0 bottom-0 left-0 w-full h-full object-cover portrait:object-[49%_center] pointer-events-none"
         onLoad={() => setBgLoaded(true)}
       />
       
       {/* Middle empty layer (for future use) */}
-      <div className="absolute inset-0 pointer-events-none z-0" id="middle-layer">
+      <div className="absolute top-0 right-0 bottom-0 left-0 pointer-events-none z-0" id="middle-layer">
         <ThuanPhatVisual />
       </div>
 
@@ -29,7 +29,7 @@ export const VespertineBackground = () => {
         src="https://i.ibb.co/jPHPJSG7/vespertine-sj.png"
         alt="Subject layer"
         referrerPolicy="no-referrer"
-        className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center] pointer-events-none"
+        className="absolute top-0 right-0 bottom-0 left-0 w-full h-full object-cover portrait:object-[49%_center] pointer-events-none"
         onLoad={() => setSjLoaded(true)}
       />
 
@@ -38,7 +38,7 @@ export const VespertineBackground = () => {
         src="https://i.ibb.co/vy4ykmw/vespertine.png" 
         alt="Fallback background"
         referrerPolicy="no-referrer"
-        className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center] pointer-events-none z-10"
+        className="absolute top-0 right-0 bottom-0 left-0 w-full h-full object-cover portrait:object-[49%_center] pointer-events-none z-10"
         initial={{ opacity: 1 }}
         animate={{ opacity: isLoaded ? 0 : 1 }}
         transition={{ duration: 0 }}

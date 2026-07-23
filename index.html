@@ -4,7 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Boulevard1st</title>
-    <script src="https://cdn.jsdelivr.net/npm/@hot-page/hotfx-split-flap" type="module"></script>
+    <script>
+      // Polyfill globalThis for older browsers like iOS 12
+      (function() {
+        if (typeof globalThis === 'object') return;
+        Object.prototype.__defineGetter__('__magic__', function() {
+          return this;
+        });
+        __magic__.globalThis = __magic__;
+        delete Object.prototype.__magic__;
+      }());
+    </script>
   </head>
   <body>
     <div id="root"></div>
