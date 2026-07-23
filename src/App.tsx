@@ -161,14 +161,14 @@ export default function App() {
         src="https://i.ibb.co/tP3rK5bg/ultrayoung.jpg"
         alt="Boulevard1st Ultrayoung Background"
         referrerPolicy="no-referrer"
-        className="absolute top-0 right-0 bottom-0 left-0 w-full h-full object-cover portrait:object-[49%_center] z-0 opacity-0 pointer-events-none"
+        className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center] z-0 opacity-0 pointer-events-none"
       />
       <img
         id="preload-young"
         src="https://i.ibb.co/Nd6BpwZ2/young.jpg"
         alt="Boulevard1st Young Background"
         referrerPolicy="no-referrer"
-        className="absolute top-0 right-0 bottom-0 left-0 w-full h-full object-cover portrait:object-[49%_center] z-0 opacity-0 pointer-events-none"
+        className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center] z-0 opacity-0 pointer-events-none"
       />
       <VespertineBackground />
 
@@ -176,11 +176,11 @@ export default function App() {
       {scene === 'intro-play' && (
         <div 
           id="scene-play"
-          className="absolute top-0 right-0 bottom-0 left-0 flex items-center justify-center bg-black z-50 select-none"
+          className="absolute inset-0 flex items-center justify-center bg-black z-50 select-none"
         >
           <div
             id="intro-phat-text"
-            className="font-sans text-[max(2.5rem,min(8vw,5rem))] text-white/90 select-none tracking-normal font-normal"
+            className="font-sans text-[clamp(2.5rem,8vw,5rem)] text-white/90 select-none tracking-normal font-normal"
           >
             phát
           </div>
@@ -191,7 +191,7 @@ export default function App() {
       {scene === 'intro-blvd' && (
         <div 
           id="scene-blvd"
-          className="absolute top-0 right-0 bottom-0 left-0 flex items-center justify-center bg-black z-40 overflow-hidden select-none w-full h-full"
+          className="absolute inset-0 flex items-center justify-center bg-black z-40 overflow-hidden select-none w-full h-full"
         >
           <svg 
             viewBox="0 0 400 100" 
@@ -222,18 +222,18 @@ export default function App() {
       {scene === 'intro-image-1' && (
         <div 
           id="scene-intro-image-1"
-          className="absolute top-0 right-0 bottom-0 left-0 z-20 select-none pointer-events-none"
+          className="absolute inset-0 z-20 select-none pointer-events-none"
         >
           {/* Sibling image to ensure perfect mix-blend-mode rendering */}
           <img
             src="https://i.ibb.co/tP3rK5bg/ultrayoung.jpg"
             alt="Intro Background Reference 1"
             referrerPolicy="no-referrer"
-            className="absolute top-0 right-0 bottom-0 left-0 w-full h-full object-cover portrait:object-[49%_center]"
+            className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center]"
           />
           {/* #8375B3 Tint Overlays */}
-          <div className="absolute top-0 right-0 bottom-0 left-0 bg-[#8375B3] mix-blend-color opacity-95 pointer-events-none" />
-          <div className="absolute top-0 right-0 bottom-0 left-0 bg-[#8375B3]/35 mix-blend-multiply pointer-events-none" />
+          <div className="absolute inset-0 bg-[#8375B3] mix-blend-color opacity-95 pointer-events-none" />
+          <div className="absolute inset-0 bg-[#8375B3]/35 mix-blend-multiply pointer-events-none" />
         </div>
       )}
 
@@ -241,18 +241,18 @@ export default function App() {
       {scene === 'intro-image-2' && (
         <div 
           id="scene-intro-image-2"
-          className="absolute top-0 right-0 bottom-0 left-0 z-15 select-none pointer-events-none"
+          className="absolute inset-0 z-15 select-none pointer-events-none"
         >
           {/* Sibling image to ensure perfect mix-blend-mode rendering */}
           <img
             src="https://i.ibb.co/Nd6BpwZ2/young.jpg"
             alt="Intro Background Reference 2"
             referrerPolicy="no-referrer"
-            className="absolute top-0 right-0 bottom-0 left-0 w-full h-full object-cover portrait:object-[49%_center]"
+            className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center]"
           />
           {/* #C54EAA Tint Overlays */}
-          <div className="absolute top-0 right-0 bottom-0 left-0 bg-[#C54EAA] mix-blend-color opacity-95 pointer-events-none" />
-          <div className="absolute top-0 right-0 bottom-0 left-0 bg-[#C54EAA]/35 mix-blend-multiply pointer-events-none" />
+          <div className="absolute inset-0 bg-[#C54EAA] mix-blend-color opacity-95 pointer-events-none" />
+          <div className="absolute inset-0 bg-[#C54EAA]/35 mix-blend-multiply pointer-events-none" />
         </div>
       )}
 
@@ -260,19 +260,19 @@ export default function App() {
       {scene === 'intro-image-3' && (
         <div 
           id="scene-intro-image-3"
-          className="absolute top-0 right-0 bottom-0 left-0 z-10 select-none pointer-events-none"
+          className="absolute inset-0 z-10 select-none pointer-events-none"
         >
           {/* Sibling image to ensure perfect mix-blend-mode rendering */}
           <VespertineBackground />
           {/* #89CC04 Tint Overlays */}
-          <div className="absolute top-0 right-0 bottom-0 left-0 bg-[#89CC04] mix-blend-color opacity-95 pointer-events-none" />
-          <div className="absolute top-0 right-0 bottom-0 left-0 bg-[#89CC04]/35 mix-blend-multiply pointer-events-none" />
+          <div className="absolute inset-0 bg-[#89CC04] mix-blend-color opacity-95 pointer-events-none" />
+          <div className="absolute inset-0 bg-[#89CC04]/35 mix-blend-multiply pointer-events-none" />
         </div>
       )}
 
       {/* Main App Screen (Background Image & Interactive Interface Layouts) */}
       {scene === 'main-app' && (
-        <div className="absolute top-0 right-0 bottom-0 left-0 z-10 overflow-y-auto overflow-x-hidden no-scrollbar scroll-smooth">
+        <div className="absolute inset-0 z-10 overflow-y-auto overflow-x-hidden no-scrollbar scroll-smooth">
           <div className="w-full flex flex-col overflow-x-hidden">
             {/* The 100vh Main Screen View */}
             <div className="relative w-full h-[calc(var(--vh,1vh)*100)] shrink-0 flex items-center justify-center overflow-hidden ">
@@ -281,7 +281,7 @@ export default function App() {
               {/* Landscape Layout (Visible only in landscape / horizontal viewports) */}
               <div 
                 id="safezone-overlay-landscape" 
-                className="hidden landscape:flex absolute top-0 right-0 bottom-0 left-0 flex-col justify-between p-[6.5%] pointer-events-none"
+                className="hidden landscape:flex absolute inset-0 flex-col justify-between p-[6.5%] pointer-events-none"
               >
                 {/* Top Row */}
                 <div className="flex justify-between items-start w-full">
@@ -289,7 +289,7 @@ export default function App() {
                     <button 
                       id="btn-contact-landscape" 
                       onClick={() => setShowContactLandscape(true)}
-                      className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[max(1.2rem,min(4.8vw,5.75rem))] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
+                      className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
                       style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                     >
                       contact
@@ -299,7 +299,7 @@ export default function App() {
                   <button 
                     id="btn-history-landscape" 
                     onClick={() => setShowHistory(true)}
-                    className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[max(1.2rem,min(4.8vw,5.75rem))] leading-none cursor-pointer tracking-tight select-none"
+                    className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
                     style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                   >
                     his-tory
@@ -310,7 +310,7 @@ export default function App() {
                 <div className="flex justify-between items-center w-full pointer-events-none">
                   <button 
                     id="btn-booking-landscape" 
-                    className="pointer-events-none text-white/50 font-archivo text-[max(1.2rem,min(4.8vw,5.75rem))] leading-none tracking-tight select-none relative left-[0.1em]"
+                    className="pointer-events-none text-white/50 font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none tracking-tight select-none relative left-[0.1em]"
                     style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                   >
                     booking
@@ -318,7 +318,7 @@ export default function App() {
                   <button 
                     id="btn-friends-landscape" 
                     onClick={() => setShowFriends(true)}
-                    className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[max(1.2rem,min(4.8vw,5.75rem))] leading-none cursor-pointer tracking-tight select-none"
+                    className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
                     style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                   >
                     friends
@@ -330,7 +330,7 @@ export default function App() {
                   <button 
                     id="btn-info-landscape" 
                     onClick={() => setShowInfo(true)}
-                    className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[max(1.2rem,min(4.8vw,5.75rem))] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
+                    className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
                     style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                   >
                     info
@@ -339,11 +339,11 @@ export default function App() {
                   {/* Centered Logo aligned with bottom baseline */}
                   <div 
                     id="logo-container"
-                    className="absolute left-1/2 bottom-0 [transform:translateX(-50%)] flex items-end justify-center pointer-events-auto"
+                    className="absolute left-1/2 bottom-0 -translate-x-1/2 flex items-end justify-center pointer-events-auto"
                   >
                     <h1 
                       id="logo-text-landscape"
-                      className="font-archivo text-white font-black text-[max(2rem,min(7.6vw,9.125rem))] leading-[0.85] tracking-tighter select-none whitespace-nowrap"
+                      className="font-archivo text-white font-black text-[clamp(2rem,7.6vw,9.125rem)] leading-[0.85] tracking-tighter select-none whitespace-nowrap"
                     >
                       Boulevard1st
                     </h1>
@@ -352,7 +352,7 @@ export default function App() {
                   <button 
                     id="btn-archive-landscape" 
                     onClick={() => setShowArchive(true)}
-                    className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[max(1.2rem,min(4.8vw,5.75rem))] leading-none cursor-pointer tracking-tight select-none"
+                    className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
                     style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                   >
                     archive
@@ -363,17 +363,17 @@ export default function App() {
               {/* Portrait Layout (Visible only in portrait / vertical viewports) */}
               <div 
                 id="safezone-overlay-portrait" 
-                className="hidden portrait:flex absolute top-0 right-0 bottom-0 left-0 pointer-events-none"
+                className="hidden portrait:flex absolute inset-0 pointer-events-none"
               >
                 {/* Anchor point exactly at 66.5vh, centered horizontally */}
-                <div className="absolute left-1/2 [transform:translateX(-50%)] w-max pointer-events-auto flex flex-col items-center" style={{ top: 'calc(var(--vh, 1vh) * 66.5)' }}>
+                <div className="absolute left-1/2 -translate-x-1/2 w-fit pointer-events-auto flex flex-col items-center" style={{ top: 'calc(var(--vh, 1vh) * 66.5)' }}>
                                   {/* Top Row - positioned absolute above the center */}
                   <div className="absolute bottom-full mb-[3px] w-full flex justify-between items-end">
                     <div className="relative pointer-events-auto">
                       <button 
                         id="btn-contact-portrait" 
                         onClick={() => setShowContactPortrait(true)}
-                        className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[max(1.65rem,min(6.5vw,3.4rem))] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
+                        className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
                         style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                       >
                         contact
@@ -382,7 +382,7 @@ export default function App() {
 
                     <button 
                       id="btn-booking-portrait"
-                      className="absolute left-1/2 [transform:translateX(-50%)] bottom-0 pointer-events-none text-white/50 font-archivo text-[max(1.65rem,min(6.5vw,3.4rem))] leading-none tracking-tight select-none"
+                      className="absolute left-1/2 -translate-x-1/2 bottom-0 pointer-events-none text-white/50 font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none"
                       style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                     >
                       booking
@@ -391,7 +391,7 @@ export default function App() {
                     <button 
                       id="btn-history-portrait" 
                       onClick={() => setShowHistory(true)}
-                      className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[max(1.65rem,min(6.5vw,3.4rem))] leading-none cursor-pointer tracking-tight select-none"  
+                      className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"  
                       style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                     >
                       his-tory
@@ -402,7 +402,7 @@ export default function App() {
                   <div className="mt-[3px] flex flex-col w-full relative">
                     <h1 
                       id="logo-text-portrait"
-                      className="font-archivo text-white font-black text-[max(2.5rem,min(11.5vw,6rem))] leading-none tracking-tighter select-none whitespace-nowrap"
+                      className="font-archivo text-white font-black text-[clamp(2.5rem,11.5vw,6rem)] leading-none tracking-tighter select-none whitespace-nowrap"
                     >
                       Boulevard1st
                     </h1>
@@ -412,7 +412,7 @@ export default function App() {
                       <button 
                         id="btn-info-portrait" 
                         onClick={() => setShowInfo(true)}
-                        className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[max(1.65rem,min(6.5vw,3.4rem))] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
+                        className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
                         style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                       >
                         info
@@ -421,7 +421,7 @@ export default function App() {
                       <button 
                         id="btn-friends-portrait"
                         onClick={() => setShowFriends(true)}
-                        className="absolute left-1/2 [transform:translateX(-50%)] top-0 pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[max(1.65rem,min(6.5vw,3.4rem))] leading-none cursor-pointer tracking-tight select-none"
+                        className="absolute left-1/2 -translate-x-1/2 top-0 pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"
                         style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                       >
                         friends
@@ -430,7 +430,7 @@ export default function App() {
                       <button 
                         id="btn-archive-portrait" 
                         onClick={() => setShowArchive(true)}
-                        className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[max(1.65rem,min(6.5vw,3.4rem))] leading-none cursor-pointer tracking-tight select-none"
+                        className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"
                         style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                       >
                         archive
@@ -460,7 +460,7 @@ export default function App() {
       {showInfo && (
         <div 
           id="info-led-screen"
-          className="fixed top-0 right-0 bottom-0 left-0 bg-black z-50 cursor-pointer select-none"
+          className="fixed inset-0 bg-black z-50 cursor-pointer select-none"
           onClick={() => setShowInfo(false)}
         >
           <LedDotBoard />
@@ -471,7 +471,7 @@ export default function App() {
       {showHistory && (
         <div 
           id="history-screen"
-          className="fixed top-0 right-0 bottom-0 left-0 bg-black z-50 flex items-center justify-center"
+          className="fixed inset-0 bg-black z-50 flex items-center justify-center"
         >
           <div className="absolute top-[6.5%] right-[6.5%] z-20">
             <button 
@@ -504,7 +504,7 @@ export default function App() {
       {showHistoryDetail && (
         <div 
           id="history-detail-screen"
-          className="fixed top-0 right-0 bottom-0 left-0 bg-black z-[60] cursor-pointer"
+          className="fixed inset-0 bg-black z-[60] cursor-pointer"
           onClick={() => setShowHistoryDetail(false)}
         />
       )}
@@ -513,7 +513,7 @@ export default function App() {
       {showArchive && (
         <div 
           id="archive-screen"
-          className="fixed top-0 right-0 bottom-0 left-0 bg-black z-50 cursor-pointer"
+          className="fixed inset-0 bg-black z-50 cursor-pointer"
           onClick={() => setShowArchive(false)}
         />
       )}
@@ -522,7 +522,7 @@ export default function App() {
       {showFriends && (
         <div 
           id="friends-screen"
-          className="fixed top-0 right-0 bottom-0 left-0 bg-black z-50 cursor-pointer"
+          className="fixed inset-0 bg-black z-50 cursor-pointer"
           onClick={() => setShowFriends(false)}
         />
       )}

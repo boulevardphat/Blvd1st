@@ -142,11 +142,11 @@ export const IntroClock = () => {
   return (
     <div 
       id="scene-clock"
-      className="absolute top-0 right-0 bottom-0 left-0 flex items-center justify-center bg-black z-30 select-none"
+      className="absolute inset-0 flex items-center justify-center bg-black z-30 select-none"
     >
       <div 
         id="clock-display"
-        className="font-archivo font-normal text-[max(1.4rem,min(4.2vw,3.8rem))] text-white/95 tracking-[0.05em] select-none pointer-events-none tabular-nums"
+        className="font-archivo font-normal text-[clamp(1.4rem,4.2vw,3.8rem)] text-white/95 tracking-[0.05em] select-none pointer-events-none tabular-nums"
       >
         {timeStr}
       </div>

@@ -42,7 +42,7 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
   const transitionProps = { duration: 0.8, ease: [0.16, 1, 0.3, 1] };
 
   const renderTextContent = () => (
-    <div className="absolute top-0 right-0 bottom-0 left-0 flex flex-col justify-between p-[6.5%] pointer-events-none hidden landscape:flex z-30">
+    <div className="absolute inset-0 flex flex-col justify-between p-[6.5%] pointer-events-none hidden landscape:flex z-30">
       {/* Top Row */}
       <div className="flex justify-between items-start w-full">
         <div className="relative">
@@ -53,7 +53,7 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
             exit="initial"
             transition={transitionProps}
             onClick={onClose}
-            className="block font-archivo hover-italic-transition text-[max(1.2rem,min(4.8vw,5.75rem))] leading-none tracking-tight select-none relative z-20 left-[0.1em] cursor-pointer pointer-events-auto"
+            className="block font-archivo hover-italic-transition text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none tracking-tight select-none relative z-20 left-[0.1em] cursor-pointer pointer-events-auto"
             style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
           >
             contact
@@ -65,7 +65,7 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.5 }}
-            className="absolute top-[100%] left-[0.1em] mt-2.5 flex flex-col space-y-1.5 pointer-events-auto select-none origin-top-left"
+            className="absolute top-[100%] left-[0.1em] mt-2.5 flex flex-col gap-1.5 pointer-events-auto select-none origin-top-left"
             style={{ scale: 1.2 }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -74,7 +74,7 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
               initial={{ opacity: 0, y: -15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.15 }}
-              className="w-[12.5rem] h-10 bg-black rounded-lg flex items-center justify-center space-x-6 border border-white/5 hover:border-white/20 transition-colors"
+              className="w-[12.5rem] h-10 bg-black rounded-lg flex items-center justify-center gap-6 border border-white/5 hover:border-white/20 transition-colors"
             >
               <a 
                 href="https://www.facebook.com/hellothisisBLVD17/" 
@@ -135,7 +135,7 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
           exit="initial"
           transition={transitionProps}
           onClick={onClose}
-          className="block font-archivo text-[max(1.2rem,min(4.8vw,5.75rem))] leading-none tracking-tight select-none cursor-pointer pointer-events-auto"
+          className="block font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none tracking-tight select-none cursor-pointer pointer-events-auto"
           style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
         >
           his-tory
@@ -150,7 +150,7 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
           animate="animate"
           exit="initial"
           transition={transitionProps}
-          className="block font-archivo text-[max(1.2rem,min(4.8vw,5.75rem))] leading-none tracking-tight select-none relative left-[0.1em]"
+          className="block font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none tracking-tight select-none relative left-[0.1em]"
           style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
         >
           booking
@@ -161,7 +161,7 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
           animate="animate"
           exit="initial"
           transition={transitionProps}
-          className="block font-archivo text-[max(1.2rem,min(4.8vw,5.75rem))] leading-none tracking-tight select-none"
+          className="block font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none tracking-tight select-none"
           style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
         >
           friends
@@ -177,15 +177,15 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
           exit="initial"
           transition={transitionProps}
           onClick={onClose}
-          className="block font-archivo text-[max(1.2rem,min(4.8vw,5.75rem))] leading-none tracking-tight select-none relative left-[0.1em] cursor-pointer pointer-events-auto"
+          className="block font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none tracking-tight select-none relative left-[0.1em] cursor-pointer pointer-events-auto"
           style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
         >
           info
         </motion.span>
 
         {/* Centered Logo aligned with bottom baseline */}
-        <div className="absolute left-1/2 bottom-0 [transform:translateX(-50%)] flex items-end justify-center">
-          <h1 className="font-archivo text-white font-black text-[max(2rem,min(7.6vw,9.125rem))] leading-[0.85] tracking-tighter select-none whitespace-nowrap">
+        <div className="absolute left-1/2 bottom-0 -translate-x-1/2 flex items-end justify-center">
+          <h1 className="font-archivo text-white font-black text-[clamp(2rem,7.6vw,9.125rem)] leading-[0.85] tracking-tighter select-none whitespace-nowrap">
             Boulevard1st
           </h1>
         </div>
@@ -197,7 +197,7 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
           exit="initial"
           transition={transitionProps}
           onClick={onClose}
-          className="block font-archivo text-[max(1.2rem,min(4.8vw,5.75rem))] leading-none tracking-tight select-none cursor-pointer pointer-events-auto"
+          className="block font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none tracking-tight select-none cursor-pointer pointer-events-auto"
           style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
         >
           archive
@@ -216,7 +216,7 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
     >
       {/* Background container with image and overlays */}
       <div 
-        className="absolute top-0 right-0 bottom-0 left-0 z-0 cursor-pointer pointer-events-auto"
+        className="absolute inset-0 z-0 cursor-pointer pointer-events-auto"
         onClick={onClose}
       >
         <VespertineBackground />
@@ -226,14 +226,14 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={transitionProps}
-          className="absolute top-0 right-0 bottom-0 left-0 bg-[#89CC04] mix-blend-color opacity-95 pointer-events-none" 
+          className="absolute inset-0 bg-[#89CC04] mix-blend-color opacity-95 pointer-events-none" 
         />
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={transitionProps}
-          className="absolute top-0 right-0 bottom-0 left-0 bg-[#89CC04]/35 mix-blend-multiply pointer-events-none" 
+          className="absolute inset-0 bg-[#89CC04]/35 mix-blend-multiply pointer-events-none" 
         />
         
         {/* Dim Overlay */}
@@ -242,7 +242,7 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={transitionProps}
-          className="absolute top-0 right-0 bottom-0 left-0 bg-black/60 pointer-events-none"
+          className="absolute inset-0 bg-black/60 pointer-events-none"
         />
       </div>
 
@@ -250,7 +250,7 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
       {renderTextContent()}
 
       {/* Copy Notification Toast */}
-      <div className="absolute top-[20%] left-1/2 [transform:translateX(-50%)] h-8 flex items-center justify-center pointer-events-none z-50">
+      <div className="absolute top-[20%] left-1/2 -translate-x-1/2 h-8 flex items-center justify-center pointer-events-none z-50">
         <AnimatePresence>
           {copyFeedback && (
             <motion.div

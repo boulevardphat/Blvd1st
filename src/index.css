@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..100,100..900;1,62..100,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@900&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -97,29 +99,3 @@ hotfx-split-flap {
 
 
 
-
-
-/* Fallback for Safari 12 which doesn't support @property */
-:root, *, ::before, ::after {
-  --tw-translate-x: 0;
-  --tw-translate-y: 0;
-  --tw-translate-z: 0;
-  --tw-scale-x: 1;
-  --tw-scale-y: 1;
-  --tw-scale-z: 1;
-  --tw-scroll-snap-strictness: proximity;
-  --tw-space-y-reverse: 0;
-  --tw-space-x-reverse: 0;
-  --tw-border-style: solid;
-  --tw-shadow: 0 0 transparent;
-  --tw-shadow-alpha: 100%;
-  --tw-inset-shadow: 0 0 transparent;
-  --tw-inset-shadow-alpha: 100%;
-  --tw-ring-shadow: 0 0 transparent;
-  --tw-inset-ring-shadow: 0 0 transparent;
-  --tw-ring-offset-width: 0;
-  --tw-ring-offset-color: #fff;
-  --tw-ring-offset-shadow: 0 0 transparent;
-  --tw-outline-style: solid;
-  --tw-drop-shadow-alpha: 100%;
-}

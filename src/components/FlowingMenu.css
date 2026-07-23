@@ -139,7 +139,7 @@
 
 .marquee__img {
   height: 14vh;
-  width: 24.88vh; /* 14vh * 16/9 for older browsers */
+  width: auto;
   aspect-ratio: 16 / 9;
   margin: 0 2vw;
   padding: 0;

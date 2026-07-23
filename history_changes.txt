@@ -306,25 +306,3 @@ LẦN THAY ĐỔI THỨ 29: RÚT NGẮN THỜI GIAN CHỜ GIỮA CÁC ANIMATION 
   + Giảm thời gian chờ trước khi vòng lặp quay lại THUANPHAT từ 600ms xuống 150ms.
   + Mục tiêu: Tối ưu hoá nhịp độ (pacing) để visual dồn dập, mạnh mẽ và khớp với nhịp độ của intro ban đầu mà không can thiệp vào bất kỳ visual/layout nào hiện tại.
 - Tham số điều chỉnh: Các giá trị delay trong `setTimeout` của hàm `runSequence()`.
-
----------------------------------------------------------
-LẦN THAY ĐỔI THỨ 30: FIX LỖI HIỂN THỊ TRÊN CÁC TRÌNH DUYỆT / THIẾT BỊ CŨ (IPHONE 5S / IOS 12)
-- File ảnh hưởng: Nhiều file (vite.config.ts, index.html, tất cả css/tsx)
-- Chi tiết thay đổi:
-  + Cập nhật target build của Vite và esbuild thành `['es2015', 'safari12']` để đảm bảo code JS được chuyển đổi (transpile) đúng cú pháp cho các trình duyệt cũ.
-  + Thêm polyfill cho `globalThis` ở `index.html` (Safari 12 không hỗ trợ `globalThis` khiến app bị sập (white screen) nếu bất kỳ thư viện nào dùng).
-  + Thay thế toàn bộ class CSS sử dụng hàm `clamp()` thành `max(min())` vì Safari 12 không hỗ trợ `clamp()`.
-  + Loại bỏ CSS class `gap` (ví dụ `gap-6`, `gap-1.5`) trong các block `flex` và thay thế bằng `space-x` / `space-y` tương ứng (Flex gap chỉ được hỗ trợ từ Safari 14).
-  + Loại bỏ CSS class `inset-0` thay bằng `top-0 left-0 right-0 bottom-0` (inset shorthand chỉ hỗ trợ từ Safari 14).
-  + Khắc phục `aspect-ratio` trong CSS file vì iOS 12 chưa hỗ trợ.
-  + Đổi `w-fit` thành `w-max` (max-content).
-- Mục tiêu: Hoạt động trơn tru trên iPhone 5s, xoá bỏ các lỗi syntax JS và tương thích flex layout trên Safari 12.
-
----------------------------------------------------------
-LẦN THAY ĐỔI THỨ 31: HOÀN THIỆN FIX CSS CHO IPHONE 5S / IOS 12
-- File ảnh hưởng: Nhiều file (src/index.css, src/App.tsx, src/components/*)
-- Chi tiết thay đổi:
-  + Cài đặt `lightningcss` và `lightningcss-cli` nhưng phát hiện Tailwind v4 phụ thuộc vào `@property` (không được Safari 12 hỗ trợ).
-  + Thay thế thủ công toàn bộ các class tiện ích của Tailwind sử dụng `translate`, `scale`, và `rotate` (vd: `-translate-x-1/2`, `scale-[1.15]`, `rotate-12`) thành các giá trị tuỳ chỉnh của `transform` (vd: `[transform:translateX(-50%)]`, `[transform:scale(1.15)]`, `-[transform:rotate(12deg)]`) vì Safari 12 không hỗ trợ các thuộc tính `translate`, `scale`, `rotate` độc lập.
-  + Viết script tự động quét và inject các giá trị khởi tạo (initial-value) của các biến CSS `--tw-*` (như `--tw-shadow`, `--tw-ring-shadow`, `--tw-space-y-reverse`...) vào `:root` trong `src/index.css`. Điều này giúp khắc phục lỗi mất hoàn toàn box-shadow, ring và các class phức tạp do Safari 12 bỏ qua `@property`.
-- Mục tiêu: Khắc phục triệt để lỗi "CSS gần như không tồn tại" (vỡ layout hoàn toàn) trên iPhone 5s, đảm bảo khả năng tương thích ngược của Tailwind v4.
