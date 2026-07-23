@@ -7,7 +7,7 @@ const Footer = ({ isPopupOpen = false }: { isPopupOpen?: boolean }) => {
       {/* Flat Solid Black Footer (Thinner, tight, black layout with snug logos and prominent dark black hint shadow) */}
             <div
               id="app-footer"
-              className="relative w-[150vw] left-1/2 -translate-x-1/2 min-h-[calc(var(--vh,1vh)*15)] bg-black border-t border-white/10 shrink-0 z-20 flex items-center justify-center py-6"
+              className="relative w-[150vw] left-1/2 [transform:translateX(-50%)] min-h-[calc(var(--vh,1vh)*15)] bg-black border-t border-white/10 shrink-0 z-20 flex items-center justify-center py-6"
             >
               {/* Animated shadow overlay for smooth entry */}
               <motion.div
@@ -24,7 +24,7 @@ const Footer = ({ isPopupOpen = false }: { isPopupOpen?: boolean }) => {
                   href="https://blvdguestbook.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-[max(96px,min(28vw,240px))] h-[max(32px,min(8.5vw,54px))] bg-white border border-black md:border-2 rounded-none shadow-[2px_2px_0px_0px_#8ace00] md:shadow-[3px_3px_0px_0px_#8ace00] hover:shadow-[4px_4px_0px_0px_#8ace00] hover:-translate-x-[1px] hover:-translate-y-[1px] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-150 select-none cursor-pointer"
+                  className="flex items-center justify-center w-[max(96px,min(28vw,240px))] h-[max(32px,min(8.5vw,54px))] bg-white border border-black md:border-2 rounded-none shadow-[2px_2px_0px_0px_#8ace00] md:shadow-[3px_3px_0px_0px_#8ace00] hover:shadow-[4px_4px_0px_0px_#8ace00] hover:[transform:translateX(-1px)] hover:[transform:translateY(-1px)] active:[transform:translateX(2px)] active:[transform:translateY(2px)] active:shadow-none transition-all duration-150 select-none cursor-pointer"
                 >
                   <span 
                     className="text-[max(9px,min(2.5vw,20px))] font-medium text-black tracking-tighter leading-none select-none"
@@ -55,7 +55,7 @@ const Footer = ({ isPopupOpen = false }: { isPopupOpen?: boolean }) => {
                   href="https://blvdmusicspace.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-[max(96px,min(28vw,240px))] h-[max(32px,min(8.5vw,54px))] bg-white rounded-none border border-white/95 md:border-2 transition-all duration-300 ease-out hover:bg-slate-950 hover:border-[#0066ff] hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-[0_0_25px_rgba(0,102,255,0.9),0_0_50px_rgba(0,102,255,0.5)] group cursor-pointer animate-led-flicker select-none"
+                  className="flex items-center justify-center w-[max(96px,min(28vw,240px))] h-[max(32px,min(8.5vw,54px))] bg-white rounded-none border border-white/95 md:border-2 transition-all duration-300 ease-out hover:bg-slate-950 hover:border-[#0066ff] hover:[transform:scale(1.02)] hover:[transform:translateY(-0.125rem)] hover:shadow-[0_0_25px_rgba(0,102,255,0.9),0_0_50px_rgba(0,102,255,0.5)] group cursor-pointer animate-led-flicker select-none"
                 >
                   <h1 
                     className="text-[max(8.5px,min(2.2vw,18px))] font-black text-black tracking-tighter leading-none text-center transition-colors duration-300 group-hover:text-white group-hover:drop-shadow-[0_0_8px_rgba(0,102,255,0.8)] font-be-vietnam whitespace-nowrap"

@@ -96,7 +96,7 @@ export const ThuanPhatVisual = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity }}
                 transition={{ duration: 0.03, delay: delay }}
-                className="font-archivo text-[12.5vw] landscape:text-[max(4.5rem,min(10.5vw,8rem))] leading-[0.7] text-[#111111] uppercase whitespace-nowrap scale-y-[0.95] origin-center tracking-[-0.04em]"
+                className="font-archivo text-[12.5vw] landscape:text-[max(4.5rem,min(10.5vw,8rem))] leading-[0.7] text-[#111111] uppercase whitespace-nowrap [transform:scaleY(0.95)] origin-center tracking-[-0.04em]"
                 style={{ fontVariationSettings: '"wdth" 100, "wght" 500' }}
               >
                 {TEXT}
@@ -109,7 +109,7 @@ export const ThuanPhatVisual = () => {
       {mode === 'blvd' && (
         <div className="absolute top-0 right-0 bottom-0 left-0 flex justify-center items-center py-[8vh] landscape:py-[4.5vh]">
           <div className="relative flex justify-center items-center h-full w-max">
-            <div className="invisible font-archivo text-[12.5vw] landscape:text-[max(4.5rem,min(10.5vw,8rem))] leading-[0.7] uppercase whitespace-nowrap scale-y-[0.95] tracking-[-0.04em]"
+            <div className="invisible font-archivo text-[12.5vw] landscape:text-[max(4.5rem,min(10.5vw,8rem))] leading-[0.7] uppercase whitespace-nowrap [transform:scaleY(0.95)] tracking-[-0.04em]"
                  style={{ fontVariationSettings: '"wdth" 100, "wght" 500' }}>
               {TEXT}
             </div>

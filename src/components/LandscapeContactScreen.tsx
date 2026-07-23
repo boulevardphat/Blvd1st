@@ -184,7 +184,7 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
         </motion.span>
 
         {/* Centered Logo aligned with bottom baseline */}
-        <div className="absolute left-1/2 bottom-0 -translate-x-1/2 flex items-end justify-center">
+        <div className="absolute left-1/2 bottom-0 [transform:translateX(-50%)] flex items-end justify-center">
           <h1 className="font-archivo text-white font-black text-[max(2rem,min(7.6vw,9.125rem))] leading-[0.85] tracking-tighter select-none whitespace-nowrap">
             Boulevard1st
           </h1>
@@ -250,7 +250,7 @@ const LandscapeContactScreen = ({ onClose }: { onClose: () => void }) => {
       {renderTextContent()}
 
       {/* Copy Notification Toast */}
-      <div className="absolute top-[20%] left-1/2 -translate-x-1/2 h-8 flex items-center justify-center pointer-events-none z-50">
+      <div className="absolute top-[20%] left-1/2 [transform:translateX(-50%)] h-8 flex items-center justify-center pointer-events-none z-50">
         <AnimatePresence>
           {copyFeedback && (
             <motion.div

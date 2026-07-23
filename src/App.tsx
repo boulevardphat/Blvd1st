@@ -339,7 +339,7 @@ export default function App() {
                   {/* Centered Logo aligned with bottom baseline */}
                   <div 
                     id="logo-container"
-                    className="absolute left-1/2 bottom-0 -translate-x-1/2 flex items-end justify-center pointer-events-auto"
+                    className="absolute left-1/2 bottom-0 [transform:translateX(-50%)] flex items-end justify-center pointer-events-auto"
                   >
                     <h1 
                       id="logo-text-landscape"
@@ -366,7 +366,7 @@ export default function App() {
                 className="hidden portrait:flex absolute top-0 right-0 bottom-0 left-0 pointer-events-none"
               >
                 {/* Anchor point exactly at 66.5vh, centered horizontally */}
-                <div className="absolute left-1/2 -translate-x-1/2 w-max pointer-events-auto flex flex-col items-center" style={{ top: 'calc(var(--vh, 1vh) * 66.5)' }}>
+                <div className="absolute left-1/2 [transform:translateX(-50%)] w-max pointer-events-auto flex flex-col items-center" style={{ top: 'calc(var(--vh, 1vh) * 66.5)' }}>
                                   {/* Top Row - positioned absolute above the center */}
                   <div className="absolute bottom-full mb-[3px] w-full flex justify-between items-end">
                     <div className="relative pointer-events-auto">
@@ -382,7 +382,7 @@ export default function App() {
 
                     <button 
                       id="btn-booking-portrait"
-                      className="absolute left-1/2 -translate-x-1/2 bottom-0 pointer-events-none text-white/50 font-archivo text-[max(1.65rem,min(6.5vw,3.4rem))] leading-none tracking-tight select-none"
+                      className="absolute left-1/2 [transform:translateX(-50%)] bottom-0 pointer-events-none text-white/50 font-archivo text-[max(1.65rem,min(6.5vw,3.4rem))] leading-none tracking-tight select-none"
                       style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                     >
                       booking
@@ -421,7 +421,7 @@ export default function App() {
                       <button 
                         id="btn-friends-portrait"
                         onClick={() => setShowFriends(true)}
-                        className="absolute left-1/2 -translate-x-1/2 top-0 pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[max(1.65rem,min(6.5vw,3.4rem))] leading-none cursor-pointer tracking-tight select-none"
+                        className="absolute left-1/2 [transform:translateX(-50%)] top-0 pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[max(1.65rem,min(6.5vw,3.4rem))] leading-none cursor-pointer tracking-tight select-none"
                         style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                       >
                         friends

@@ -57,7 +57,7 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
   const renderTextContent = () => (
     <div className="absolute top-0 right-0 bottom-0 left-0 pointer-events-none">
       {/* Anchor point exactly at 66.5vh, centered horizontally */}
-      <div className="absolute left-1/2 -translate-x-1/2 w-max flex flex-col items-center" style={{ top: 'calc(var(--vh, 1vh) * 66.5)' }}>
+      <div className="absolute left-1/2 [transform:translateX(-50%)] w-max flex flex-col items-center" style={{ top: 'calc(var(--vh, 1vh) * 66.5)' }}>
         
         {/* Top Row - positioned absolute above the center */}
         <div className="absolute bottom-full mb-[3px] w-full flex justify-between items-end">
@@ -78,7 +78,7 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
             animate="animate"
             exit="initial"
             transition={transitionProps}
-            className="absolute left-1/2 -translate-x-1/2 bottom-0 font-archivo text-[max(1.65rem,min(6.5vw,3.4rem))] leading-none tracking-tight select-none"
+            className="absolute left-1/2 [transform:translateX(-50%)] bottom-0 font-archivo text-[max(1.65rem,min(6.5vw,3.4rem))] leading-none tracking-tight select-none"
             style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
           >
             booking
@@ -121,7 +121,7 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
               animate="animate"
               exit="initial"
               transition={transitionProps}
-              className="absolute left-1/2 -translate-x-1/2 top-0 font-archivo text-[max(1.65rem,min(6.5vw,3.4rem))] leading-none tracking-tight select-none"
+              className="absolute left-1/2 [transform:translateX(-50%)] top-0 font-archivo text-[max(1.65rem,min(6.5vw,3.4rem))] leading-none tracking-tight select-none"
               style={{ fontVariationSettings: '"wdth" var(--font-wdth), "wght" var(--font-wght)' } as any}
             >
               friends
@@ -162,11 +162,11 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className="absolute left-0 right-0 top-[calc(var(--vh,1vh)*66.5)] -translate-y-1/2 h-[calc(var(--vh,1vh)*9.5)] bg-black border-y border-white/10 flex flex-col justify-center items-center z-10 select-none"
+        className="absolute left-0 right-0 top-[calc(var(--vh,1vh)*66.5)] [transform:translateY(-50%)] h-[calc(var(--vh,1vh)*9.5)] bg-black border-y border-white/10 flex flex-col justify-center items-center z-10 select-none"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Copy Notification Toast */}
-        <div className="absolute -top-10 left-1/2 -translate-x-1/2 h-8 flex items-center justify-center pointer-events-none">
+        <div className="absolute -top-10 left-1/2 [transform:translateX(-50%)] h-8 flex items-center justify-center pointer-events-none">
           <AnimatePresence>
             {copyFeedback && (
               <motion.div
@@ -190,7 +190,7 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
               target="_blank" 
               rel="noopener noreferrer" 
               onClick={(e) => e.stopPropagation()}
-              className="text-white hover:scale-115 transition-transform active:scale-95 cursor-pointer"
+              className="text-white hover:[transform:scale(1.15)] transition-transform active:[transform:scale(0.95)] cursor-pointer"
             >
               <Facebook strokeWidth={1.5} size={28} />
             </a>
@@ -199,7 +199,7 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
               target="_blank" 
               rel="noopener noreferrer" 
               onClick={(e) => e.stopPropagation()}
-              className="text-white hover:scale-115 transition-transform active:scale-95 cursor-pointer"
+              className="text-white hover:[transform:scale(1.15)] transition-transform active:[transform:scale(0.95)] cursor-pointer"
             >
               <Instagram strokeWidth={1.5} size={28} />
             </a>
@@ -208,7 +208,7 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
               target="_blank" 
               rel="noopener noreferrer" 
               onClick={(e) => e.stopPropagation()}
-              className="text-white hover:scale-115 transition-transform active:scale-95 cursor-pointer"
+              className="text-white hover:[transform:scale(1.15)] transition-transform active:[transform:scale(0.95)] cursor-pointer"
             >
               <AtSign strokeWidth={1.5} size={28} />
             </a>
@@ -224,7 +224,7 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
                 e.stopPropagation();
                 handleCopy('thuanphat26092008@gmail.com', 'EMAIL CÁ NHÂN');
               }}
-              className="text-white hover:scale-115 transition-transform active:scale-95 cursor-pointer flex flex-col items-center"
+              className="text-white hover:[transform:scale(1.15)] transition-transform active:[transform:scale(0.95)] cursor-pointer flex flex-col items-center"
             >
               <Copy strokeWidth={1.5} size={28} />
             </button>
@@ -233,9 +233,9 @@ const PortraitContactScreen = ({ onClose }: { onClose: () => void }) => {
                 e.stopPropagation();
                 handleCopy('phatnt.a2.2326@gmail.com', 'EMAIL HỌC TẬP');
               }}
-              className="text-white hover:scale-115 transition-transform active:scale-95 cursor-pointer flex flex-col items-center"
+              className="text-white hover:[transform:scale(1.15)] transition-transform active:[transform:scale(0.95)] cursor-pointer flex flex-col items-center"
             >
-              <Copy strokeWidth={1.5} size={28} className="rotate-12" />
+              <Copy strokeWidth={1.5} size={28} className="[transform:rotate(12deg)]" />
             </button>
           </div>
         </div>

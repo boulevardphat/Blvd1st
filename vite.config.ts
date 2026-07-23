@@ -14,8 +14,17 @@ export default defineConfig(() => {
         target: ['es2015', 'safari12'],
       },
     },
+    css: {
+      transformer: 'lightningcss',
+      lightningcss: {
+        targets: {
+          safari: (12 << 16)
+        }
+      }
+    },
     build: {
       target: ['es2015', 'safari12'],
+      cssMinify: 'lightningcss',
       chunkSizeWarningLimit: 1000,
       rollupOptions: {
         output: {

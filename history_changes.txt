@@ -319,3 +319,12 @@ LẦN THAY ĐỔI THỨ 30: FIX LỖI HIỂN THỊ TRÊN CÁC TRÌNH DUYỆT / T
   + Khắc phục `aspect-ratio` trong CSS file vì iOS 12 chưa hỗ trợ.
   + Đổi `w-fit` thành `w-max` (max-content).
 - Mục tiêu: Hoạt động trơn tru trên iPhone 5s, xoá bỏ các lỗi syntax JS và tương thích flex layout trên Safari 12.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 31: HOÀN THIỆN FIX CSS CHO IPHONE 5S / IOS 12
+- File ảnh hưởng: Nhiều file (src/index.css, src/App.tsx, src/components/*)
+- Chi tiết thay đổi:
+  + Cài đặt `lightningcss` và `lightningcss-cli` nhưng phát hiện Tailwind v4 phụ thuộc vào `@property` (không được Safari 12 hỗ trợ).
+  + Thay thế thủ công toàn bộ các class tiện ích của Tailwind sử dụng `translate`, `scale`, và `rotate` (vd: `-translate-x-1/2`, `scale-[1.15]`, `rotate-12`) thành các giá trị tuỳ chỉnh của `transform` (vd: `[transform:translateX(-50%)]`, `[transform:scale(1.15)]`, `-[transform:rotate(12deg)]`) vì Safari 12 không hỗ trợ các thuộc tính `translate`, `scale`, `rotate` độc lập.
+  + Viết script tự động quét và inject các giá trị khởi tạo (initial-value) của các biến CSS `--tw-*` (như `--tw-shadow`, `--tw-ring-shadow`, `--tw-space-y-reverse`...) vào `:root` trong `src/index.css`. Điều này giúp khắc phục lỗi mất hoàn toàn box-shadow, ring và các class phức tạp do Safari 12 bỏ qua `@property`.
+- Mục tiêu: Khắc phục triệt để lỗi "CSS gần như không tồn tại" (vỡ layout hoàn toàn) trên iPhone 5s, đảm bảo khả năng tương thích ngược của Tailwind v4.
