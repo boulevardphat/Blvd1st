@@ -74,7 +74,7 @@ export const ThuanPhatVisual = () => {
     <div className="absolute inset-0 z-10 pointer-events-none">
       
       {mode === 'thuanphat' && (
-        <div className="absolute inset-0 flex flex-col justify-center items-center overflow-hidden gap-[1.8vh] landscape:gap-[4.5vh]">
+        <div className="absolute inset-0 flex flex-col justify-center items-center overflow-hidden gap-[calc(var(--vh,1vh)*1.8)] landscape:gap-[calc(var(--vh,1vh)*4.5)]">
           {Array.from({ length: numRows }).map((_, index) => {
             let opacity = 0;
             let delay = 0;
@@ -107,7 +107,7 @@ export const ThuanPhatVisual = () => {
       )}
 
       {mode === 'blvd' && (
-        <div className="absolute inset-0 flex justify-center items-center py-[8vh] landscape:py-[4.5vh]">
+        <div className="absolute inset-0 flex justify-center items-center py-[calc(var(--vh,1vh)*8)] landscape:py-[calc(var(--vh,1vh)*4.5)]">
           <div className="relative flex justify-center items-center h-full w-fit">
             <div className="invisible font-archivo text-[12.5vw] landscape:text-[clamp(4.5rem,10.5vw,8rem)] leading-[0.7] uppercase whitespace-nowrap scale-y-[0.95] tracking-[-0.04em]"
                  style={{ fontVariationSettings: '"wdth" 100, "wght" 500' }}>

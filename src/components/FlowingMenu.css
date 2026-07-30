@@ -129,7 +129,7 @@
   white-space: nowrap;
   text-transform: uppercase;
   font-weight: 900;
-  font-size: 12vh;
+  font-size: calc(var(--vh, 1vh) * 12);
   line-height: 1;
   padding: 0 2vw;
   letter-spacing: -0.03em;
@@ -138,7 +138,7 @@
 }
 
 .marquee__img {
-  height: 14vh;
+  height: calc(var(--vh, 1vh) * 14);
   width: auto;
   aspect-ratio: 16 / 9;
   margin: 0 2vw;

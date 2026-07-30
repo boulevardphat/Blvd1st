@@ -61,16 +61,28 @@ export default function App() {
 
   useEffect(() => {
     let lastWidth = window.innerWidth;
+    let lastHeight = window.innerHeight;
     const setVh = () => {
-      if (window.innerWidth !== lastWidth || !document.documentElement.style.getPropertyValue('--vh')) {
+      // Recalculate if width changes (rotation/resize) OR height changes significantly (split-screen/keyboard > 150px)
+      // but ignore small height changes (URL bar hide/show)
+      if (
+        window.innerWidth !== lastWidth ||
+        Math.abs(window.innerHeight - lastHeight) > 150 ||
+        !document.documentElement.style.getPropertyValue('--vh')
+      ) {
         let vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}px`);
         lastWidth = window.innerWidth;
+        lastHeight = window.innerHeight;
       }
     };
     setVh();
     window.addEventListener('resize', setVh);
-    return () => window.removeEventListener('resize', setVh);
+    window.addEventListener('orientationchange', setVh);
+    return () => {
+      window.removeEventListener('resize', setVh);
+      window.removeEventListener('orientationchange', setVh);
+    };
   }, []);
 
   const isAnyPopupOpen = showInfo || showHistory || showArchive || showFriends || showContactLandscape || showContactPortrait;

@@ -327,3 +327,13 @@ LẦN THAY ĐỔI THỨ 31: KHẮC PHỤC LỖI MÀN HÌNH ĐEN Ở PRE-INTRO
   + Gỡ bỏ thẻ bọc `<AnimatePresence>` quanh `pre-intro` overlay. Do thẻ `motion.div` của `pre-intro` không có thuộc tính `exit`, việc gỡ bỏ thẻ bọc đảm bảo khi `scene` chuyển sang `intro-play`, màn hình đen sẽ bị gỡ bỏ (unmount) lập tức ngay khoảnh khắc chuyển scene (không có bất cứ độ trễ hay fade-out nào), thoả mãn chính xác yêu cầu "chi chạy sang đen hoàn toàn thì ảnh (overlay) mất luôn, không fade, intro chơi ngay lúc đó".
   + Đổi thứ tự gán thuộc tính ảnh (`img.onload` rồi mới tới `img.src`) để đề phòng trường hợp cache làm sự kiện tải ảnh nhảy (fire) quá nhanh trên một số trình duyệt.
 - Tham số điều chỉnh: Bổ sung `[scene, imagesLoaded]`, bỏ `<AnimatePresence>`, đổi thứ tự `.src`.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 32: SỬA LỖI HỎNG BỐ CỤC TRÊN TABLET KHI ẨN HIỆN URL BAR & TỐI ƯU setVh
+- File ảnh hưởng: /src/App.tsx, /src/components/FlowingMenu.css, /src/components/ThuanPhatVisual.tsx
+- Chi tiết thay đổi:
+  + Phát hiện nguyên nhân thực sự gây lỗi bố cục trên tablet (landscape) khi ẩn hiện thanh công cụ: tuy container gốc đã dùng `--vh` để cố định, nhưng các component bên trong (`ThuanPhatVisual` và `FlowingMenu`) lại sử dụng đơn vị `vh` thô (raw `vh` như `12vh`, `4.5vh`). Khi URL bar ẩn đi, các đơn vị `vh` thô này phình to ra bên trong một container không đổi kích thước, dẫn đến bố cục bị vỡ, lệch.
+  + Đã thay thế toàn bộ các đơn vị `vh` thô bằng `calc(var(--vh, 1vh) * X)` ở Tailwind classes (`ThuanPhatVisual.tsx`) và CSS file (`FlowingMenu.css`).
+  + Tối ưu hoá thuật toán tính `--vh` trong `App.tsx`: Bổ sung thêm biến `lastHeight`, thuật toán giờ đây sẽ tính toán lại `--vh` nếu `innerWidth` thay đổi (khi xoay màn hình/resize) HOẶC nếu `innerHeight` thay đổi một lượng lớn hơn 150px (để cover các trường hợp bật/tắt bàn phím ảo, split-screen trên iPad), đồng thời bỏ qua các thay đổi nhỏ (như ẩn/hiện URL bar) để bảo toàn sự ổn định tuyệt đối của bố cục.
+  + Bổ sung thêm listener cho sự kiện `orientationchange` để tối đa hoá độ nhạy khi xoay thiết bị.
+- Tham số điều chỉnh: `gap-[calc(var(--vh,1vh)*4.5)]`, `Math.abs(window.innerHeight - lastHeight) > 150`, `orientationchange`.
