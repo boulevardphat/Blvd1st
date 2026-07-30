@@ -18,11 +18,12 @@ import { IntroClock } from './components/IntroClock';
 
 import { VespertineBackground } from './components/VespertineBackground';
 
-type SceneState = 'intro-play' | 'intro-image-1' | 'intro-image-2' | 'intro-image-3' | 'main-app';
+type SceneState = 'pre-intro' | 'intro-play' | 'intro-blvd' | 'intro-clock' | 'intro-image-1' | 'intro-image-2' | 'intro-image-3' | 'main-app';
 
 export default function App() {
 
-  const [scene, setScene] = useState<SceneState>('intro-play');
+  const [scene, setScene] = useState<SceneState>('pre-intro');
+  const [imagesLoaded, setImagesLoaded] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [showHistoryDetail, setShowHistoryDetail] = useState(false);
@@ -32,6 +33,31 @@ export default function App() {
   const [showContactPortrait, setShowContactPortrait] = useState(false);
   
   const bgAudioRef = React.useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    const imageUrls = [
+      "https://i.ibb.co/JFvk9wzr/vespertine-bg.png",
+      "https://i.ibb.co/jPHPJSG7/vespertine-sj.png",
+      "https://i.ibb.co/vy4ykmw/vespertine.png",
+      "https://i.ibb.co/Nd6BpwZ2/young.jpg",
+      "https://i.ibb.co/tP3rK5bg/ultrayoung.jpg"
+    ];
+
+    let loadedCount = 0;
+    const handleImageLoad = () => {
+      loadedCount++;
+      if (loadedCount === imageUrls.length) {
+        setImagesLoaded(true);
+      }
+    };
+
+    imageUrls.forEach(url => {
+      const img = new Image();
+      img.onload = handleImageLoad;
+      img.onerror = handleImageLoad;
+      img.src = url;
+    });
+  }, []);
 
   useEffect(() => {
     let lastWidth = window.innerWidth;
@@ -106,6 +132,12 @@ export default function App() {
 
   // Handle automatic transitions between scenes (Custom sequence timing)
   useEffect(() => {
+    if (scene === 'pre-intro' && imagesLoaded) {
+      const t = setTimeout(() => {
+        setScene('intro-play');
+      }, 1500); // Wait 1.5s to finish the black fade animation before starting intro
+      return () => clearTimeout(t);
+    }
     if (scene === 'intro-play') {
       const t = setTimeout(() => {
         setScene('intro-blvd');
@@ -142,7 +174,7 @@ export default function App() {
       }, 500); // 0.5s for KC6 (tinted background #8375B3)
       return () => clearTimeout(t);
     }
-  }, [scene]);
+  }, [scene, imagesLoaded]);
 
   return (
     <main 
@@ -155,6 +187,17 @@ export default function App() {
         onEnded={handleBgAudioEnded}
       />
       
+      {/* Pre-intro overlay */}
+      {scene === 'pre-intro' && (
+        <motion.div
+          key="pre-intro"
+          initial={{ backgroundColor: '#ffffff' }}
+          animate={{ backgroundColor: imagesLoaded ? '#000000' : '#ffffff' }}
+          transition={{ duration: 1.5, ease: 'easeInOut' }}
+          className="absolute inset-0 z-[100]"
+        />
+      )}
+
       {/* Preloaded Background Images (Always active at z-0, hidden behind black scenes 1-3, visible in scenes 4-6 and main app) */}
       <img
         id="preload-ultrayoung"

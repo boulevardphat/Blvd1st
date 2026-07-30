@@ -306,3 +306,24 @@ LẦN THAY ĐỔI THỨ 29: RÚT NGẮN THỜI GIAN CHỜ GIỮA CÁC ANIMATION 
   + Giảm thời gian chờ trước khi vòng lặp quay lại THUANPHAT từ 600ms xuống 150ms.
   + Mục tiêu: Tối ưu hoá nhịp độ (pacing) để visual dồn dập, mạnh mẽ và khớp với nhịp độ của intro ban đầu mà không can thiệp vào bất kỳ visual/layout nào hiện tại.
 - Tham số điều chỉnh: Các giá trị delay trong `setTimeout` của hàm `runSequence()`.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 30: THÊM MÀN HÌNH PRE-INTRO (TRẮNG CHUYỂN ĐEN KHI LOAD XONG ẢNH) VÀ TỐI ƯU MÃ NGUỒN
+- File ảnh hưởng: /src/App.tsx
+- Chi tiết thay đổi:
+  + Thêm một scene state mới là `pre-intro` đóng vai trò là màn hình loading đầu tiên.
+  + Màn hình pre-intro hiển thị màu trắng hoàn toàn (`#ffffff`), che phủ toàn bộ web (`z-[100]`).
+  + Thiết lập một `useEffect` để tạo `new Image()` và chủ động preload toàn bộ 5 hình ảnh nền (`vespertine-bg.png`, `vespertine-sj.png`, `vespertine.png`, `young.jpg`, `ultrayoung.jpg`) không phụ thuộc vào render cycle của DOM.
+  + Khi tất cả ảnh được tải thành công, màn hình sẽ từ từ chuyển sang màu đen (`#000000`) qua một animation mượt mà kéo dài 1.5s, đảm bảo người dùng chỉ thấy quá trình transition khi ảnh đã sẵn sàng.
+  + Sau đó, cảnh sẽ tự động nhường chỗ cho `intro-play` (intro gốc).
+  + Khắc phục, dọn dẹp các type không dùng (khai báo các SceneState thiếu) để tối ưu build trên Vercel và đẩy lên GitHub mượt mà, không gặp lỗi Type-Check.
+- Tham số điều chỉnh: Bổ sung `imagesLoaded` state, thêm type `pre-intro`, `intro-blvd`, `intro-clock`, transition fade to black.
+
+---------------------------------------------------------
+LẦN THAY ĐỔI THỨ 31: KHẮC PHỤC LỖI MÀN HÌNH ĐEN Ở PRE-INTRO
+- File ảnh hưởng: /src/App.tsx
+- Chi tiết thay đổi:
+  + Phát hiện lỗi ở dependency array của `useEffect` quản lý scene transition: biến `imagesLoaded` bị bỏ quên. Điều này dẫn tới khi `imagesLoaded` thay đổi thành `true`, component render lại nhưng `useEffect` không chạy lại => timeout chuyển scene không bao giờ được thiết lập, khiến màn hình bị kẹt ở trạng thái đen vĩnh viễn (do overlay `pre-intro` đen xì đã che lấp). Đã thêm `imagesLoaded` vào mảng dependency `[scene, imagesLoaded]`.
+  + Gỡ bỏ thẻ bọc `<AnimatePresence>` quanh `pre-intro` overlay. Do thẻ `motion.div` của `pre-intro` không có thuộc tính `exit`, việc gỡ bỏ thẻ bọc đảm bảo khi `scene` chuyển sang `intro-play`, màn hình đen sẽ bị gỡ bỏ (unmount) lập tức ngay khoảnh khắc chuyển scene (không có bất cứ độ trễ hay fade-out nào), thoả mãn chính xác yêu cầu "chi chạy sang đen hoàn toàn thì ảnh (overlay) mất luôn, không fade, intro chơi ngay lúc đó".
+  + Đổi thứ tự gán thuộc tính ảnh (`img.onload` rồi mới tới `img.src`) để đề phòng trường hợp cache làm sự kiện tải ảnh nhảy (fire) quá nhanh trên một số trình duyệt.
+- Tham số điều chỉnh: Bổ sung `[scene, imagesLoaded]`, bỏ `<AnimatePresence>`, đổi thứ tự `.src`.
