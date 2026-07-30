@@ -7,9 +7,6 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X } from 'lucide-react';
 import FlowingMenu from './components/FlowingMenu';
-import { LedDotBoard } from './components/LedDotBoard';
-import LandscapeContactScreen from './components/LandscapeContactScreen';
-import PortraitContactScreen from './components/PortraitContactScreen';
 import Footer from './components/Footer';
 
 
@@ -158,14 +155,26 @@ export default function App() {
     }
     if (scene === 'intro-blvd') {
       const t = setTimeout(() => {
-        setScene('intro-clock');
+        setScene('intro-clock-normal');
       }, 500); // 0.5s for KC2 ("BLVD")
       return () => clearTimeout(t);
     }
-    if (scene === 'intro-clock') {
+    if (scene === 'intro-clock-normal') {
+      const t = setTimeout(() => {
+        setScene('intro-clock-reverse-mirrored');
+      }, 600); // KC3
+      return () => clearTimeout(t);
+    }
+    if (scene === 'intro-clock-reverse-mirrored') {
+      const t = setTimeout(() => {
+        setScene('intro-clock-multiple');
+      }, 600); // KC4
+      return () => clearTimeout(t);
+    }
+    if (scene === 'intro-clock-multiple') {
       const t = setTimeout(() => {
         setScene('intro-image-1');
-      }, 800); // 2.0s for KC3 (clock ticks) to be easily visible
+      }, 600); // KC6
       return () => clearTimeout(t);
     }
     if (scene === 'intro-image-1') {
@@ -271,7 +280,11 @@ export default function App() {
       )}
 
       {/* KC3: High-frequency live ticking clock */}
-      {scene === 'intro-clock' && <IntroClock />}
+      {scene === 'intro-clock-normal' && <IntroClock mode="normal" />}
+      {/* KC4: Reverse and mirrored clock */}
+      {scene === 'intro-clock-reverse-mirrored' && <IntroClock mode="reverse-mirrored" />}
+      {/* KC6: Multiple clocks */}
+      {scene === 'intro-clock-multiple' && <IntroClock mode="multiple" />}
 
       {/* KC4: Background Image with #8375B3 tint */}
       {scene === 'intro-image-1' && (
@@ -497,16 +510,6 @@ export default function App() {
             </div>
 
             <Footer isPopupOpen={isAnyPopupOpen} />
-
-              {/* Landscape Contact Overlay */}
-              <AnimatePresence>
-                {showContactLandscape && <LandscapeContactScreen onClose={() => setShowContactLandscape(false)} />}
-              </AnimatePresence>
-
-              {/* Portrait Contact Overlay */}
-              <AnimatePresence>
-                {showContactPortrait && <PortraitContactScreen onClose={() => setShowContactPortrait(false)} />}
-              </AnimatePresence>
           </div>
         </div>
       )}
@@ -514,12 +517,28 @@ export default function App() {
       {/* Info Screen: LED Dot Matrix board, clicking anywhere exits */}
       {showInfo && (
         <div 
-          id="info-led-screen"
-          className="fixed inset-0 bg-black z-50 cursor-pointer select-none"
+          id="info-screen"
+          className="fixed inset-0 bg-black z-[100] cursor-pointer"
           onClick={() => setShowInfo(false)}
-        >
-          <LedDotBoard />
-        </div>
+        />
+      )}
+
+      {/* Landscape Contact Screen */}
+      {showContactLandscape && (
+        <div 
+          id="contact-landscape-screen"
+          className="fixed inset-0 bg-black z-[100] cursor-pointer"
+          onClick={() => setShowContactLandscape(false)}
+        />
+      )}
+
+      {/* Portrait Contact Screen */}
+      {showContactPortrait && (
+        <div 
+          id="contact-portrait-screen"
+          className="fixed inset-0 bg-black z-[100] cursor-pointer"
+          onClick={() => setShowContactPortrait(false)}
+        />
       )}
 
       {/* History Screen */}

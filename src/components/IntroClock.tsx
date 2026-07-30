@@ -93,10 +93,14 @@ class ClockAudio {
   }
 }
 
-export const IntroClock = () => {
-  const [timeStr, setTimeStr] = useState('');
+export interface IntroClockProps {
+  mode?: 'normal' | 'reverse-mirrored' | 'multiple';
+}
 
+export const IntroClock: React.FC<IntroClockProps> = ({ mode = 'normal' }) => {
+  const [timeStr, setTimeStr] = useState('');
   useEffect(() => {
+    const startTimeMs = Date.now();
     const clockAudio = new ClockAudio();
     clockAudio.init();
 
@@ -111,7 +115,13 @@ export const IntroClock = () => {
     let lastTickStep = -1;
 
     const updateClock = () => {
-      const now = new Date();
+      let nowMs = Date.now();
+      if (mode === 'reverse-mirrored') {
+        const diff = nowMs - startTimeMs;
+        // Run backwards at normal speed
+        nowMs = startTimeMs - diff; 
+      }
+      const now = new Date(nowMs);
       const hrs = String(now.getHours()).padStart(2, '0');
       const mins = String(now.getMinutes()).padStart(2, '0');
       const secs = String(now.getSeconds()).padStart(2, '0');
@@ -119,8 +129,8 @@ export const IntroClock = () => {
       setTimeStr(`${hrs} : ${mins} : ${secs} : ${ms}`);
 
       // Rapid mechanical stopwatch ticking: every 125ms (8 ticks per second) for a frantic, high-beat retro gear aesthetic
-      const nowMs = now.getTime();
-      const currentTickStep = Math.floor(nowMs / 125);
+      const currentNowMs = now.getTime();
+      const currentTickStep = Math.floor(currentNowMs / 125);
 
       if (currentTickStep !== lastTickStep) {
         lastTickStep = currentTickStep;
@@ -137,19 +147,34 @@ export const IntroClock = () => {
       window.removeEventListener('click', handleInteraction);
       window.removeEventListener('touchstart', handleInteraction);
     };
-  }, []);
+  }, [mode]);
+
+  const getTransform = () => {
+    if (mode === 'reverse-mirrored') return 'scaleX(-1)';
+    return 'none';
+  };
+
+  const ClockDisplay = () => (
+    <div 
+      className="font-archivo font-normal text-[clamp(1.4rem,4.2vw,3.8rem)] text-white/95 tracking-[0.05em] select-none pointer-events-none tabular-nums"
+      style={{ transform: getTransform() }}
+    >
+      {timeStr}
+    </div>
+  );
 
   return (
     <div 
       id="scene-clock"
-      className="absolute inset-0 flex items-center justify-center bg-black z-30 select-none"
+      className="absolute inset-0 flex flex-col items-center justify-center bg-black z-30 select-none overflow-hidden gap-[calc(var(--vh,1vh)*0.5)] landscape:gap-[calc(var(--vh,1vh)*1.5)]"
     >
-      <div 
-        id="clock-display"
-        className="font-archivo font-normal text-[clamp(1.4rem,4.2vw,3.8rem)] text-white/95 tracking-[0.05em] select-none pointer-events-none tabular-nums"
-      >
-        {timeStr}
-      </div>
+      {mode === 'multiple' ? (
+        Array.from({ length: 25 }).map((_, i) => (
+          <ClockDisplay key={i} />
+        ))
+      ) : (
+        <ClockDisplay />
+      )}
     </div>
   );
 };
