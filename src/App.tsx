@@ -559,10 +559,10 @@ export default function App() {
             <FlowingMenu
               items={[
                 { text: 'pre-BLVD', image: 'https://i.ibb.co/vy4ykmw/vespertine.png', onClick: (e: any) => { e.stopPropagation(); setShowHistoryDetail(true); } },
-                { text: '#BLVD15', image: 'https://i.ibb.co/Nd6BpwZ2/young.jpg', onClick: (e: any) => { e.stopPropagation(); setShowHistoryDetail(true); } },
-                { text: '#BLVD16', image: 'https://i.ibb.co/tP3rK5bg/ultrayoung.jpg', onClick: (e: any) => { e.stopPropagation(); setShowHistoryDetail(true); } },
-                { text: '#BLVD17', image: 'https://i.ibb.co/vy4ykmw/vespertine.png', onClick: (e: any) => { e.stopPropagation(); setShowHistoryDetail(true); } },
-                { text: '#BLVD18', image: 'https://i.ibb.co/Nd6BpwZ2/young.jpg', onClick: (e: any) => { e.stopPropagation(); } }
+                { text: '#BLVD15', customColor: '#EFDD7C', image: 'https://i.ibb.co/Nd6BpwZ2/young.jpg', onClick: (e: any) => { e.stopPropagation(); setShowHistoryDetail(true); } },
+                { text: '#BLVD16', customColor: '#8ACE00', image: 'https://i.ibb.co/tP3rK5bg/ultrayoung.jpg', onClick: (e: any) => { e.stopPropagation(); setShowHistoryDetail(true); } },
+                { text: '#BLVD17', customColor: '#ffffff', image: 'https://i.ibb.co/vy4ykmw/vespertine.png', onClick: (e: any) => { e.stopPropagation(); setShowHistoryDetail(true); } },
+                { text: '#BLVD18', customColor: '#705fa3', gradientColor: '#FE00A1', hoverText: 'COMINGSOON', dimOnHover: true, image: 'https://i.ibb.co/Nd6BpwZ2/young.jpg', onClick: (e: any) => { e.stopPropagation(); } }
               ]}
               speed={4}
               textColor="#a6a6a6"

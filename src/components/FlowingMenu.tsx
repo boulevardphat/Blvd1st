@@ -44,7 +44,7 @@ function FlowingMenu({
   );
 }
 
-function MenuItem({ link, text, image, onClick, speed, textColor, marqueeBgColor, marqueeTextColor, borderColor }: any) {
+function MenuItem({ link, text, image, onClick, speed, textColor, marqueeBgColor, marqueeTextColor, borderColor, customColor, gradientColor, hoverText, dimOnHover }: any) {
   const itemRef = useRef(null);
   const marqueeRef = useRef(null);
   const marqueeInnerRef = useRef(null);
@@ -116,8 +116,18 @@ function MenuItem({ link, text, image, onClick, speed, textColor, marqueeBgColor
     };
   }, [text, image, repetitions, speed]);
 
+  const lastTouchTime = useRef(0);
+
   const handleMouseEnter = (ev: any) => {
     if (!itemRef.current || !marqueeRef.current || !marqueeInnerRef.current) return;
+    
+    if (ev.type.startsWith('touch')) {
+      lastTouchTime.current = Date.now();
+    } else if (Date.now() - lastTouchTime.current < 500) {
+      // Ignore simulated mouse events right after touch
+      return;
+    }
+
     const rect = (itemRef.current as any).getBoundingClientRect();
     let clientX = ev.clientX;
     let clientY = ev.clientY;
@@ -129,7 +139,15 @@ function MenuItem({ link, text, image, onClick, speed, textColor, marqueeBgColor
 
     const x = clientX - rect.left;
     const y = clientY - rect.top;
-    const edge = findClosestEdge(x, y, rect.width, rect.height);
+    
+    // Always use 'bottom' for touch devices to ensure consistent animation direction
+    // regardless of where on the item the user tapped.
+    const isTouch = ev.type.startsWith('touch') || window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    const edge = isTouch ? 'bottom' : findClosestEdge(x, y, rect.width, rect.height);
+
+    if (dimOnHover) {
+      gsap.to(itemRef.current, { opacity: 0.5, duration: 0 });
+    }
 
     gsap
       .timeline({ defaults: animationDefaults })
@@ -140,6 +158,12 @@ function MenuItem({ link, text, image, onClick, speed, textColor, marqueeBgColor
 
   const handleMouseLeave = (ev: any) => {
     if (!itemRef.current || !marqueeRef.current || !marqueeInnerRef.current) return;
+    
+    if (ev.type.startsWith('mouse') && Date.now() - lastTouchTime.current < 500) {
+      // Ignore simulated mouse events right after touch
+      return;
+    }
+
     const rect = (itemRef.current as any).getBoundingClientRect();
     let clientX = ev.clientX;
     let clientY = ev.clientY;
@@ -151,13 +175,21 @@ function MenuItem({ link, text, image, onClick, speed, textColor, marqueeBgColor
 
     const x = clientX - rect.left;
     const y = clientY - rect.top;
-    const edge = findClosestEdge(x, y, rect.width, rect.height);
+    
+    const isTouch = ev.type.startsWith('touch') || window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    const edge = isTouch ? 'bottom' : findClosestEdge(x, y, rect.width, rect.height);
+
+    if (dimOnHover) {
+      gsap.to(itemRef.current, { opacity: 1, duration: 0 });
+    }
 
     gsap
       .timeline({ defaults: animationDefaults })
       .to(marqueeRef.current, { y: edge === 'top' ? '-101%' : '101%' }, 0)
       .to(marqueeInnerRef.current, { y: edge === 'top' ? '101%' : '-101%' }, 0);
   };
+
+  const match = typeof text === 'string' ? text.match(/^(#BLVD)(\d+)$/) : null;
 
   return (
     <div className="menu__item" ref={itemRef} style={{ borderColor, '--char-count': text.length } as React.CSSProperties}>
@@ -171,13 +203,35 @@ function MenuItem({ link, text, image, onClick, speed, textColor, marqueeBgColor
         style={{ color: textColor }}
       >
         <span className="sr-only">{text}</span>
-        <span className="desktop-text" aria-hidden="true">{text}</span>
+        <span className="desktop-text" aria-hidden="true">
+          {match && customColor ? (
+            <>
+              <span>{match[1]}</span>
+              <span style={gradientColor ? {
+                background: `linear-gradient(135deg, ${gradientColor} 10%, ${customColor} 60%)`,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                display: 'inline-block'
+              } : { color: customColor }}>{match[2]}</span>
+            </>
+          ) : (
+            <span style={{ color: textColor }}>{text}</span>
+          )}
+        </span>
         <svg 
           className="w-full h-full block mobile-svg" 
           preserveAspectRatio="none" 
           viewBox="0 0 1000 100"
           aria-hidden="true"
         >
+          {gradientColor && (
+            <defs>
+              <linearGradient id={`grad-${text.replace('#', '')}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="10%" stopColor={gradientColor} />
+                <stop offset="60%" stopColor={customColor} />
+              </linearGradient>
+            </defs>
+          )}
           <text 
             x="50%" 
             y="54%" 
@@ -189,7 +243,14 @@ function MenuItem({ link, text, image, onClick, speed, textColor, marqueeBgColor
             textLength="900"
             lengthAdjust="spacingAndGlyphs"
           >
-            {text}
+            {match && customColor ? (
+              <>
+                <tspan>{match[1]}</tspan>
+                <tspan fill={gradientColor ? `url(#grad-${text.replace('#', '')})` : customColor}>{match[2]}</tspan>
+              </>
+            ) : (
+              <tspan fill="currentColor">{text}</tspan>
+            )}
           </text>
         </svg>
       </button>
@@ -198,7 +259,9 @@ function MenuItem({ link, text, image, onClick, speed, textColor, marqueeBgColor
           <div className="marquee__inner" ref={marqueeInnerRef} aria-hidden="true">
             {[...Array(repetitions)].map((_, idx) => (
               <div className="marquee__part font-archivo" key={idx} style={{ color: marqueeTextColor }}>
-                <span>{text}</span>
+                <span className="marquee-text-inner">
+                  <span>{hoverText || text}</span>
+                </span>
                 <div className="marquee__img" style={{ backgroundImage: `url(${image})` }} />
               </div>
             ))}

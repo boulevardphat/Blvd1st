@@ -477,3 +477,37 @@ LẦN THAY ĐỔI THỨ 36: GỘP NHỊP ĐỒNG HỒ NGƯỢC VÀ LẬT THÀNH 
   + Nhịp 5 (Multiple Clocks) giữ nguyên số lượng hàng (25) và khoảng cách hẹp, tiếp nối ngay sau nhịp 4.
   + Cập nhật lại `SceneState` và rút gọn các mốc timeout trong `App.tsx` cho đồng nhất.
 - Tham số điều chỉnh: `mode="reverse-mirrored"`, scaleX(-1), SceneState.
+
+LẦN THAY ĐỔI THỨ 37: TỐI ƯU HIỆU ỨNG GIAO DIỆN HISTORY VÀ BỔ SUNG MÀU SẮC ĐẶC TRƯNG
+- Thời gian: 30/07/2026 10:28:40 (Giờ TPHCM)
+- File ảnh hưởng: /src/App.tsx, /src/components/FlowingMenu.tsx
+- Chi tiết thay đổi:
+  + Khắc phục triệt để lỗi hiệu ứng trượt xuất hiện không nhất quán (đôi khi từ trên xuống, đôi khi từ dưới lên) trên màn hình cảm ứng: Cập nhật `FlowingMenu.tsx` để bỏ qua các sự kiện chuột mô phỏng (simulated mouse events) sau khi chạm, đồng thời ép hướng xuất hiện của hover animation luôn luôn là từ dưới lên (`bottom`) đối với các thiết bị cảm ứng hoặc khi phát hiện thao tác chạm.
+  + Áp dụng mã màu tĩnh đặc trưng cho từng nhịp tuổi BLVD (khi chưa hover) như yêu cầu: #BLVD15 (`#EFDD7C`), #BLVD16 (`#8ACE00`), #BLVD17 (`#9d9ea1`), #BLVD18 (`#705fa3`).
+  + Riêng với #BLVD18: bổ sung thuộc tính `hoverText: 'COMINGSOON'` để thay thế label khi đưa chuột vào, và `dimOnHover: true` để tổng thể thanh menu mờ đi (opacity giảm còn 0.5) khi ở trạng thái hover.
+- Tham số điều chỉnh: `ev.type.startsWith('touch')`, `window.matchMedia('(hover: none) and (pointer: coarse)')`, customColor prop, `opacity: 0.5`.
+
+LẦN THAY ĐỔI THỨ 38: CHỈNH LẠI MÀU SẮC RIÊNG CHO PHẦN SỐ & HIỆU ỨNG MỜ TỨC THÌ
+- Thời gian: 30/07/2026 10:33:40 (Giờ TPHCM)
+- File ảnh hưởng: /src/components/FlowingMenu.tsx
+- Chi tiết thay đổi:
+  + Tách chuỗi `#BLVDXX` thành hai phần riêng biệt: `#BLVD` và `XX` (số). Màu sắc mặc định (`textColor`) được giữ cho phần `#BLVD`, còn mã màu tuỳ chỉnh (`customColor`) chỉ được áp dụng cho phần số tuổi để tạo điểm nhấn khác biệt. Logic này được áp dụng đồng bộ trên cả HTML (desktop) và SVG (mobile).
+  + Tuỳ chỉnh lại hiệu ứng mờ (dimOnHover) cho thanh menu `#BLVD18`: Sửa đổi duration của GSAP animation từ `0.3s` xuống `0s` để hiệu ứng mờ (opacity giảm xuống 0.5) diễn ra lập tức ngay khi hover, thay vì từ từ như trước đây.
+- Tham số điều chỉnh: Text splitting `match = text.match(/^(#BLVD)(\d+)$/)`, `gsap.to({ ... duration: 0 })`, SVG `<tspan>` mapping.
+
+LẦN THAY ĐỔI THỨ 39: TINH CHỈNH MÀU SẮC RIÊNG CHO SỐ VÀ THÊM HIỆU ỨNG GRADIENT
+- Thời gian: 30/07/2026 10:37:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/App.tsx, /src/components/FlowingMenu.tsx
+- Chi tiết thay đổi:
+  + Cập nhật lại logic FlowingMenu. Màu sắc tùy chỉnh (`customColor`) giờ đây chỉ giới hạn tác dụng trong trạng thái CHƯA hover (bình thường). Khi ở trạng thái hover (xuất hiện marquee), phần chữ trượt sẽ không bị ảnh hưởng bởi `customColor` mà sử dụng màu sắc đồng bộ, hoặc sử dụng nội dung thay thế (`hoverText`) nếu có.
+  + Sửa màu chỉ định cho thanh `#BLVD17`: Cập nhật `customColor` sang `#ffffff` (Màu trắng) để tách bạch rõ hơn với phần text `#BLVD` gốc.
+  + Thêm hiệu ứng Gradient chữ cho thanh `#BLVD18`: Bổ sung tham số `gradientColor` truyền vào `<FlowingMenu>` component. Áp dụng CSS `linear-gradient(to right, ...)` kết hợp `background-clip: text` cho thành phần HTML (desktop). Đối với thành phần SVG (mobile), sử dụng `<defs><linearGradient>` và `<tspan fill="url(#...)">` để đảm bảo dải màu gradient mượt mà từ `#705fa3` sang `#FE00A1` trên mọi nền tảng.
+- Tham số điều chỉnh: `gradientColor="#FE00A1"`, `<linearGradient>`, `background-clip: text`.
+
+LẦN THAY ĐỔI THỨ 40: ĐIỀU CHỈNH HƯỚNG VÀ TỶ LỆ MÀU GRADIENT CỦA #BLVD18
+- Thời gian: 30/07/2026 10:40:20 (Giờ TPHCM)
+- File ảnh hưởng: /src/components/FlowingMenu.tsx
+- Chi tiết thay đổi:
+  + Chỉnh sửa hướng của hiệu ứng gradient cho #BLVD18 thành hướng Đông Nam (`135deg` đối với CSS và `x1="0%" y1="0%" x2="100%" y2="100%"` đối với SVG).
+  + Thay đổi tỷ lệ chuyển màu từ hồng (`#FE00A1`) sang tím (`#705fa3`), thiết lập các mốc điểm dừng (stop-color offset) sao cho màu tím chiếm phần lớn diện tích (hồng chiếm khoảng 10% bắt đầu và chuyển hẳn sang tím từ 60% trở đi).
+- Tham số điều chỉnh: `linear-gradient(135deg, ${gradientColor} 10%, ${customColor} 60%)`, `x2="100%" y2="100%"`, `offset="10%"`, `offset="60%"`.
