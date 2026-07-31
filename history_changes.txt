@@ -520,3 +520,53 @@ LẦN THAY ĐỔI THỨ 41: NHẬP VÀ KHAI BÁO CÁC FONT CHỮ RIÊNG THEO YÊ
   + Cập nhật `@theme` trong Tailwind để có thể gọi nhanh thông qua CSS variables: `--font-turista`, `--font-arial` (kèm fallback "Arial" chuẩn), `--font-vespertine`.
   + Theo yêu cầu, chỉ thực hiện việc khai báo font để chuẩn bị cho các bước sau, không áp dụng font trực tiếp vào giao diện trong lần thay đổi này.
 - Tham số điều chỉnh: `@font-face` urls `/fonts/turista.ttf`, `/fonts/arial.ttf`, `/fonts/vespertine.ttf`, css vars `--font-turista`, `--font-arial`, `--font-vespertine`.
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 42: CẬP NHẬT TÊN FILE FONT TRONG INDEX.CSS
+- Thời gian: 31/07/2026 18:39:56 (Giờ TPHCM)
+- File ảnh hưởng: /src/index.css
+- Chi tiết thay đổi:
+  + Cập nhật đường dẫn đường dẫn các font chữ `@font-face` khớp với tên file thực tế trong thư mục `/public/fonts`: `Turista Gorda NF W01 Regular.ttf`, `ARIAL.TTF`, `vespertine Regular.ttf`.
+- Tham số điều chỉnh: `url('/fonts/Turista Gorda NF W01 Regular.ttf')`, `url('/fonts/ARIAL.TTF')`, `url('/fonts/vespertine Regular.ttf')`.
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 43: CẬP NHẬT CHỨC NĂNG TAB CONTACT (GIAO DIỆN NGANG - LANDSCAPE)
+- Thời gian: 31/07/2026 19:02:28 (Giờ TPHCM)
+- File ảnh hưởng: /src/App.tsx, /src/components/VespertineBackground.tsx
+- Chi tiết thay đổi:
+  + Bỏ hiệu ứng fade của các nút và logo khi mở Contact (ẩn lập tức các overlay chính khi bấm nút contact).
+  + Thêm tab Contact trượt từ cạnh phải màn hình vào với kích thước `w-[50vw]`, chiều cao full màn hình `h-full`, nền màu đen `#000000`, có viền bên trái `border-l border-white/20`.
+  + Thêm prop `shiftLeft={boolean}` cho `VespertineBackground`: di chuyển hình nền sang trái 25% (`x: '-25%'`) bằng animation `motion.div` mượt mà (`duration: 0.6s`) để giữ trọng tâm điểm nhìn ở nửa trái màn hình.
+- Tham số điều chỉnh: `shiftLeft={showContactLandscape}`, `x: '-25%'`, transition duration `0.6s`.
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 44: TỐI ƯU GIAO DIỆN TAB CONTACT CHO MOBILE (PORTRAIT)
+- Thời gian: 31/07/2026 19:05:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/App.tsx
+- Chi tiết thay đổi:
+  + Thiết lập tab Contact ở chế độ Portrait trượt từ dưới lên (`initial={{ y: '100%' }}`, `animate={{ y: 0 }}`), chiếm 50% chiều cao màn hình (`h-[50vh]`, `w-full`), nền màu đen `#000000` với viền trên `border-t border-white/20`.
+  + Giữ nguyên hình nền không dịch chuyển ở chế độ Portrait, đồng thời phủ một lớp overlay tối màu `bg-black/60` với animation mờ mượt mà phía trên hình nền.
+- Tham số điều chỉnh: `h-[50vh]`, `y: '100%'` -> `0`, `bg-black/60`.
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 45: THAY NÚT ĐÓNG BẰNG CHỮ "CLOSE" TRONG TAB CONTACT
+- Thời gian: 31/07/2026 19:08:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/App.tsx
+- Chi tiết thay đổi:
+  + Thay thế biểu tượng nút X bằng chữ "close" cho cả giao diện Landscape và Portrait.
+  + Định dạng font chữ `font-archivo` (không narrow), khoảng cách chữ hẹp `tracking-tighter`, kích thước `text-2xl`, hiệu ứng hover nghiêng `hover-italic-transition`.
+- Tham số điều chỉnh: `<span className="font-archivo text-2xl tracking-tighter leading-none">close</span>`.
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 46: ĐIỀU CHỈNH ĐỘ DÀY FONT CỦA NÚT "CLOSE"
+- Thời gian: 31/07/2026 19:11:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/App.tsx
+- Chi tiết thay đổi:
+  + Tăng độ dày chữ "close" từ `wght: 200` lên `wght: 300` ở cả 2 tab Contact (Landscape và Portrait) để chữ nổi bật và rõ ràng hơn.
+- Tham số điều chỉnh: `fontVariationSettings: '"wght" 300'`.
+

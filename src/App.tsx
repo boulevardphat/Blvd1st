@@ -345,12 +345,26 @@ export default function App() {
             {/* The 100vh Main Screen View */}
             <div className="relative w-full h-[calc(var(--vh,1vh)*100)] shrink-0 flex items-center justify-center overflow-hidden ">
               {/* Background Image */}
-              <VespertineBackground />
+              <VespertineBackground shiftLeft={showContactLandscape} />
+
+              <AnimatePresence>
+                {showContactPortrait && (
+                  <motion.div
+                    className="absolute inset-0 bg-black/60 z-10 pointer-events-none hidden portrait:block"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.6 }}
+                  />
+                )}
+              </AnimatePresence>
+
               {/* Landscape Layout (Visible only in landscape / horizontal viewports) */}
-              <div 
-                id="safezone-overlay-landscape" 
-                className="hidden landscape:flex absolute inset-0 flex-col justify-between p-[6.5%] pointer-events-none"
-              >
+              {!(showContactLandscape || showContactPortrait) && (
+                <div 
+                  id="safezone-overlay-landscape" 
+                  className="hidden landscape:flex absolute inset-0 flex-col justify-between p-[6.5%] pointer-events-none"
+                >
                 {/* Top Row */}
                 <div className="flex justify-between items-start w-full">
                   <div className="relative pointer-events-auto">
@@ -427,12 +441,14 @@ export default function App() {
                   </button>
                 </div>
               </div>
+              )}
 
               {/* Portrait Layout (Visible only in portrait / vertical viewports) */}
-              <div 
-                id="safezone-overlay-portrait" 
-                className="hidden portrait:flex absolute inset-0 pointer-events-none"
-              >
+              {!(showContactLandscape || showContactPortrait) && (
+                <div 
+                  id="safezone-overlay-portrait" 
+                  className="hidden portrait:flex absolute inset-0 pointer-events-none"
+                >
                 {/* Anchor point exactly at 66.5vh, centered horizontally */}
                 <div className="absolute left-1/2 -translate-x-1/2 w-fit pointer-events-auto flex flex-col items-center" style={{ top: 'calc(var(--vh, 1vh) * 66.5)' }}>
                                   {/* Top Row - positioned absolute above the center */}
@@ -507,6 +523,7 @@ export default function App() {
                   </div>
                 </div>
               </div>
+              )}
             </div>
 
             <Footer isPopupOpen={isAnyPopupOpen} />
@@ -523,23 +540,51 @@ export default function App() {
         />
       )}
 
-      {/* Landscape Contact Screen */}
-      {showContactLandscape && (
-        <div 
-          id="contact-landscape-screen"
-          className="fixed inset-0 bg-black z-[100] cursor-pointer"
-          onClick={() => setShowContactLandscape(false)}
-        />
-      )}
+      {/* Contact Tab - Landscape */}
+      <AnimatePresence>
+        {showContactLandscape && (
+          <motion.div 
+            id="contact-tab-landscape"
+            className="fixed top-0 right-0 h-full w-[50vw] bg-[#000000] z-[100] border-l border-white/20 flex flex-col hidden landscape:flex"
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="absolute top-[6.5%] right-[6.5%] z-20">
+              <button 
+                onClick={() => setShowContactLandscape(false)}
+                className="text-white/90 hover:text-white hover-italic-transition transition-colors cursor-pointer"
+              >
+                <span className="font-archivo text-2xl tracking-tighter leading-none" style={{ fontVariationSettings: '"wght" 300' }}>close</span>
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Portrait Contact Screen */}
-      {showContactPortrait && (
-        <div 
-          id="contact-portrait-screen"
-          className="fixed inset-0 bg-black z-[100] cursor-pointer"
-          onClick={() => setShowContactPortrait(false)}
-        />
-      )}
+      {/* Contact Tab - Portrait */}
+      <AnimatePresence>
+        {showContactPortrait && (
+          <motion.div 
+            id="contact-tab-portrait"
+            className="fixed bottom-0 left-0 w-full h-[50vh] bg-[#000000] z-[100] border-t border-white/20 flex flex-col hidden portrait:flex"
+            initial={{ y: '100%' }}
+            animate={{ y: 0 }}
+            exit={{ y: '100%' }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="absolute top-[6.5%] right-[6.5%] z-20">
+              <button 
+                onClick={() => setShowContactPortrait(false)}
+                className="text-white/90 hover:text-white hover-italic-transition transition-colors cursor-pointer"
+              >
+                <span className="font-archivo text-2xl tracking-tighter leading-none" style={{ fontVariationSettings: '"wght" 300' }}>close</span>
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* History Screen */}
       {showHistory && (
