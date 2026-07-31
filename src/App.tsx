@@ -6,7 +6,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X } from 'lucide-react';
-import FlowingMenu from './components/FlowingMenu';
 import Footer from './components/Footer';
 
 
@@ -17,17 +16,88 @@ import { VespertineBackground } from './components/VespertineBackground';
 
 type SceneState = 'pre-intro' | 'intro-play' | 'intro-blvd' | 'intro-clock' | 'intro-image-1' | 'intro-image-2' | 'intro-image-3' | 'main-app';
 
+
+function SlideTab({ 
+  isOpenLandscape, 
+  isOpenPortrait, 
+  title, 
+  onClose, 
+  children 
+}: { 
+  isOpenLandscape: boolean, 
+  isOpenPortrait: boolean, 
+  title: string, 
+  onClose: () => void, 
+  children?: React.ReactNode 
+}) {
+  return (
+    <>
+      <AnimatePresence>
+        {isOpenLandscape && (
+          <motion.div 
+            className="fixed top-0 right-0 h-full w-[50vw] bg-[#000000] z-[100] border-l border-white/20 flex flex-col hidden landscape:flex"
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="absolute top-[6.5%] left-[6.5%] z-20">
+              <span className="font-archivo text-2xl tracking-tighter leading-none text-white/90" style={{ fontVariationSettings: '"wght" 400' }}>
+                {title}
+              </span>
+            </div>
+            <div className="absolute top-[6.5%] right-[6.5%] z-20">
+              <button 
+                onClick={onClose}
+                className="text-white/90 hover:text-white hover-italic-transition transition-colors cursor-pointer"
+              >
+                <span className="font-archivo text-2xl tracking-tighter leading-none" style={{ fontVariationSettings: '"wght" 300' }}>close</span>
+              </button>
+            </div>
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isOpenPortrait && (
+          <motion.div 
+            className="fixed bottom-0 left-0 w-full h-[50vh] bg-[#000000] z-[100] border-t border-white/20 flex flex-col hidden portrait:flex"
+            initial={{ y: '100%' }}
+            animate={{ y: 0 }}
+            exit={{ y: '100%' }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="absolute top-[6.5%] left-[6.5%] z-20">
+              <span className="font-archivo text-2xl tracking-tighter leading-none text-white/90" style={{ fontVariationSettings: '"wght" 400' }}>
+                {title}
+              </span>
+            </div>
+            <div className="absolute top-[6.5%] right-[6.5%] z-20">
+              <button 
+                onClick={onClose}
+                className="text-white/90 hover:text-white hover-italic-transition transition-colors cursor-pointer"
+              >
+                <span className="font-archivo text-2xl tracking-tighter leading-none" style={{ fontVariationSettings: '"wght" 300' }}>close</span>
+              </button>
+            </div>
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+
 export default function App() {
 
   const [scene, setScene] = useState<SceneState>('pre-intro');
   const [imagesLoaded, setImagesLoaded] = useState(false);
-  const [showInfo, setShowInfo] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
+  const [activeLandscapeTab, setActiveLandscapeTab] = useState<'contact' | 'info' | 'history' | null>(null);
+  const [activePortraitTab, setActivePortraitTab] = useState<'contact' | 'info' | 'history' | null>(null);
   const [showHistoryDetail, setShowHistoryDetail] = useState(false);
   const [showArchive, setShowArchive] = useState(false);
   const [showFriends, setShowFriends] = useState(false);
-  const [showContactLandscape, setShowContactLandscape] = useState(false);
-  const [showContactPortrait, setShowContactPortrait] = useState(false);
   
   const bgAudioRef = React.useRef<HTMLAudioElement>(null);
 
@@ -82,7 +152,7 @@ export default function App() {
     };
   }, []);
 
-  const isAnyPopupOpen = showInfo || showHistory || showArchive || showFriends || showContactLandscape || showContactPortrait;
+  const isAnyPopupOpen = activeLandscapeTab !== null || activePortraitTab !== null || showArchive || showFriends || showHistoryDetail;
 
   useEffect(() => {
     if (scene === 'main-app' && !isAnyPopupOpen && bgAudioRef.current) {
@@ -345,10 +415,10 @@ export default function App() {
             {/* The 100vh Main Screen View */}
             <div className="relative w-full h-[calc(var(--vh,1vh)*100)] shrink-0 flex items-center justify-center overflow-hidden ">
               {/* Background Image */}
-              <VespertineBackground shiftLeft={showContactLandscape} />
+              <VespertineBackground shiftLeft={activeLandscapeTab !== null} />
 
               <AnimatePresence>
-                {showContactPortrait && (
+                {activePortraitTab !== null && (
                   <motion.div
                     className="absolute inset-0 bg-black/60 z-10 pointer-events-none hidden portrait:block"
                     initial={{ opacity: 0 }}
@@ -360,7 +430,7 @@ export default function App() {
               </AnimatePresence>
 
               {/* Landscape Layout (Visible only in landscape / horizontal viewports) */}
-              {!(showContactLandscape || showContactPortrait) && (
+              {!(activeLandscapeTab !== null || activePortraitTab !== null) && (
                 <div 
                   id="safezone-overlay-landscape" 
                   className="hidden landscape:flex absolute inset-0 flex-col justify-between p-[6.5%] pointer-events-none"
@@ -370,7 +440,7 @@ export default function App() {
                   <div className="relative pointer-events-auto">
                     <button 
                       id="btn-contact-landscape" 
-                      onClick={() => setShowContactLandscape(true)}
+                      onClick={() => setActiveLandscapeTab('contact')}
                       className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
                       style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                     >
@@ -380,7 +450,7 @@ export default function App() {
                   
                   <button 
                     id="btn-history-landscape" 
-                    onClick={() => setShowHistory(true)}
+                    onClick={() => setActiveLandscapeTab('history')}
                     className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
                     style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                   >
@@ -411,7 +481,7 @@ export default function App() {
                 <div className="relative flex justify-between items-baseline w-full">
                   <button 
                     id="btn-info-landscape" 
-                    onClick={() => setShowInfo(true)}
+                    onClick={() => setActiveLandscapeTab('info')}
                     className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
                     style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                   >
@@ -444,7 +514,7 @@ export default function App() {
               )}
 
               {/* Portrait Layout (Visible only in portrait / vertical viewports) */}
-              {!(showContactLandscape || showContactPortrait) && (
+              {!(activeLandscapeTab !== null || activePortraitTab !== null) && (
                 <div 
                   id="safezone-overlay-portrait" 
                   className="hidden portrait:flex absolute inset-0 pointer-events-none"
@@ -456,7 +526,7 @@ export default function App() {
                     <div className="relative pointer-events-auto">
                       <button 
                         id="btn-contact-portrait" 
-                        onClick={() => setShowContactPortrait(true)}
+                        onClick={() => setActivePortraitTab('contact')}
                         className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
                         style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                       >
@@ -474,7 +544,7 @@ export default function App() {
 
                     <button 
                       id="btn-history-portrait" 
-                      onClick={() => setShowHistory(true)}
+                      onClick={() => setActivePortraitTab('history')}
                       className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"  
                       style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                     >
@@ -495,7 +565,7 @@ export default function App() {
                     <div className="mt-[6px] w-full flex justify-between items-start relative">
                       <button 
                         id="btn-info-portrait" 
-                        onClick={() => setShowInfo(true)}
+                        onClick={() => setActivePortraitTab('info')}
                         className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
                         style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                       >
@@ -531,93 +601,36 @@ export default function App() {
         </div>
       )}
 
-      {/* Info Screen: LED Dot Matrix board, clicking anywhere exits */}
-      {showInfo && (
-        <div 
-          id="info-screen"
-          className="fixed inset-0 bg-black z-[100] cursor-pointer"
-          onClick={() => setShowInfo(false)}
-        />
-      )}
+      
+      <SlideTab
+        isOpenLandscape={activeLandscapeTab === 'contact'}
+        isOpenPortrait={activePortraitTab === 'contact'}
+        title="contact"
+        onClose={() => {
+          setActiveLandscapeTab(null);
+          setActivePortraitTab(null);
+        }}
+      />
+      
+      <SlideTab
+        isOpenLandscape={activeLandscapeTab === 'info'}
+        isOpenPortrait={activePortraitTab === 'info'}
+        title="info"
+        onClose={() => {
+          setActiveLandscapeTab(null);
+          setActivePortraitTab(null);
+        }}
+      />
 
-      {/* Contact Tab - Landscape */}
-      <AnimatePresence>
-        {showContactLandscape && (
-          <motion.div 
-            id="contact-tab-landscape"
-            className="fixed top-0 right-0 h-full w-[50vw] bg-[#000000] z-[100] border-l border-white/20 flex flex-col hidden landscape:flex"
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className="absolute top-[6.5%] right-[6.5%] z-20">
-              <button 
-                onClick={() => setShowContactLandscape(false)}
-                className="text-white/90 hover:text-white hover-italic-transition transition-colors cursor-pointer"
-              >
-                <span className="font-archivo text-2xl tracking-tighter leading-none" style={{ fontVariationSettings: '"wght" 300' }}>close</span>
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Contact Tab - Portrait */}
-      <AnimatePresence>
-        {showContactPortrait && (
-          <motion.div 
-            id="contact-tab-portrait"
-            className="fixed bottom-0 left-0 w-full h-[50vh] bg-[#000000] z-[100] border-t border-white/20 flex flex-col hidden portrait:flex"
-            initial={{ y: '100%' }}
-            animate={{ y: 0 }}
-            exit={{ y: '100%' }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className="absolute top-[6.5%] right-[6.5%] z-20">
-              <button 
-                onClick={() => setShowContactPortrait(false)}
-                className="text-white/90 hover:text-white hover-italic-transition transition-colors cursor-pointer"
-              >
-                <span className="font-archivo text-2xl tracking-tighter leading-none" style={{ fontVariationSettings: '"wght" 300' }}>close</span>
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* History Screen */}
-      {showHistory && (
-        <div 
-          id="history-screen"
-          className="fixed inset-0 bg-black z-50 flex items-center justify-center"
-        >
-          <div className="absolute top-[6.5%] right-[6.5%] z-20">
-            <button 
-              onClick={() => setShowHistory(false)}
-              className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white rounded-full p-3 transition-colors shadow-lg border border-white/10"
-            >
-              <X size={24} strokeWidth={2} />
-            </button>
-          </div>
-          <div className="w-full h-full relative">
-            <FlowingMenu
-              items={[
-                { text: 'pre-BLVD', image: 'https://i.ibb.co/vy4ykmw/vespertine.png', onClick: (e: any) => { e.stopPropagation(); setShowHistoryDetail(true); } },
-                { text: '#BLVD15', customColor: '#EFDD7C', image: 'https://i.ibb.co/Nd6BpwZ2/young.jpg', onClick: (e: any) => { e.stopPropagation(); setShowHistoryDetail(true); } },
-                { text: '#BLVD16', customColor: '#8ACE00', image: 'https://i.ibb.co/tP3rK5bg/ultrayoung.jpg', onClick: (e: any) => { e.stopPropagation(); setShowHistoryDetail(true); } },
-                { text: '#BLVD17', customColor: '#ffffff', image: 'https://i.ibb.co/vy4ykmw/vespertine.png', onClick: (e: any) => { e.stopPropagation(); setShowHistoryDetail(true); } },
-                { text: '#BLVD18', customColor: '#705fa3', gradientColor: '#FE00A1', hoverText: 'COMINGSOON', dimOnHover: true, image: 'https://i.ibb.co/Nd6BpwZ2/young.jpg', onClick: (e: any) => { e.stopPropagation(); } }
-              ]}
-              speed={4}
-              textColor="#a6a6a6"
-              marqueeTextColor="#ffffff"
-              marqueeBgColor="#1a1a1a"
-              borderColor="rgba(255,255,255,0.1)"
-            />
-          </div>
-        </div>
-      )}
+      <SlideTab
+        isOpenLandscape={activeLandscapeTab === 'history'}
+        isOpenPortrait={activePortraitTab === 'history'}
+        title="history"
+        onClose={() => {
+          setActiveLandscapeTab(null);
+          setActivePortraitTab(null);
+        }}
+      />
 
       {/* History Detail Screen: Completely blank black screen */}
       {showHistoryDetail && (
