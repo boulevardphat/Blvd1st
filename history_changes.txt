@@ -511,3 +511,12 @@ LẦN THAY ĐỔI THỨ 40: ĐIỀU CHỈNH HƯỚNG VÀ TỶ LỆ MÀU GRADIENT
   + Chỉnh sửa hướng của hiệu ứng gradient cho #BLVD18 thành hướng Đông Nam (`135deg` đối với CSS và `x1="0%" y1="0%" x2="100%" y2="100%"` đối với SVG).
   + Thay đổi tỷ lệ chuyển màu từ hồng (`#FE00A1`) sang tím (`#705fa3`), thiết lập các mốc điểm dừng (stop-color offset) sao cho màu tím chiếm phần lớn diện tích (hồng chiếm khoảng 10% bắt đầu và chuyển hẳn sang tím từ 60% trở đi).
 - Tham số điều chỉnh: `linear-gradient(135deg, ${gradientColor} 10%, ${customColor} 60%)`, `x2="100%" y2="100%"`, `offset="10%"`, `offset="60%"`.
+
+LẦN THAY ĐỔI THỨ 41: NHẬP VÀ KHAI BÁO CÁC FONT CHỮ RIÊNG THEO YÊU CẦU
+- Thời gian: 31/07/2026 11:31:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/index.css
+- Chi tiết thay đổi:
+  + Thêm quy tắc `@font-face` để import các font chữ tuỳ chỉnh từ thư mục `/fonts/` (sẽ được người dùng thêm vào sau): `Turista` cho #BLVD15, `ArialCustom` (pack riêng của Arial) cho #BLVD16, và `Vespertine` cho #BLVD17.
+  + Cập nhật `@theme` trong Tailwind để có thể gọi nhanh thông qua CSS variables: `--font-turista`, `--font-arial` (kèm fallback "Arial" chuẩn), `--font-vespertine`.
+  + Theo yêu cầu, chỉ thực hiện việc khai báo font để chuẩn bị cho các bước sau, không áp dụng font trực tiếp vào giao diện trong lần thay đổi này.
+- Tham số điều chỉnh: `@font-face` urls `/fonts/turista.ttf`, `/fonts/arial.ttf`, `/fonts/vespertine.ttf`, css vars `--font-turista`, `--font-arial`, `--font-vespertine`.

@@ -33,17 +33,24 @@ export default function App() {
 
   useEffect(() => {
     const imageUrls = [
-      "https://i.ibb.co/JFvk9wzr/vespertine-bg.png",
-      "https://i.ibb.co/jPHPJSG7/vespertine-sj.png",
-      "https://i.ibb.co/vy4ykmw/vespertine.png",
-      "https://i.ibb.co/Nd6BpwZ2/young.jpg",
-      "https://i.ibb.co/tP3rK5bg/ultrayoung.jpg"
+      "/images/home/vespertine-bg.webp",
+      "/images/home/vespertine-sj.webp",
+      "/images/home/vespertine.webp"
     ];
 
     let loadedCount = 0;
+    let isTimeout = false;
+
+    const fallbackTimeout = setTimeout(() => {
+      isTimeout = true;
+      setImagesLoaded(true);
+    }, 2500);
+
     const handleImageLoad = () => {
+      if (isTimeout) return;
       loadedCount++;
       if (loadedCount === imageUrls.length) {
+        clearTimeout(fallbackTimeout);
         setImagesLoaded(true);
       }
     };
@@ -54,6 +61,8 @@ export default function App() {
       img.onerror = handleImageLoad;
       img.src = url;
     });
+
+    return () => clearTimeout(fallbackTimeout);
   }, []);
 
   useEffect(() => {
@@ -558,10 +567,10 @@ export default function App() {
           <div className="w-full h-full relative">
             <FlowingMenu
               items={[
-                { text: 'pre-BLVD', image: 'https://i.ibb.co/vy4ykmw/vespertine.png', onClick: (e: any) => { e.stopPropagation(); setShowHistoryDetail(true); } },
+                { text: 'pre-BLVD', image: '/images/home/vespertine.webp', onClick: (e: any) => { e.stopPropagation(); setShowHistoryDetail(true); } },
                 { text: '#BLVD15', customColor: '#EFDD7C', image: 'https://i.ibb.co/Nd6BpwZ2/young.jpg', onClick: (e: any) => { e.stopPropagation(); setShowHistoryDetail(true); } },
                 { text: '#BLVD16', customColor: '#8ACE00', image: 'https://i.ibb.co/tP3rK5bg/ultrayoung.jpg', onClick: (e: any) => { e.stopPropagation(); setShowHistoryDetail(true); } },
-                { text: '#BLVD17', customColor: '#ffffff', image: 'https://i.ibb.co/vy4ykmw/vespertine.png', onClick: (e: any) => { e.stopPropagation(); setShowHistoryDetail(true); } },
+                { text: '#BLVD17', customColor: '#ffffff', image: '/images/home/vespertine.webp', onClick: (e: any) => { e.stopPropagation(); setShowHistoryDetail(true); } },
                 { text: '#BLVD18', customColor: '#705fa3', gradientColor: '#FE00A1', hoverText: 'COMINGSOON', dimOnHover: true, image: 'https://i.ibb.co/Nd6BpwZ2/young.jpg', onClick: (e: any) => { e.stopPropagation(); } }
               ]}
               speed={4}

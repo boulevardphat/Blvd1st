@@ -2,9 +2,34 @@
 @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@900&display=swap');
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Turista';
+  src: url('/fonts/Turista Gorda NF W01 Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ArialCustom';
+  src: url('/fonts/ARIAL.TTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Vespertine';
+  src: url('/fonts/vespertine Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
 @theme {
   --font-archivo: "Archivo", sans-serif;
   --font-be-vietnam: "Be Vietnam Pro", sans-serif;
+  --font-turista: "Turista", sans-serif;
+  --font-arial: "ArialCustom", "Arial", sans-serif;
+  --font-vespertine: "Vespertine", sans-serif;
 }
 
 .font-archivo-narrow {
@@ -96,6 +121,3 @@ hotfx-split-flap {
   margin: 0 !important;
   padding: 0 !important;
 }
-
-
-

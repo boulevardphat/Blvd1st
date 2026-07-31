@@ -12,7 +12,7 @@ export const VespertineBackground = () => {
     <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
       {/* Background Layer */}
       <img
-        src="https://i.ibb.co/JFvk9wzr/vespertine-bg.png"
+        src="/images/home/vespertine-bg.webp"
         alt="Background layer"
         referrerPolicy="no-referrer"
         className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center] pointer-events-none"
@@ -26,7 +26,7 @@ export const VespertineBackground = () => {
 
       {/* Subject Layer */}
       <img
-        src="https://i.ibb.co/jPHPJSG7/vespertine-sj.png"
+        src="/images/home/vespertine-sj.webp"
         alt="Subject layer"
         referrerPolicy="no-referrer"
         className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center] pointer-events-none"
@@ -35,7 +35,7 @@ export const VespertineBackground = () => {
 
       {/* Fallback / Original Image (On top, fades out when others load) */}
       <motion.img 
-        src="https://i.ibb.co/vy4ykmw/vespertine.png" 
+        src="/images/home/vespertine.webp" 
         alt="Fallback background"
         referrerPolicy="no-referrer"
         className="absolute inset-0 w-full h-full object-cover portrait:object-[49%_center] pointer-events-none z-10"
