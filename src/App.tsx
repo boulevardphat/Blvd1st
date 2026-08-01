@@ -42,7 +42,7 @@ function SlideTab({
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="absolute top-[6.5%] left-[6.5%] z-20">
-              <span className="font-archivo text-2xl tracking-tighter leading-none text-white/90" style={{ fontVariationSettings: '"wght" 400' }}>
+              <span className="font-archivo text-2xl tracking-tighter leading-none text-white/90" style={{ fontVariationSettings: '"wght" 600' }}>
                 {title}
               </span>
             </div>
@@ -69,7 +69,7 @@ function SlideTab({
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="absolute top-[6.5%] left-[6.5%] z-20">
-              <span className="font-archivo text-2xl tracking-tighter leading-none text-white/90" style={{ fontVariationSettings: '"wght" 400' }}>
+              <span className="font-archivo text-2xl tracking-tighter leading-none text-white/90" style={{ fontVariationSettings: '"wght" 600' }}>
                 {title}
               </span>
             </div>
@@ -410,7 +410,7 @@ export default function App() {
 
       {/* Main App Screen (Background Image & Interactive Interface Layouts) */}
       {scene === 'main-app' && (
-        <div className="absolute inset-0 z-10 overflow-y-auto overflow-x-hidden no-scrollbar scroll-smooth">
+        <div className={`absolute inset-0 z-10 overflow-x-hidden no-scrollbar scroll-smooth ${isAnyPopupOpen ? 'overflow-y-hidden' : 'overflow-y-auto'}`}>
           <div className="w-full flex flex-col overflow-x-hidden">
             {/* The 100vh Main Screen View */}
             <div className="relative w-full h-[calc(var(--vh,1vh)*100)] shrink-0 flex items-center justify-center overflow-hidden ">
@@ -625,7 +625,7 @@ export default function App() {
       <SlideTab
         isOpenLandscape={activeLandscapeTab === 'history'}
         isOpenPortrait={activePortraitTab === 'history'}
-        title="history"
+        title="his-tory"
         onClose={() => {
           setActiveLandscapeTab(null);
           setActivePortraitTab(null);
