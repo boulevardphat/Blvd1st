@@ -570,3 +570,104 @@ LẦN THAY ĐỔI THỨ 46: ĐIỀU CHỈNH ĐỘ DÀY FONT CỦA NÚT "CLOSE"
   + Tăng độ dày chữ "close" từ `wght: 200` lên `wght: 300` ở cả 2 tab Contact (Landscape và Portrait) để chữ nổi bật và rõ ràng hơn.
 - Tham số điều chỉnh: `fontVariationSettings: '"wght" 300'`.
 
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 51: TRÌNH BÀY LẠI MỤC INFO VỚI NỘI DUNG DEMO
+- Thời gian: 01/08/2026 11:06:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/App.tsx
+- Chi tiết thay đổi:
+  + Áp dụng layout mẫu cho mục `info`: Các phần thông tin được xếp từ trên xuống, căn lề trái khớp với chữ "info" (`left-[6.5%]`).
+  + Theo yêu cầu: tên mục nhỏ (dùng `text-white/50 text-[clamp(...)] uppercase tracking-[0.2em]`), nội dung bên dưới chữ lớn (dùng `font-archivo text-white text-[clamp(...)]`).
+  + Các nội dung hiện đang để tạm (Location, Hours, Music) vì chưa có nội dung gốc.
+- Tham số điều chỉnh: Bổ sung layout chi tiết vào bên trong `<SlideTab title="info">`.
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 52: KHÔI PHỤC NỘI DUNG MỤC INFO TỪ BẢN CŨ
+- Thời gian: 01/08/2026 11:09:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/App.tsx
+- Chi tiết thay đổi:
+  + Cập nhật lại các nội dung text của mục `info` cho đúng với bản gốc "ngày xưa" (từ bản màn hình LED cũ).
+  + Áp dụng vào layout hiện tại: tiêu đề nhỏ (name, blvd, birth, zodiac, mbti) phía trên, nội dung chữ to ở phía dưới.
+- Tham số điều chỉnh: Sửa text tĩnh từ `Location`, `Hours`, `Music` thành `Phat Nguyen Thuan`, `Boulevard`, `26/09/2008`, `Libra ♎`, `INFP-T`.
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 53: CẬP NHẬT LẠI MỤC INFO (THU NHỎ KHOẢNG CÁCH, XÓA BỚT THÔNG TIN, THÊM KHUNG ẢNH)
+- Thời gian: 01/08/2026 11:19:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/App.tsx
+- Chi tiết thay đổi:
+  + Đã loại bỏ mục `blvd` (Boulevard) và biểu tượng `♎` ở mục zodiac.
+  + Đã thêm thuộc tính `items-start` vào các container để đảm bảo tất cả các nội dung đều được canh lề trái hoàn toàn (trước đó có thể bị dịch chuyển nhẹ do đặc tính của flex).
+  + Thu nhỏ lại khoảng cách giữa các mục thông tin (điều chỉnh từ `gap-[clamp(2rem,5vw,4rem)]` xuống `gap-[clamp(1.2rem,3vw,2.5rem)]`).
+  + Chừa một khoảng không gian trống phía trên mục "Họ tên" (hình vuông có nền trắng trong suốt rất nhẹ) để làm vị trí cho ảnh sau này, ảnh cũng được canh lề trái.
+- Tham số điều chỉnh: Sửa layout trong `<SlideTab title="info">`, thêm `<div className="w-[clamp(4rem,10vw,6rem)] h-[clamp(4rem,10vw,6rem)] bg-white/5 rounded-md mb-2"></div>`.
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 54: THÊM ẢNH VÀO MỤC INFO VÀ ĐIỀU CHỈNH CHIỀU CAO TAB TRÊN MOBILE
+- Thời gian: 01/08/2026 11:26:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/App.tsx
+- Chi tiết thay đổi:
+  + Cập nhật hình ảnh vào mục info (sử dụng đường dẫn https://i.ibb.co/TxrtFvPZ/info.webp). Hình ảnh được căn lề trái như yêu cầu.
+  + Điều chỉnh chiều cao của tất cả các SlideTab trên thiết bị di động (khi ở chế độ portrait). Tăng từ nửa màn hình (50vh) lên 8 phần 10 màn hình (80vh) để hiển thị được nhiều nội dung hơn, phù hợp với yêu cầu.
+- Tham số điều chỉnh: `h-[50vh]` đổi thành `h-[80vh]`. Sửa thẻ `div` trống thành `<img src="..." />`.
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 55: ĐIỀU CHỈNH KÍCH THƯỚC VÀ KIỂU DÁNG ẢNH TRONG MỤC INFO
+- Thời gian: 01/08/2026 11:28:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/App.tsx
+- Chi tiết thay đổi:
+  + Cập nhật kích thước ảnh to hơn (width thay đổi từ `w-[clamp(4rem,12vw,7rem)]` thành `w-[clamp(12rem,35vw,24rem)]`).
+  + Bỏ bo góc (`rounded-sm`).
+  + Thêm tỉ lệ ảnh (`aspect-[1439/959]`) để đảm bảo ảnh giữ đúng tỷ lệ độ phân giải gốc của ảnh.
+- Tham số điều chỉnh: Sửa class `<img ... className="w-[clamp(12rem,35vw,24rem)] aspect-[1439/959] object-cover mb-2" />`
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 56: THU NHỎ ẢNH Ở GIAO DIỆN NGANG VÀ CHUYỂN TẤT CẢ NÚT THÀNH TAB
+- Thời gian: 01/08/2026 11:33:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/App.tsx
+- Chi tiết thay đổi:
+  + Giảm kích thước hình ảnh mục info 20% riêng ở giao diện ngang (thêm `landscape:w-[clamp(9.6rem,28vw,19.2rem)]`).
+  + Chuyển tất cả các nút còn lại trên giao diện chính (`booking`, `friends`, `archive`) thành dạng tab trượt SlideTab đồng bộ với `info`, `contact` và `his-tory`.
+  + Mở khóa nút `booking` (cho phép tương tác `pointer-events-auto`, đổi màu text sang `text-white/90 hover:text-white`).
+- Tham số điều chỉnh:
+  + Sửa state tab: `<'contact' | 'info' | 'history' | 'booking' | 'friends' | 'archive' | null>`.
+  + Bổ sung 3 `<SlideTab>` cho `booking`, `friends`, và `archive`.
+  + Sửa class ảnh: `w-[clamp(12rem,35vw,24rem)] landscape:w-[clamp(9.6rem,28vw,19.2rem)] aspect-[1439/959] object-cover mb-2`.
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 57: CÂN BẰNG KHOẢNG CÁCH TRÊN VÀ DƯỚI TIÊU ĐỀ "INFO"
+- Thời gian: 01/08/2026 11:35:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/App.tsx
+- Chi tiết thay đổi:
+  + Khoảng cách từ mép trên cửa sổ đến mép trên tiêu đề "info" là 6.5%.
+  + Đã điều chỉnh khoảng cách từ mép dưới tiêu đề "info" đến khu vực nội dung bằng đúng 6.5% (đổi thuộc tính `top` của container nội dung từ `top-[20%]` thành `top-[calc(13%+1.5rem)]`).
+  + Tăng `max-h` của container nội dung từ `75%` lên `80%` để tận dụng diện tích hiển thị.
+- Tham số điều chỉnh: Sửa class container thành `className="absolute top-[calc(13%+1.5rem)] left-[6.5%] right-[6.5%] flex flex-col gap-[clamp(1.2rem,3vw,2.5rem)] items-start overflow-y-auto no-scrollbar pb-10 max-h-[80%]"`.
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 58: CĂN CHỈNH ĐỒNG ĐỀU MỤC INFO VÀ SỬA LỖI ĐƠ WEB KHI XOAY MÀN HÌNH TABLET
+- Thời gian: 01/08/2026 11:42:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/App.tsx
+- Chi tiết thay đổi:
+  + (1) Lỗi căn lề: Kiểm tra lại toàn bộ file, điều chỉnh để lề trái của hình ảnh, text content và tiêu đề "info" đồng bộ và cân bằng. Đảm bảo toàn bộ nội dung trong mục Info được canh chuẩn xác `left-[6.5%]`.
+  + (2) Lỗi đơ màn hình khi xoay máy: Khắc phục lỗi bằng cách gộp trạng thái đóng/mở tab trên 2 giao diện (`activeLandscapeTab` và `activePortraitTab`) thành một trạng thái duy nhất là `activeTab`. 
+    -> Nhờ vậy, khi xoay từ màn hình dọc (portrait) sang ngang (landscape) hoặc ngược lại, thành phần giao diện không bị giấu nhầm (display: none) gây kẹt tương tác, giúp website chuyển đổi hoạt ảnh mượt mà, người dùng có thể thấy và đóng tab dễ dàng ở cả hai chiều.
+- Tham số điều chỉnh: Gộp state thành `activeTab`, sửa tất cả tham số gọi mở tab liên quan để cùng truy xuất từ 1 nguồn trạng thái đồng nhất.
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 59: KHẮC PHỤC ẢNH NỀN BỊ DỊCH TRÁI KHI Ở CHẾ ĐỘ DỌC
+- Thời gian: 01/08/2026 11:44:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/App.tsx
+- Chi tiết thay đổi:
+  + Thêm trạng thái nhận diện giao diện ngang dọc (`isLandscape`).
+  + Ràng buộc hiệu ứng dịch ảnh nền sang trái (`shiftLeft`) chỉ kích hoạt khi màn hình ở chế độ ngang (`isLandscape === true`) và có tab đang mở.
+  + Nhờ đó, thao tác mở tab ở chế độ dọc không còn gây ra hiện tượng ảnh nền bị lệch ngang sai thiết kế gốc.
+- Tham số điều chỉnh: Cập nhật biến `shiftLeft={activeTab !== null && isLandscape}`.

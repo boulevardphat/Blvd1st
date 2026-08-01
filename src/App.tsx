@@ -62,7 +62,7 @@ function SlideTab({
       <AnimatePresence>
         {isOpenPortrait && (
           <motion.div 
-            className="fixed bottom-0 left-0 w-full h-[50vh] bg-[#000000] z-[100] border-t border-white/20 flex flex-col hidden portrait:flex"
+            className="fixed bottom-0 left-0 w-full h-[80vh] bg-[#000000] z-[100] border-t border-white/20 flex flex-col hidden portrait:flex"
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
@@ -93,8 +93,8 @@ export default function App() {
 
   const [scene, setScene] = useState<SceneState>('pre-intro');
   const [imagesLoaded, setImagesLoaded] = useState(false);
-  const [activeLandscapeTab, setActiveLandscapeTab] = useState<'contact' | 'info' | 'history' | null>(null);
-  const [activePortraitTab, setActivePortraitTab] = useState<'contact' | 'info' | 'history' | null>(null);
+  const [isLandscape, setIsLandscape] = useState(window.innerWidth > window.innerHeight);
+  const [activeTab, setActiveTab] = useState<'contact' | 'info' | 'history' | 'booking' | 'friends' | 'archive' | null>(null);
   const [showHistoryDetail, setShowHistoryDetail] = useState(false);
   const [showArchive, setShowArchive] = useState(false);
   const [showFriends, setShowFriends] = useState(false);
@@ -141,6 +141,7 @@ export default function App() {
         document.documentElement.style.setProperty('--vh', `${vh}px`);
         lastWidth = window.innerWidth;
         lastHeight = window.innerHeight;
+        setIsLandscape(window.innerWidth > window.innerHeight);
       }
     };
     setVh();
@@ -152,7 +153,7 @@ export default function App() {
     };
   }, []);
 
-  const isAnyPopupOpen = activeLandscapeTab !== null || activePortraitTab !== null || showArchive || showFriends || showHistoryDetail;
+  const isAnyPopupOpen = activeTab !== null || showArchive || showFriends || showHistoryDetail;
 
   useEffect(() => {
     if (scene === 'main-app' && !isAnyPopupOpen && bgAudioRef.current) {
@@ -415,10 +416,10 @@ export default function App() {
             {/* The 100vh Main Screen View */}
             <div className="relative w-full h-[calc(var(--vh,1vh)*100)] shrink-0 flex items-center justify-center overflow-hidden ">
               {/* Background Image */}
-              <VespertineBackground shiftLeft={activeLandscapeTab !== null} />
+              <VespertineBackground shiftLeft={activeTab !== null && isLandscape} />
 
               <AnimatePresence>
-                {activePortraitTab !== null && (
+                {activeTab !== null && (
                   <motion.div
                     className="absolute inset-0 bg-black/60 z-10 pointer-events-none hidden portrait:block"
                     initial={{ opacity: 0 }}
@@ -430,7 +431,7 @@ export default function App() {
               </AnimatePresence>
 
               {/* Landscape Layout (Visible only in landscape / horizontal viewports) */}
-              {!(activeLandscapeTab !== null || activePortraitTab !== null) && (
+              {!(activeTab !== null) && (
                 <div 
                   id="safezone-overlay-landscape" 
                   className="hidden landscape:flex absolute inset-0 flex-col justify-between p-[6.5%] pointer-events-none"
@@ -440,7 +441,7 @@ export default function App() {
                   <div className="relative pointer-events-auto">
                     <button 
                       id="btn-contact-landscape" 
-                      onClick={() => setActiveLandscapeTab('contact')}
+                      onClick={() => setActiveTab('contact')}
                       className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
                       style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                     >
@@ -450,7 +451,7 @@ export default function App() {
                   
                   <button 
                     id="btn-history-landscape" 
-                    onClick={() => setActiveLandscapeTab('history')}
+                    onClick={() => setActiveTab('history')}
                     className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
                     style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                   >
@@ -462,14 +463,15 @@ export default function App() {
                 <div className="flex justify-between items-center w-full pointer-events-none">
                   <button 
                     id="btn-booking-landscape" 
-                    className="pointer-events-none text-white/50 font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none tracking-tight select-none relative left-[0.1em]"
+                    onClick={() => setActiveTab('booking')}
+                    className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
                     style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                   >
                     booking
                   </button>
                   <button 
                     id="btn-friends-landscape" 
-                    onClick={() => setShowFriends(true)}
+                    onClick={() => setActiveTab('friends')}
                     className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
                     style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                   >
@@ -481,7 +483,7 @@ export default function App() {
                 <div className="relative flex justify-between items-baseline w-full">
                   <button 
                     id="btn-info-landscape" 
-                    onClick={() => setActiveLandscapeTab('info')}
+                    onClick={() => setActiveTab('info')}
                     className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
                     style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                   >
@@ -503,7 +505,7 @@ export default function App() {
 
                   <button 
                     id="btn-archive-landscape" 
-                    onClick={() => setShowArchive(true)}
+                    onClick={() => setActiveTab('archive')}
                     className="pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.2rem,4.8vw,5.75rem)] leading-none cursor-pointer tracking-tight select-none"
                     style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                   >
@@ -514,7 +516,7 @@ export default function App() {
               )}
 
               {/* Portrait Layout (Visible only in portrait / vertical viewports) */}
-              {!(activeLandscapeTab !== null || activePortraitTab !== null) && (
+              {!(activeTab !== null) && (
                 <div 
                   id="safezone-overlay-portrait" 
                   className="hidden portrait:flex absolute inset-0 pointer-events-none"
@@ -526,7 +528,7 @@ export default function App() {
                     <div className="relative pointer-events-auto">
                       <button 
                         id="btn-contact-portrait" 
-                        onClick={() => setActivePortraitTab('contact')}
+                        onClick={() => setActiveTab('contact')}
                         className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
                         style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                       >
@@ -536,7 +538,8 @@ export default function App() {
 
                     <button 
                       id="btn-booking-portrait"
-                      className="absolute left-1/2 -translate-x-1/2 bottom-0 pointer-events-none text-white/50 font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none tracking-tight select-none"
+                      onClick={() => setActiveTab('booking')}
+                      className="absolute left-1/2 -translate-x-1/2 bottom-0 pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"
                       style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                     >
                       booking
@@ -544,7 +547,7 @@ export default function App() {
 
                     <button 
                       id="btn-history-portrait" 
-                      onClick={() => setActivePortraitTab('history')}
+                      onClick={() => setActiveTab('history')}
                       className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"  
                       style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                     >
@@ -565,7 +568,7 @@ export default function App() {
                     <div className="mt-[6px] w-full flex justify-between items-start relative">
                       <button 
                         id="btn-info-portrait" 
-                        onClick={() => setActivePortraitTab('info')}
+                        onClick={() => setActiveTab('info')}
                         className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none relative left-[0.1em]"
                         style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                       >
@@ -574,7 +577,7 @@ export default function App() {
 
                       <button 
                         id="btn-friends-portrait"
-                        onClick={() => setShowFriends(true)}
+                        onClick={() => setActiveTab('friends')}
                         className="absolute left-1/2 -translate-x-1/2 top-0 pointer-events-auto text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"
                         style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                       >
@@ -583,7 +586,7 @@ export default function App() {
 
                       <button 
                         id="btn-archive-portrait" 
-                        onClick={() => setShowArchive(true)}
+                        onClick={() => setActiveTab('archive')}
                         className="text-white/90 hover:text-white hover-italic-transition font-archivo text-[clamp(1.65rem,6.5vw,3.4rem)] leading-none cursor-pointer tracking-tight select-none"
                         style={{ fontVariationSettings: '"wdth" 62, "wght" 200' }}
                       >
@@ -603,32 +606,77 @@ export default function App() {
 
       
       <SlideTab
-        isOpenLandscape={activeLandscapeTab === 'contact'}
-        isOpenPortrait={activePortraitTab === 'contact'}
+        isOpenLandscape={activeTab === 'contact'}
+        isOpenPortrait={activeTab === 'contact'}
         title="contact"
         onClose={() => {
-          setActiveLandscapeTab(null);
-          setActivePortraitTab(null);
+          setActiveTab(null);
         }}
       />
       
       <SlideTab
-        isOpenLandscape={activeLandscapeTab === 'info'}
-        isOpenPortrait={activePortraitTab === 'info'}
+        isOpenLandscape={activeTab === 'info'}
+        isOpenPortrait={activeTab === 'info'}
         title="info"
         onClose={() => {
-          setActiveLandscapeTab(null);
-          setActivePortraitTab(null);
+          setActiveTab(null);
+        }}
+      >
+        <div className="absolute top-[calc(13%+1.5rem)] left-[6.5%] right-[6.5%] flex flex-col gap-[clamp(1.2rem,3vw,2.5rem)] items-start overflow-y-auto no-scrollbar pb-10 max-h-[80%]">
+          {/* Image placeholder */}
+          <img src="https://i.ibb.co/TxrtFvPZ/info.webp" alt="Phat Nguyen Thuan" className="w-[clamp(12rem,35vw,24rem)] landscape:w-[clamp(9.6rem,28vw,19.2rem)] aspect-[1439/959] object-cover mb-2" referrerPolicy="no-referrer" />
+          <div className="flex flex-col gap-1 items-start">
+            <span className="font-sans text-white/50 text-[clamp(0.6rem,1.5vw,0.875rem)] uppercase tracking-[0.2em]">name</span>
+            <span className="font-archivo text-white text-[clamp(1.5rem,4.5vw,3.5rem)] leading-none tracking-tight">Phat Nguyen Thuan</span>
+          </div>
+          <div className="flex flex-col gap-1 items-start">
+            <span className="font-sans text-white/50 text-[clamp(0.6rem,1.5vw,0.875rem)] uppercase tracking-[0.2em]">birth</span>
+            <span className="font-archivo text-white text-[clamp(1.5rem,4.5vw,3.5rem)] leading-none tracking-tight">26/09/2008</span>
+          </div>
+          <div className="flex flex-col gap-1 items-start">
+            <span className="font-sans text-white/50 text-[clamp(0.6rem,1.5vw,0.875rem)] uppercase tracking-[0.2em]">zodiac</span>
+            <span className="font-archivo text-white text-[clamp(1.5rem,4.5vw,3.5rem)] leading-none tracking-tight">Libra</span>
+          </div>
+          <div className="flex flex-col gap-1 items-start">
+            <span className="font-sans text-white/50 text-[clamp(0.6rem,1.5vw,0.875rem)] uppercase tracking-[0.2em]">mbti</span>
+            <span className="font-archivo text-white text-[clamp(1.5rem,4.5vw,3.5rem)] leading-none tracking-tight">INFP-T</span>
+          </div>
+        </div>
+      </SlideTab>
+
+      <SlideTab
+        isOpenLandscape={activeTab === 'history'}
+        isOpenPortrait={activeTab === 'history'}
+        title="his-tory"
+        onClose={() => {
+          setActiveTab(null);
         }}
       />
 
       <SlideTab
-        isOpenLandscape={activeLandscapeTab === 'history'}
-        isOpenPortrait={activePortraitTab === 'history'}
-        title="his-tory"
+        isOpenLandscape={activeTab === 'booking'}
+        isOpenPortrait={activeTab === 'booking'}
+        title="booking"
         onClose={() => {
-          setActiveLandscapeTab(null);
-          setActivePortraitTab(null);
+          setActiveTab(null);
+        }}
+      />
+
+      <SlideTab
+        isOpenLandscape={activeTab === 'friends'}
+        isOpenPortrait={activeTab === 'friends'}
+        title="friends"
+        onClose={() => {
+          setActiveTab(null);
+        }}
+      />
+
+      <SlideTab
+        isOpenLandscape={activeTab === 'archive'}
+        isOpenPortrait={activeTab === 'archive'}
+        title="archive"
+        onClose={() => {
+          setActiveTab(null);
         }}
       />
 
