@@ -1,6 +1,31 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
 
+const StretchedLabel = ({ text }: { text: string }) => (
+  <div className="absolute inset-0 overflow-hidden flex items-center justify-center p-[4px] md:p-[6px]">
+    <svg 
+      viewBox="0 0 400 100" 
+      className="w-full h-full pointer-events-none" 
+      preserveAspectRatio="none"
+    >
+      <text
+        x="50%"
+        y="52%"
+        dominantBaseline="central"
+        textAnchor="middle"
+        textLength="400"
+        lengthAdjust="spacingAndGlyphs"
+        className="font-archivo uppercase"
+        fontSize="110"
+        fill="currentColor"
+        style={{ fontVariationSettings: '"wght" 800' }}
+      >
+        {text.toUpperCase()}
+      </text>
+    </svg>
+  </div>
+);
+
 interface ViewingZoneProps {
   showBorder?: boolean;
   imageSrc?: string;
@@ -49,27 +74,27 @@ export const ViewingZone: React.FC<ViewingZoneProps> = ({
     return btnName;
   };
 
-  const getHoverStyleClass = (btnName: string) => {
+  const getButtonStyleClass = (btnName: string) => {
     const lower = btnName.toLowerCase();
     if (lower === 'facebook') {
-      return 'hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2]';
+      return 'hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2] active:bg-[#0c59be] active:text-white active:scale-[0.98]';
     }
     if (lower === 'instagram') {
-      return 'hover:bg-gradient-to-r hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] hover:text-white';
+      return 'hover:bg-gradient-to-r hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] hover:text-white active:bg-gradient-to-r active:from-[#d87c1e] active:via-[#b81b34] active:to-[#910d68] active:text-white active:scale-[0.98]';
     }
     if (lower === 'threads') {
-      return 'hover:bg-white hover:text-black hover:border-white';
+      return 'hover:bg-white hover:text-black hover:border-white active:bg-zinc-300 active:text-black active:scale-[0.98]';
     }
     if (lower === 'locket') {
-      return 'hover:bg-[#FFC700] hover:text-black hover:border-[#FFC700]';
+      return 'hover:bg-[#FFC700] hover:text-black hover:border-[#FFC700] active:bg-[#d9a700] active:text-black active:scale-[0.98]';
     }
     if (lower === 'sdt' || lower === 'phone') {
-      return 'hover:bg-[#10B981] hover:text-black hover:border-[#10B981]';
+      return 'hover:bg-[#10B981] hover:text-black hover:border-[#10B981] active:bg-[#047857] active:text-white active:scale-[0.98]';
     }
     if (lower === 'email') {
-      return 'hover:bg-[#EA4335] hover:text-white hover:border-[#EA4335]';
+      return 'hover:bg-[#EA4335] hover:text-white hover:border-[#EA4335] active:bg-[#b31412] active:text-white active:scale-[0.98]';
     }
-    return 'hover:bg-black/90 hover:text-white';
+    return 'hover:bg-black/90 hover:text-white active:bg-white active:text-black';
   };
 
   const handleEmailChoice = (type: 'personal' | 'school') => {
@@ -118,14 +143,14 @@ export const ViewingZone: React.FC<ViewingZoneProps> = ({
             <div className="flex items-center gap-0 border border-white/30 rounded-none overflow-hidden bg-black/80">
               <button
                 onClick={() => handleEmailChoice('personal')}
-                className="px-6 md:px-10 py-2.5 md:py-3.5 bg-black/80 hover:bg-white hover:text-black text-white font-archivo text-sm md:text-lg tracking-tight lowercase border-r border-white/30 rounded-none transition-colors cursor-pointer select-none"
+                className="px-6 md:px-10 py-2.5 md:py-3.5 bg-black/80 hover:bg-[#EA4335] hover:text-white active:bg-[#b31412] active:scale-[0.98] text-white font-archivo text-sm md:text-lg tracking-tight lowercase border-r border-white/30 rounded-none transition-all cursor-pointer select-none"
                 style={{ fontVariationSettings: '"wght" 600' }}
               >
                 personal
               </button>
               <button
                 onClick={() => handleEmailChoice('school')}
-                className="px-6 md:px-10 py-2.5 md:py-3.5 bg-black/80 hover:bg-white hover:text-black text-white font-archivo text-sm md:text-lg tracking-tight lowercase rounded-none transition-colors cursor-pointer select-none"
+                className="px-6 md:px-10 py-2.5 md:py-3.5 bg-black/80 hover:bg-[#1877F2] hover:text-white active:bg-[#0c59be] active:scale-[0.98] text-white font-archivo text-sm md:text-lg tracking-tight lowercase rounded-none transition-all cursor-pointer select-none"
                 style={{ fontVariationSettings: '"wght" 600' }}
               >
                 school
@@ -143,10 +168,13 @@ export const ViewingZone: React.FC<ViewingZoneProps> = ({
             onClick={() => handleButtonClick(btn)}
             onMouseEnter={() => setHoveredBtn(btn)}
             onMouseLeave={() => setHoveredBtn(null)}
-            className={`w-full py-2.5 md:py-3.5 bg-black/70 active:bg-white active:text-black text-white/90 font-archivo text-sm md:text-lg tracking-tight transition-colors cursor-pointer border-b border-r last:border-r-0 border-white/30 rounded-none select-none ${getHoverStyleClass(btn)}`}
+            className={`relative overflow-hidden w-full py-2.5 md:py-3.5 bg-black/70 text-white/90 font-archivo text-sm md:text-lg tracking-tight transition-all cursor-pointer border-b border-r last:border-r-0 border-white/30 rounded-none select-none ${getButtonStyleClass(btn)}`}
             style={{ fontVariationSettings: '"wght" 600' }}
           >
-            {hoveredBtn === btn ? getHoverLabel(btn) : btn}
+            <span className={hoveredBtn === btn ? 'opacity-0' : 'opacity-100 transition-opacity'}>{btn}</span>
+            {hoveredBtn === btn && (
+              <StretchedLabel text={getHoverLabel(btn)} />
+            )}
           </button>
         ))}
       </div>
@@ -159,10 +187,13 @@ export const ViewingZone: React.FC<ViewingZoneProps> = ({
             onClick={() => handleButtonClick(btn)}
             onMouseEnter={() => setHoveredBtn(btn)}
             onMouseLeave={() => setHoveredBtn(null)}
-            className={`w-full py-2.5 md:py-3.5 bg-black/70 active:bg-white active:text-black text-white/90 font-archivo text-sm md:text-lg tracking-tight transition-colors cursor-pointer border-t border-r last:border-r-0 border-white/30 rounded-none select-none ${getHoverStyleClass(btn)}`}
+            className={`relative overflow-hidden w-full py-2.5 md:py-3.5 bg-black/70 text-white/90 font-archivo text-sm md:text-lg tracking-tight transition-all cursor-pointer border-t border-r last:border-r-0 border-white/30 rounded-none select-none ${getButtonStyleClass(btn)}`}
             style={{ fontVariationSettings: '"wght" 600' }}
           >
-            {hoveredBtn === btn ? getHoverLabel(btn) : btn}
+            <span className={hoveredBtn === btn ? 'opacity-0' : 'opacity-100 transition-opacity'}>{btn}</span>
+            {hoveredBtn === btn && (
+              <StretchedLabel text={getHoverLabel(btn)} />
+            )}
           </button>
         ))}
       </div>

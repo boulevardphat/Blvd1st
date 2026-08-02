@@ -778,3 +778,31 @@ LẦN THAY ĐỔI THỨ 67: THÊM CẤU HÌNH HOVER MÀU CHO PHONE & EMAIL, CẬ
   + (3) Loại bỏ hoàn toàn lớp phủ mờ tối màu (`bg-black/30`) che tấm ảnh bên trong `ViewingZone` để ảnh giữ nguyên độ sáng nét gốc.
   + (4) Bật lớp phủ màu tối `bg-black/60` phía sau cho toàn bộ giao diện chính khi truy cập bất kỳ mục nào ở cả chế độ ngang (Landscape) lẫn dọc (Portrait).
 - Tham số điều chỉnh: `ViewingZone.tsx` (`getHoverLabel`, `getHoverStyleClass`, gỡ bỏ `bg-black/30`) và `App.tsx` (`motion.div className="absolute inset-0 bg-black/60 z-10 pointer-events-none"`).
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 68: TỐI ƯU TRẠNG THÁI ACTIVE (NHẤN NÚT) MANG MÀU SẮC ĐẶC TRƯNG TỪNG THƯƠNG HIỆU
+- Thời gian: 02/08/2026 14:33:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/components/ViewingZone.tsx
+- Chi tiết thay đổi:
+  + Loại bỏ màu trắng trơn `active:bg-white active:text-black` cố định của trạng thái nhấn nút.
+  + Cấu hình màu nền & chữ ở trạng thái Active (kèm hiệu ứng co nhẹ `scale-[0.98]`) theo đúng nhận diện thương hiệu của từng nút:
+    * `facebook`: Active sang tông xanh đậm nhung `#0c59be` chữ trắng.
+    * `instagram`: Active sang tông dải màu rực ấm `#d87c1e -> #b81b34 -> #910d68` chữ trắng.
+    * `threads`: Active sang màu xám xi măng `bg-zinc-300` chữ đen.
+    * `locket`: Active sang tông vàng hổ phách đậm `#d9a700` chữ đen.
+    * `phone`: Active sang tông xanh lục đậm `#047857` chữ trắng.
+    * `email`: Active sang tông đỏ thẫm `#b31412` chữ trắng.
+  + Áp dụng tương tự hiệu ứng hover & active riêng biệt cho 2 thanh chọn `personal` (Đỏ Gmail) và `school` (Xanh Facebook) trong bảng lựa chọn Email.
+- Tham số điều chỉnh: Hàm `getButtonStyleClass` trong `ViewingZone.tsx`.
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 69: ÁP DỤNG HIỆU ỨNG TEXT STRETCH CHO EASTER EGG LABEL KHI HOVER (KIỂU BLVD)
+- Thời gian: 02/08/2026 14:38:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/components/ViewingZone.tsx
+- Chi tiết thay đổi:
+  + Cập nhật các Easter Egg labels để chuyển tất cả thành IN HOA (uppercase).
+  + Tạo component `StretchedLabel` bên trong `ViewingZone` sử dụng SVG `<text textLength="400" lengthAdjust="spacingAndGlyphs" preserveAspectRatio="none">` để ép chữ trải dài vừa khít theo toàn bộ chiều rộng và chiều cao của nút bấm (đúng kỹ thuật đã dùng cho chữ BLVD ở màn hình boot).
+  + Wrap nội dung gốc `{btn}` bằng `span` với class opacity transition, khi hover sẽ hiện `<StretchedLabel>` bên trên nền, mang lại hiệu ứng chữ đầy đặn và phá cách.
+- Tham số điều chỉnh: component `StretchedLabel` và render layout của 2 mảng `topButtons`, `bottomButtons` trong `ViewingZone.tsx`.
