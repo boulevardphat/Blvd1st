@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { X } from 'lucide-react';
 
 const StretchedLabel = ({ text }: { text: string }) => (
@@ -36,13 +36,46 @@ interface ViewingZoneProps {
 
 export const ViewingZone: React.FC<ViewingZoneProps> = ({
   showBorder = true,
-  imageSrc = "https://i.ibb.co/TxrtFvPZ/info.webp",
+  imageSrc = "https://i.ibb.co/ycXZb8vq/contact.webp",
   topButtons = ["facebook", "instagram", "threads"],
   bottomButtons = ["locket", "phone", "email"],
   onButtonClick
 }) => {
-  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [emailExpanded, setEmailExpanded] = useState(false);
   const [hoveredBtn, setHoveredBtn] = useState<string | null>(null);
+  const [copiedType, setCopiedType] = useState<'personal' | 'school' | null>(null);
+
+  const textRef = useRef<SVGTextElement>(null);
+  const [viewBox, setViewBox] = useState('0 0 535 82'); // Fallback
+
+  useEffect(() => {
+    const updateBBox = () => {
+      if (textRef.current) {
+        const bbox = textRef.current.getBBox();
+        if (bbox.width > 0 && bbox.height > 0) {
+          // Exactly map the viewBox to the visual bounding box of the text
+          // Apply manual trims to eliminate the font's built-in sidebearing and baseline padding
+          const trimLeft = 6; // Cắt bỏ khoảng trắng thừa bên trái của chữ B
+          const trimBottom = 7; // Cắt bỏ khoảng trắng thừa dưới đáy (baseline padding)
+          setViewBox(`${bbox.x + trimLeft} ${bbox.y} ${bbox.width - trimLeft} ${bbox.height - trimBottom}`);
+        }
+      }
+    };
+
+    if ('fonts' in document) {
+      document.fonts.ready.then(updateBBox);
+    }
+    updateBBox();
+    
+    // Add resize listener to recalculate on orientation/size changes
+    window.addEventListener('resize', updateBBox);
+    
+    const timeout = setTimeout(updateBBox, 150);
+    return () => {
+      clearTimeout(timeout);
+      window.removeEventListener('resize', updateBBox);
+    };
+  }, []);
 
   const handleButtonClick = (btn: string) => {
     onButtonClick?.(btn);
@@ -59,7 +92,7 @@ export const ViewingZone: React.FC<ViewingZoneProps> = ({
     } else if (btnLower === 'sdt' || btnLower === 'phone') {
       window.location.href = 'tel:0901234567';
     } else if (btnLower === 'email') {
-      setShowEmailModal(true);
+      setEmailExpanded(true);
     }
   };
 
@@ -98,67 +131,38 @@ export const ViewingZone: React.FC<ViewingZoneProps> = ({
   };
 
   const handleEmailChoice = (type: 'personal' | 'school') => {
-    if (type === 'personal') {
-      window.location.href = 'mailto:thuanphat26092008@gmail.com';
-    } else if (type === 'school') {
-      window.location.href = 'mailto:phatnt.a2.2326@gmail.com';
+    const email = type === 'personal' ? 'thuanphat26092008@gmail.com' : 'phatnt.a2.2326@gmail.com';
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(email).catch(() => {});
     }
+    
+    setCopiedType(type);
+    setTimeout(() => {
+      setCopiedType(null);
+    }, 2000);
+
+    window.location.href = `mailto:${email}`;
     onButtonClick?.(`email-${type}`);
   };
 
   return (
     <div className={`relative w-full h-full flex flex-col justify-between overflow-hidden rounded-none ${showBorder ? 'border border-white/40' : ''}`}>
       {/* Image Layer in the Zone */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
+      <div 
+        className={`absolute inset-0 z-0 overflow-hidden ${emailExpanded ? 'cursor-pointer' : ''}`}
+        onClick={() => {
+          if (emailExpanded) {
+            setEmailExpanded(false);
+          }
+        }}
+      >
         <img 
           src={imageSrc} 
           alt="Viewing Zone Graphic" 
-          className="w-full h-full object-cover rounded-none"
+          className="w-full h-full object-cover rounded-none select-none"
           referrerPolicy="no-referrer"
         />
       </div>
-
-      {/* Email Selection Panel Overlay */}
-      {showEmailModal && (
-        <div className="absolute inset-0 z-30 bg-black/60 backdrop-blur-xs flex flex-col items-center justify-center p-4">
-          <div className="relative flex flex-col items-center gap-3">
-            {/* Header label & Close button */}
-            <div className="w-full flex items-center justify-between pb-1 px-1">
-              <span 
-                className="font-archivo text-white/80 text-xs md:text-sm tracking-tight lowercase"
-                style={{ fontVariationSettings: '"wght" 500' }}
-              >
-                select email
-              </span>
-              <button
-                onClick={() => setShowEmailModal(false)}
-                className="text-white/60 hover:text-white transition-colors p-1 cursor-pointer"
-                title="close"
-              >
-                <X className="w-4 h-4 md:w-5 md:h-5" />
-              </button>
-            </div>
-
-            {/* 2 Email Bars (nằm sát nhau không gap, kích thước i chang 1 nút) */}
-            <div className="flex items-center gap-0 border border-white/30 rounded-none overflow-hidden bg-black/80">
-              <button
-                onClick={() => handleEmailChoice('personal')}
-                className="px-6 md:px-10 py-2.5 md:py-3.5 bg-black/80 hover:bg-[#EA4335] hover:text-white active:bg-[#b31412] active:scale-[0.98] text-white font-archivo text-sm md:text-lg tracking-tight lowercase border-r border-white/30 rounded-none transition-all cursor-pointer select-none"
-                style={{ fontVariationSettings: '"wght" 600' }}
-              >
-                personal
-              </button>
-              <button
-                onClick={() => handleEmailChoice('school')}
-                className="px-6 md:px-10 py-2.5 md:py-3.5 bg-black/80 hover:bg-[#1877F2] hover:text-white active:bg-[#0c59be] active:scale-[0.98] text-white font-archivo text-sm md:text-lg tracking-tight lowercase rounded-none transition-all cursor-pointer select-none"
-                style={{ fontVariationSettings: '"wght" 600' }}
-              >
-                school
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Top 3 Rectangular Buttons */}
       <div className="relative z-10 w-full grid grid-cols-3 gap-0">
@@ -179,23 +183,101 @@ export const ViewingZone: React.FC<ViewingZoneProps> = ({
         ))}
       </div>
 
-      {/* Bottom 3 Rectangular Buttons */}
-      <div className="relative z-10 w-full grid grid-cols-3 gap-0">
-        {bottomButtons.map((btn, idx) => (
-          <button
-            key={`bottom-${idx}`}
-            onClick={() => handleButtonClick(btn)}
-            onMouseEnter={() => setHoveredBtn(btn)}
-            onMouseLeave={() => setHoveredBtn(null)}
-            className={`relative overflow-hidden w-full py-2.5 md:py-3.5 bg-black/70 text-white/90 font-archivo text-sm md:text-lg tracking-tight transition-all cursor-pointer border-t border-r last:border-r-0 border-white/30 rounded-none select-none ${getButtonStyleClass(btn)}`}
-            style={{ fontVariationSettings: '"wght" 600' }}
+      {/* Logo and Bottom Buttons Container */}
+      <div className="relative z-10 w-full flex flex-col">
+        {/* Boulevard1st Logo (Scaled proportionally to fill width, no distortion) */}
+        <div className="w-full pointer-events-none select-none opacity-95 flex items-end translate-y-[2px]">
+          <svg 
+            viewBox={viewBox} 
+            className="w-full h-auto drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] overflow-visible"
           >
-            <span className={hoveredBtn === btn ? 'opacity-0' : 'opacity-100 transition-opacity'}>{btn}</span>
-            {hoveredBtn === btn && (
-              <StretchedLabel text={getHoverLabel(btn)} />
-            )}
-          </button>
-        ))}
+            <text
+              ref={textRef}
+              x="50%"
+              y="79"
+              textAnchor="middle"
+              className="font-archivo fill-white font-black tracking-tighter"
+              fontSize="90"
+            >
+              {"Boulevard1st"}
+            </text>
+          </svg>
+        </div>
+
+        {/* Bottom 3 Rectangular Buttons */}
+        <div className="w-full grid grid-cols-3 gap-0">
+          {bottomButtons.map((btn, idx) => {
+          if (btn.toLowerCase() === 'email' && emailExpanded) {
+            const isSchoolCopied = copiedType === 'school';
+            const isSchoolHovered = hoveredBtn === 'email_school';
+            const isPersonalCopied = copiedType === 'personal';
+            const isPersonalHovered = hoveredBtn === 'email_personal';
+
+            return (
+              <div key={`bottom-${idx}`} className="w-full h-full relative">
+                <div className="absolute bottom-0 left-0 w-full flex flex-col gap-0 z-20">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleEmailChoice('school'); }}
+                    onMouseEnter={() => setHoveredBtn('email_school')}
+                    onMouseLeave={() => setHoveredBtn(null)}
+                    className="relative overflow-hidden w-full py-2.5 md:py-3.5 bg-black/70 text-white/90 font-archivo text-sm md:text-lg tracking-tight transition-all cursor-pointer border-t border-l border-white/30 rounded-none select-none hover:bg-[#1877F2] hover:text-white active:bg-[#0c59be] active:text-white active:scale-[0.98]"
+                    style={{ fontVariationSettings: '"wght" 600' }}
+                  >
+                    <span className={(isSchoolHovered || isSchoolCopied) ? 'opacity-0' : 'opacity-100 transition-opacity'}>
+                      {isSchoolCopied ? 'copied' : 'school'}
+                    </span>
+                    {(isSchoolHovered || isSchoolCopied) && (
+                      <StretchedLabel text={isSchoolCopied ? "COPIED" : "SCHOOL"} />
+                    )}
+                  </button>
+
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleEmailChoice('personal'); }}
+                    onMouseEnter={() => setHoveredBtn('email_personal')}
+                    onMouseLeave={() => setHoveredBtn(null)}
+                    className="relative overflow-hidden w-full py-2.5 md:py-3.5 bg-black/70 text-white/90 font-archivo text-sm md:text-lg tracking-tight transition-all cursor-pointer border-t border-l border-white/30 rounded-none select-none hover:bg-[#EA4335] hover:text-white active:bg-[#b31412] active:text-white active:scale-[0.98]"
+                    style={{ fontVariationSettings: '"wght" 600' }}
+                  >
+                    <span className={(isPersonalHovered || isPersonalCopied) ? 'opacity-0' : 'opacity-100 transition-opacity'}>
+                      {isPersonalCopied ? 'copied' : 'personal'}
+                    </span>
+                    {(isPersonalHovered || isPersonalCopied) && (
+                      <StretchedLabel text={isPersonalCopied ? "COPIED" : "PERSONAL"} />
+                    )}
+                  </button>
+
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setEmailExpanded(false); setHoveredBtn(null); }}
+                    onMouseEnter={() => setHoveredBtn('email_close')}
+                    onMouseLeave={() => setHoveredBtn(null)}
+                    className="relative overflow-hidden w-full py-2.5 md:py-3.5 bg-black/70 text-white/90 font-archivo text-sm md:text-lg tracking-tight transition-all cursor-pointer border-t border-l border-white/30 rounded-none select-none hover:bg-black/90 hover:text-white active:bg-white active:text-black"
+                    style={{ fontVariationSettings: '"wght" 600' }}
+                  >
+                    <span className={hoveredBtn === 'email_close' ? 'opacity-0' : 'opacity-100 transition-opacity'}>email</span>
+                    {hoveredBtn === 'email_close' && <StretchedLabel text="CLOSE" />}
+                  </button>
+                </div>
+              </div>
+            );
+          }
+
+          return (
+            <button
+              key={`bottom-${idx}`}
+              onClick={() => handleButtonClick(btn)}
+              onMouseEnter={() => setHoveredBtn(btn)}
+              onMouseLeave={() => setHoveredBtn(null)}
+              className={`relative overflow-hidden w-full py-2.5 md:py-3.5 bg-black/70 text-white/90 font-archivo text-sm md:text-lg tracking-tight transition-all cursor-pointer border-t border-r last:border-r-0 border-white/30 rounded-none select-none ${getButtonStyleClass(btn)}`}
+              style={{ fontVariationSettings: '"wght" 600' }}
+            >
+              <span className={hoveredBtn === btn ? 'opacity-0' : 'opacity-100 transition-opacity'}>{btn}</span>
+              {hoveredBtn === btn && (
+                <StretchedLabel text={getHoverLabel(btn)} />
+              )}
+            </button>
+          );
+        })}
+      </div>
       </div>
     </div>
   );

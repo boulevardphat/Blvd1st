@@ -127,6 +127,21 @@ export default function App() {
     });
   }, []);
 
+  // Background preloading for secondary tab images (info, contact, etc.) right after main page images finish loading
+  useEffect(() => {
+    if (imagesLoaded) {
+      const secondaryImageUrls = [
+        "https://i.ibb.co/ycXZb8vq/contact.webp",
+        "https://i.ibb.co/TxrtFvPZ/info.webp"
+      ];
+
+      secondaryImageUrls.forEach(url => {
+        const img = new Image();
+        img.src = url;
+      });
+    }
+  }, [imagesLoaded]);
+
   useEffect(() => {
     let lastWidth = window.innerWidth;
     let lastHeight = window.innerHeight;
@@ -615,7 +630,7 @@ export default function App() {
         }}
       >
         <div className="absolute top-[calc(13%+1.5rem)] left-[6.5%] right-[6.5%] bottom-[6.5%]">
-          <ViewingZone showBorder={true} />
+          <ViewingZone showBorder={true} imageSrc="https://i.ibb.co/ycXZb8vq/contact.webp" />
         </div>
       </SlideTab>
       
