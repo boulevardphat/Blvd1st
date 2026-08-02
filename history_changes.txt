@@ -671,3 +671,110 @@ LẦN THAY ĐỔI THỨ 59: KHẮC PHỤC ẢNH NỀN BỊ DỊCH TRÁI KHI Ở 
   + Ràng buộc hiệu ứng dịch ảnh nền sang trái (`shiftLeft`) chỉ kích hoạt khi màn hình ở chế độ ngang (`isLandscape === true`) và có tab đang mở.
   + Nhờ đó, thao tác mở tab ở chế độ dọc không còn gây ra hiện tượng ảnh nền bị lệch ngang sai thiết kế gốc.
 - Tham số điều chỉnh: Cập nhật biến `shiftLeft={activeTab !== null && isLandscape}`.
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 60: THÊM ĐƯỜNG VIỀN TRẮNG MỎNG BAO QUANH KHU VỰC THÔNG TIN MỤC CONTACT
+- Thời gian: 02/08/2026 13:53:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/App.tsx
+- Chi tiết thay đổi:
+  + Thêm khu vực hiển thị nội dung cho mục Contact (Facebook, Instagram, Personal Email, Study Email).
+  + Kẻ đường viền màu trắng mỏng (`border border-white/30 p-5 md:p-8 rounded-sm`) bao quanh toàn bộ khu vực thông tin liên hệ của mục Contact.
+  + Đảm bảo vị trí căn lề đồng bộ hoàn toàn với mục Info (`top-[calc(13%+1.5rem)] left-[6.5%] right-[6.5%]`).
+- Tham số điều chỉnh: Khung thông tin bao quanh bởi thẻ `<div className="border border-white/30 p-5 md:p-8 rounded-sm flex flex-col gap-[clamp(1.2rem,3vw,2rem)] items-start w-full max-w-2xl">`.
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 61: ĐIỀU CHỈNH KHUNG SAFEZONE / VIEWING ZONE TRONG MỤC CONTACT
+- Thời gian: 02/08/2026 13:54:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/App.tsx
+- Chi tiết thay đổi:
+  + Loại bỏ nội dung text chi tiết, chỉ để 1 đường viền mỏng đại diện cho vùng an toàn hiển thị nội dung (Safezone / Viewing zone) của mục Contact để xem bố cục.
+  + Đường viền được đặt theo tọa độ: `top-[calc(13%+1.5rem)] left-[6.5%] right-[6.5%] bottom-[6.5%]`.
+- Tham số điều chỉnh: Sửa thẻ container trong tab contact thành `<div className="absolute top-[calc(13%+1.5rem)] left-[6.5%] right-[6.5%] bottom-[6.5%] border border-white/40 rounded-sm pointer-events-none flex items-center justify-center">`.
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 62: CHUYỂN KHUNG SAFEZONE THÀNH COMPONENT VIEWINGZONE CÓ HÌNH ẢNH VÀ 6 NÚT CHỮ NHẬT
+- Thời gian: 02/08/2026 14:03:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/components/ViewingZone.tsx (mới), /src/App.tsx
+- Chi tiết thay đổi:
+  + (1) Tạo component độc lập `ViewingZone.tsx` giúp dễ dàng bật/tắt hoặc loại bỏ sau này (qua prop `showBorder={true}`).
+  + (2) Loại bỏ tất cả đường bo góc (`rounded-none` vuông vức), thêm nhãn chú thích zone "Safezone / Viewing Zone".
+  + (3) Biến toàn bộ khung nền zone thành hình ảnh (`object-cover w-full h-full`).
+  + (4) Thiết lập 6 nút hình chữ nhật vuông vức, không bo góc (`rounded-none`), không gap (`gap-0`): 3 nút bám sát mép trên của zone, 3 nút bám sát mép dưới của zone. Tổng chiều rộng mỗi bộ 3 nút bằng đúng chiều rộng zone.
+- Tham số điều chỉnh: Component `ViewingZone`, class `w-full grid grid-cols-3 gap-0 rounded-none`.
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 63: CẬP NHẬT GIAO DIỆN COMPONENT VIEWINGZONE
+- Thời gian: 02/08/2026 14:05:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/components/ViewingZone.tsx
+- Chi tiết thay đổi:
+  + (1) Loại bỏ nhãn chú thích "Safezone / Viewing Zone" khỏi giao diện theo yêu cầu.
+  + (2) Cập nhật phông chữ của nhãn nút bấm thành phông Archivo chốt nét chữ thường (`font-archivo tracking-tight lowercase`, `fontVariationSettings: '"wght" 600'`) đồng bộ hoàn toàn với kiểu chữ của nút `contact`.
+- Tham số điều chỉnh: Sửa class nút trong `ViewingZone` thành `font-archivo text-sm md:text-lg tracking-tight lowercase` với `fontVariationSettings: '"wght" 600'`.
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 64: CẬP NHẬT TÊN VÀ TÁC VỤ 6 NÚT BẤM VÀ BẢNG CHỌN EMAIL TRONG VIEWINGZONE
+- Thời gian: 02/08/2026 14:16:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/components/ViewingZone.tsx
+- Chi tiết thay đổi:
+  + (1) Cập nhật danh sách 6 nút bấm theo thứ tự từ trái sang phải, từ trên xuống dưới:
+    * Hàng trên: `facebook`, `instagram`, `threads`
+    * Hàng dưới: `locket`, `sdt`, `email`
+  + (2) Cấu hình liên kết và tác vụ trực tiếp cho từng nút khi click:
+    * `facebook` -> Mở trang Facebook `https://www.facebook.com/hellothisisBLVD17/`
+    * `instagram` -> Mở trang Instagram `https://www.instagram.com/endenogatai_dah`
+    * `threads` -> Mở trang Threads `https://www.threads.com/@endenogatai_dah`
+    * `locket` -> Mở trang Locket `https://locket.cam/endenogatai_dah`
+    * `sdt` -> Gọi số điện thoại `tel:0901234567`
+  + (3) Thiết lập tính năng đặc biệt cho nút `email`:
+    * Khi click `email`, bật bảng overlay lựa chọn email chứa 2 thanh `personal` và `school`.
+    * Hai thanh được thiết kế vuông vức nằm sát nhau (`gap-0`, `border border-white/30 rounded-none`), kích thước chuẩn từng nút bấm (`px-6 md:px-10 py-2.5 md:py-3.5 font-archivo text-sm md:text-lg tracking-tight lowercase`).
+    * Click `personal` -> `mailto:thuanphat26092008@gmail.com`
+    * Click `school` -> `mailto:phatnt.a2.2326@gmail.com`
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 65: ĐỔI TÊN NÚT SDT THÀNH PHONE VÀ ĐIỀU CHỈNH HOVER CHO CÁC MẠNG XÃ HỘI
+- Thời gian: 02/08/2026 14:20:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/components/ViewingZone.tsx
+- Chi tiết thay đổi:
+  + (1) Đổi tên nút `sdt` thành `phone` (chữ thường `phone` đồng bộ phông chữ nút `contact`).
+  + (2) Thêm màu nền chủ đạo đặc trưng khi hover cho 4 mạng xã hội:
+    * `facebook`: `#1877F2` (Xanh Facebook)
+    * `instagram`: Gradient rực rỡ (`from-[#f09433] via-[#dc2743] to-[#bc1888]`)
+    * `threads`: Nền trắng chữ đen thanh lịch (`bg-white text-black`)
+    * `locket`: `#FFC700` (Vàng Locket đặc trưng)
+- Tham số điều chỉnh: Hàm `getHoverStyleClass(btnName)` trong `ViewingZone.tsx`.
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 66: THÊM EASTER EGG ĐỔI LABEL NÚT BẤM KHIN HOVER TRONG VIEWINGZONE
+- Thời gian: 02/08/2026 14:22:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/components/ViewingZone.tsx
+- Chi tiết thay đổi:
+  + (1) Thiết lập hàm `getHoverLabel(btnName)` để trả về nhãn Easter egg tương ứng cho từng nút khi hover:
+    * `facebook` -> `"Have"`
+    * `instagram` -> `"you"`
+    * `threads` -> `"confessed?"`
+    * `locket` -> `"I have"`
+  + (2) Thêm state `hoveredBtn` theo dõi nút đang được rơ chuột qua (`onMouseEnter`, `onMouseLeave`), thay thế nội dung hiển thị của nút thành nhãn Easter egg tương ứng khi hovered.
+- Tham số điều chỉnh: `getHoverLabel` và state `hoveredBtn` trong `ViewingZone.tsx`.
+
+---------------------------------------------------------
+
+LẦN THAY ĐỔI THỨ 67: THÊM CẤU HÌNH HOVER MÀU CHO PHONE & EMAIL, CẬP NHẬT EASTER EGG VÀ TỐI ƯU LỚP PHỦ NỀN
+- Thời gian: 02/08/2026 14:27:00 (Giờ TPHCM)
+- File ảnh hưởng: /src/components/ViewingZone.tsx, /src/App.tsx
+- Chi tiết thay đổi:
+  + (1) Bổ sung màu hover chủ đạo cho nút `phone` (`#10B981` Xanh lá tươi) và `email` (`#EA4335` Đỏ Gmail).
+  + (2) Cập nhật nhãn Easter Egg khi hover hàng nút dưới theo đúng thứ tự:
+    * `locket` -> `"I am"`
+    * `phone` -> `"no one"`
+    * `email` -> `"but ME"`
+  + (3) Loại bỏ hoàn toàn lớp phủ mờ tối màu (`bg-black/30`) che tấm ảnh bên trong `ViewingZone` để ảnh giữ nguyên độ sáng nét gốc.
+  + (4) Bật lớp phủ màu tối `bg-black/60` phía sau cho toàn bộ giao diện chính khi truy cập bất kỳ mục nào ở cả chế độ ngang (Landscape) lẫn dọc (Portrait).
+- Tham số điều chỉnh: `ViewingZone.tsx` (`getHoverLabel`, `getHoverStyleClass`, gỡ bỏ `bg-black/30`) và `App.tsx` (`motion.div className="absolute inset-0 bg-black/60 z-10 pointer-events-none"`).

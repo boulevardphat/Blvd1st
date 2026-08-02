@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X } from 'lucide-react';
 import Footer from './components/Footer';
+import { ViewingZone } from './components/ViewingZone';
 
 
 
@@ -421,7 +422,7 @@ export default function App() {
               <AnimatePresence>
                 {activeTab !== null && (
                   <motion.div
-                    className="absolute inset-0 bg-black/60 z-10 pointer-events-none hidden portrait:block"
+                    className="absolute inset-0 bg-black/60 z-10 pointer-events-none"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -612,7 +613,11 @@ export default function App() {
         onClose={() => {
           setActiveTab(null);
         }}
-      />
+      >
+        <div className="absolute top-[calc(13%+1.5rem)] left-[6.5%] right-[6.5%] bottom-[6.5%]">
+          <ViewingZone showBorder={true} />
+        </div>
+      </SlideTab>
       
       <SlideTab
         isOpenLandscape={activeTab === 'info'}
