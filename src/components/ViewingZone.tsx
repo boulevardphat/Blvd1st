@@ -38,17 +38,20 @@ export const ViewingZone: React.FC<ViewingZoneProps> = ({
   showBorder = true,
   imageSrc = "https://i.ibb.co/ycXZb8vq/contact.webp",
   topButtons = ["facebook", "instagram", "threads"],
-  bottomButtons = ["locket", "phone", "email"],
+  bottomButtons = ["locket", "phone/zalo", "email"],
   onButtonClick
 }) => {
   const [emailExpanded, setEmailExpanded] = useState(false);
   const [hoveredBtn, setHoveredBtn] = useState<string | null>(null);
   const [copiedType, setCopiedType] = useState<'personal' | 'school' | null>(null);
+  const [phoneCopied, setPhoneCopied] = useState(false);
 
   const textRef = useRef<SVGTextElement>(null);
   const [viewBox, setViewBox] = useState('0 0 535 82'); // Fallback
 
   useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    
     const updateBBox = () => {
       if (textRef.current) {
         const bbox = textRef.current.getBBox();
@@ -56,7 +59,7 @@ export const ViewingZone: React.FC<ViewingZoneProps> = ({
           // Exactly map the viewBox to the visual bounding box of the text
           // Apply manual trims to eliminate the font's built-in sidebearing and baseline padding
           const trimLeft = 6; // Cắt bỏ khoảng trắng thừa bên trái của chữ B
-          const trimBottom = 7; // Cắt bỏ khoảng trắng thừa dưới đáy (baseline padding)
+          const trimBottom = 10; // Cắt bỏ khoảng trắng thừa dưới đáy (baseline padding) nhích xuống sát mép
           setViewBox(`${bbox.x + trimLeft} ${bbox.y} ${bbox.width - trimLeft} ${bbox.height - trimBottom}`);
         }
       }
@@ -67,13 +70,33 @@ export const ViewingZone: React.FC<ViewingZoneProps> = ({
     }
     updateBBox();
     
+    const handleResize = () => {
+      updateBBox();
+      // On mobile devices, orientation changes can take a bit to finish relayouting
+      clearTimeout(timeout);
+      timeout = setTimeout(updateBBox, 150);
+      setTimeout(updateBBox, 400);
+    };
+
     // Add resize listener to recalculate on orientation/size changes
-    window.addEventListener('resize', updateBBox);
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleResize);
     
-    const timeout = setTimeout(updateBBox, 150);
+    // Also use ResizeObserver on the document body or SVG container to catch any layout shifts
+    const observer = new ResizeObserver(() => {
+      handleResize();
+    });
+    
+    if (textRef.current?.parentElement) {
+       observer.observe(textRef.current.parentElement);
+    }
+    
+    timeout = setTimeout(updateBBox, 150);
     return () => {
       clearTimeout(timeout);
-      window.removeEventListener('resize', updateBBox);
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleResize);
+      observer.disconnect();
     };
   }, []);
 
@@ -89,8 +112,14 @@ export const ViewingZone: React.FC<ViewingZoneProps> = ({
       window.open('https://www.threads.com/@endenogatai_dah', '_blank');
     } else if (btnLower === 'locket') {
       window.open('https://locket.cam/endenogatai_dah', '_blank');
-    } else if (btnLower === 'sdt' || btnLower === 'phone') {
-      window.location.href = 'tel:0901234567';
+    } else if (btnLower === 'sdt' || btnLower === 'phone' || btnLower.includes('phone') || btnLower.includes('zalo')) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText('0833939468').catch(() => {});
+      }
+      setPhoneCopied(true);
+      setTimeout(() => {
+        setPhoneCopied(false);
+      }, 2000);
     } else if (btnLower === 'email') {
       setEmailExpanded(true);
     }
@@ -101,31 +130,31 @@ export const ViewingZone: React.FC<ViewingZoneProps> = ({
     if (lower === 'facebook') return 'Have';
     if (lower === 'instagram') return 'you';
     if (lower === 'threads') return 'confessed?';
-    if (lower === 'locket') return 'I am';
-    if (lower === 'sdt' || lower === 'phone') return 'no one';
-    if (lower === 'email') return 'but ME';
+    if (lower === 'locket') return 'MY SINS';
+    if (lower === 'sdt' || lower === 'phone' || lower.includes('phone') || lower.includes('zalo')) return 'ARE';
+    if (lower === 'email') return 'MY SAVIOR';
     return btnName;
   };
 
   const getButtonStyleClass = (btnName: string) => {
     const lower = btnName.toLowerCase();
     if (lower === 'facebook') {
-      return 'hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2] active:bg-[#0c59be] active:text-white active:scale-[0.98]';
+      return 'hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2] active:bg-[#0c59be] active:text-white';
     }
     if (lower === 'instagram') {
-      return 'hover:bg-gradient-to-r hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] hover:text-white active:bg-gradient-to-r active:from-[#d87c1e] active:via-[#b81b34] active:to-[#910d68] active:text-white active:scale-[0.98]';
+      return 'hover:bg-gradient-to-r hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] hover:text-white active:bg-gradient-to-r active:from-[#d87c1e] active:via-[#b81b34] active:to-[#910d68] active:text-white';
     }
     if (lower === 'threads') {
-      return 'hover:bg-white hover:text-black hover:border-white active:bg-zinc-300 active:text-black active:scale-[0.98]';
+      return 'hover:bg-white hover:text-black hover:border-white active:bg-zinc-300 active:text-black';
     }
     if (lower === 'locket') {
-      return 'hover:bg-[#FFC700] hover:text-black hover:border-[#FFC700] active:bg-[#d9a700] active:text-black active:scale-[0.98]';
+      return 'hover:bg-[#FFC700] hover:text-black hover:border-[#FFC700] active:bg-[#d9a700] active:text-black';
     }
-    if (lower === 'sdt' || lower === 'phone') {
-      return 'hover:bg-[#10B981] hover:text-black hover:border-[#10B981] active:bg-[#047857] active:text-white active:scale-[0.98]';
+    if (lower === 'sdt' || lower === 'phone' || lower.includes('phone') || lower.includes('zalo')) {
+      return 'hover:bg-[#10B981] hover:text-black hover:border-[#10B981] active:bg-[#047857] active:text-white';
     }
     if (lower === 'email') {
-      return 'hover:bg-[#EA4335] hover:text-white hover:border-[#EA4335] active:bg-[#b31412] active:text-white active:scale-[0.98]';
+      return 'hover:bg-[#EA4335] hover:text-white hover:border-[#EA4335] active:bg-[#b31412] active:text-white';
     }
     return 'hover:bg-black/90 hover:text-white active:bg-white active:text-black';
   };
@@ -172,6 +201,9 @@ export const ViewingZone: React.FC<ViewingZoneProps> = ({
             onClick={() => handleButtonClick(btn)}
             onMouseEnter={() => setHoveredBtn(btn)}
             onMouseLeave={() => setHoveredBtn(null)}
+            onTouchStart={() => setHoveredBtn(btn)}
+            onTouchEnd={() => setHoveredBtn(null)}
+            onTouchCancel={() => setHoveredBtn(null)}
             className={`relative overflow-hidden w-full py-2.5 md:py-3.5 bg-black/70 text-white/90 font-archivo text-sm md:text-lg tracking-tight transition-all cursor-pointer border-b border-r last:border-r-0 border-white/30 rounded-none select-none ${getButtonStyleClass(btn)}`}
             style={{ fontVariationSettings: '"wght" 600' }}
           >
@@ -186,7 +218,7 @@ export const ViewingZone: React.FC<ViewingZoneProps> = ({
       {/* Logo and Bottom Buttons Container */}
       <div className="relative z-10 w-full flex flex-col">
         {/* Boulevard1st Logo (Scaled proportionally to fill width, no distortion) */}
-        <div className="w-full pointer-events-none select-none opacity-95 flex items-end translate-y-[2px]">
+        <div className="w-full pointer-events-none select-none opacity-95 flex items-end translate-y-[4px]">
           <svg 
             viewBox={viewBox} 
             className="w-full h-auto drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] overflow-visible"
@@ -220,7 +252,10 @@ export const ViewingZone: React.FC<ViewingZoneProps> = ({
                     onClick={(e) => { e.stopPropagation(); handleEmailChoice('school'); }}
                     onMouseEnter={() => setHoveredBtn('email_school')}
                     onMouseLeave={() => setHoveredBtn(null)}
-                    className="relative overflow-hidden w-full py-2.5 md:py-3.5 bg-black/70 text-white/90 font-archivo text-sm md:text-lg tracking-tight transition-all cursor-pointer border-t border-l border-white/30 rounded-none select-none hover:bg-[#1877F2] hover:text-white active:bg-[#0c59be] active:text-white active:scale-[0.98]"
+                    onTouchStart={() => setHoveredBtn('email_school')}
+                    onTouchEnd={() => setHoveredBtn(null)}
+                    onTouchCancel={() => setHoveredBtn(null)}
+                    className="relative overflow-hidden w-full py-2.5 md:py-3.5 bg-black/70 text-white/90 font-archivo text-sm md:text-lg tracking-tight transition-all cursor-pointer border-t border-l border-white/30 rounded-none select-none hover:bg-[#1877F2] hover:text-white active:bg-[#0c59be] active:text-white"
                     style={{ fontVariationSettings: '"wght" 600' }}
                   >
                     <span className={(isSchoolHovered || isSchoolCopied) ? 'opacity-0' : 'opacity-100 transition-opacity'}>
@@ -235,7 +270,10 @@ export const ViewingZone: React.FC<ViewingZoneProps> = ({
                     onClick={(e) => { e.stopPropagation(); handleEmailChoice('personal'); }}
                     onMouseEnter={() => setHoveredBtn('email_personal')}
                     onMouseLeave={() => setHoveredBtn(null)}
-                    className="relative overflow-hidden w-full py-2.5 md:py-3.5 bg-black/70 text-white/90 font-archivo text-sm md:text-lg tracking-tight transition-all cursor-pointer border-t border-l border-white/30 rounded-none select-none hover:bg-[#EA4335] hover:text-white active:bg-[#b31412] active:text-white active:scale-[0.98]"
+                    onTouchStart={() => setHoveredBtn('email_personal')}
+                    onTouchEnd={() => setHoveredBtn(null)}
+                    onTouchCancel={() => setHoveredBtn(null)}
+                    className="relative overflow-hidden w-full py-2.5 md:py-3.5 bg-black/70 text-white/90 font-archivo text-sm md:text-lg tracking-tight transition-all cursor-pointer border-t border-l border-white/30 rounded-none select-none hover:bg-[#EA4335] hover:text-white active:bg-[#b31412] active:text-white"
                     style={{ fontVariationSettings: '"wght" 600' }}
                   >
                     <span className={(isPersonalHovered || isPersonalCopied) ? 'opacity-0' : 'opacity-100 transition-opacity'}>
@@ -250,6 +288,9 @@ export const ViewingZone: React.FC<ViewingZoneProps> = ({
                     onClick={(e) => { e.stopPropagation(); setEmailExpanded(false); setHoveredBtn(null); }}
                     onMouseEnter={() => setHoveredBtn('email_close')}
                     onMouseLeave={() => setHoveredBtn(null)}
+                    onTouchStart={() => setHoveredBtn('email_close')}
+                    onTouchEnd={() => setHoveredBtn(null)}
+                    onTouchCancel={() => setHoveredBtn(null)}
                     className="relative overflow-hidden w-full py-2.5 md:py-3.5 bg-black/70 text-white/90 font-archivo text-sm md:text-lg tracking-tight transition-all cursor-pointer border-t border-l border-white/30 rounded-none select-none hover:bg-black/90 hover:text-white active:bg-white active:text-black"
                     style={{ fontVariationSettings: '"wght" 600' }}
                   >
@@ -261,18 +302,25 @@ export const ViewingZone: React.FC<ViewingZoneProps> = ({
             );
           }
 
+          const isPhoneBtn = btn.toLowerCase().includes('phone') || btn.toLowerCase().includes('zalo') || btn.toLowerCase() === 'sdt';
+
           return (
             <button
               key={`bottom-${idx}`}
               onClick={() => handleButtonClick(btn)}
               onMouseEnter={() => setHoveredBtn(btn)}
               onMouseLeave={() => setHoveredBtn(null)}
+              onTouchStart={() => setHoveredBtn(btn)}
+              onTouchEnd={() => setHoveredBtn(null)}
+              onTouchCancel={() => setHoveredBtn(null)}
               className={`relative overflow-hidden w-full py-2.5 md:py-3.5 bg-black/70 text-white/90 font-archivo text-sm md:text-lg tracking-tight transition-all cursor-pointer border-t border-r last:border-r-0 border-white/30 rounded-none select-none ${getButtonStyleClass(btn)}`}
               style={{ fontVariationSettings: '"wght" 600' }}
             >
-              <span className={hoveredBtn === btn ? 'opacity-0' : 'opacity-100 transition-opacity'}>{btn}</span>
-              {hoveredBtn === btn && (
-                <StretchedLabel text={getHoverLabel(btn)} />
+              <span className={(hoveredBtn === btn || (isPhoneBtn && phoneCopied)) ? 'opacity-0' : 'opacity-100 transition-opacity'}>
+                {isPhoneBtn && phoneCopied ? 'copied' : btn}
+              </span>
+              {(hoveredBtn === btn || (isPhoneBtn && phoneCopied)) && (
+                <StretchedLabel text={(isPhoneBtn && phoneCopied) ? "COPIED" : getHoverLabel(btn)} />
               )}
             </button>
           );

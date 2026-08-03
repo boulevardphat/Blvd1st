@@ -31,6 +31,18 @@ function SlideTab({
   onClose: () => void, 
   children?: React.ReactNode 
 }) {
+  const getVnTitle = (t: string) => {
+    const lower = t.toLowerCase();
+    if (lower === 'contact') return 'liên hệ';
+    if (lower === 'info') return 'thông tin';
+    if (lower === 'his-tory' || lower === 'history') return 'tiểu sử';
+    if (lower === 'friends') return 'bạn bè';
+    if (lower === 'archive') return 'lưu trữ';
+    if (lower === 'booking') return 'đặt lịch';
+    return null;
+  };
+  const vnTitle = getVnTitle(title);
+
   return (
     <>
       <AnimatePresence>
@@ -42,10 +54,15 @@ function SlideTab({
             exit={{ x: '100%' }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="absolute top-[6.5%] left-[6.5%] z-20">
+            <div className="absolute top-[6.5%] left-[6.5%] z-20 flex items-baseline select-none">
               <span className="font-archivo text-2xl tracking-tighter leading-none text-white/90" style={{ fontVariationSettings: '"wght" 600' }}>
                 {title}
               </span>
+              {vnTitle && (
+                <span className="font-archivo text-2xl tracking-tighter leading-none text-white/40 ml-1.5" style={{ fontVariationSettings: '"wght" 600' }}>
+                  ({vnTitle})
+                </span>
+              )}
             </div>
             <div className="absolute top-[6.5%] right-[6.5%] z-20">
               <button 
@@ -69,10 +86,15 @@ function SlideTab({
             exit={{ y: '100%' }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="absolute top-[6.5%] left-[6.5%] z-20">
+            <div className="absolute top-[6.5%] left-[6.5%] z-20 flex items-baseline select-none">
               <span className="font-archivo text-2xl tracking-tighter leading-none text-white/90" style={{ fontVariationSettings: '"wght" 600' }}>
                 {title}
               </span>
+              {vnTitle && (
+                <span className="font-archivo text-2xl tracking-tighter leading-none text-white/40 ml-1.5" style={{ fontVariationSettings: '"wght" 600' }}>
+                  ({vnTitle})
+                </span>
+              )}
             </div>
             <div className="absolute top-[6.5%] right-[6.5%] z-20">
               <button 
@@ -87,6 +109,83 @@ function SlideTab({
         )}
       </AnimatePresence>
     </>
+  );
+}
+
+function HistoryStretchedItem({ item }: { item: any, key?: React.Key }) {
+  const textRef = React.useRef<SVGTextElement>(null);
+  const [viewBox, setViewBox] = useState('0 0 1000 100'); // Fallback
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    
+    const updateBBox = () => {
+      if (textRef.current) {
+        const bbox = textRef.current.getBBox();
+        if (bbox.width > 0 && bbox.height > 0) {
+          // Exactly map the viewBox to the visual bounding box of the text
+          // to eliminate any internal padding of the font
+          const trimLeft = 2; 
+          const trimRight = 2;
+          const trimTop = 15;
+          const trimBottom = 12;
+          setViewBox(`${bbox.x + trimLeft} ${bbox.y + trimTop} ${bbox.width - trimLeft - trimRight} ${bbox.height - trimTop - trimBottom}`);
+        }
+      }
+    };
+
+    if ('fonts' in document) {
+      document.fonts.ready.then(updateBBox);
+    }
+    updateBBox();
+    
+    const handleResize = () => {
+      clearTimeout(timeout);
+      timeout = setTimeout(updateBBox, 150);
+      setTimeout(updateBBox, 400); // Safari fallback
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [item]);
+
+  return (
+    <div className="flex-1 border-b border-white/40 relative overflow-hidden flex items-center justify-center p-0 text-[#a6a6a6]">
+      <svg 
+        viewBox={viewBox} 
+        className="w-full h-full pointer-events-none block overflow-visible" 
+        preserveAspectRatio="none"
+      >
+        {item.gradient && (
+          <defs>
+            <linearGradient id={`grad-${item.match2}`} x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="10%" stopColor={item.gradient} />
+              <stop offset="60%" stopColor={item.color} />
+            </linearGradient>
+          </defs>
+        )}
+        <text
+          ref={textRef}
+          x="50%"
+          y="50%"
+          dominantBaseline="central"
+          textAnchor="middle"
+          className="font-archivo uppercase"
+          fontSize="100"
+          fill="currentColor"
+          style={{ fontVariationSettings: '"wght" 900', color: item.defaultColor }}
+        >
+          {item.text ? (
+            <tspan fill="currentColor">{item.text}</tspan>
+          ) : (
+            <>
+              <tspan>{item.match1}</tspan>
+              <tspan fill={item.gradient ? `url(#grad-${item.match2})` : item.color}>{item.match2}</tspan>
+            </>
+          )}
+        </text>
+      </svg>
+    </div>
   );
 }
 
@@ -671,7 +770,19 @@ export default function App() {
         onClose={() => {
           setActiveTab(null);
         }}
-      />
+      >
+        <div className="absolute top-[calc(13%+1.5rem)] left-[6.5%] right-[6.5%] bottom-[6.5%] border-t border-l border-r border-white/40 pointer-events-auto rounded-none flex flex-col">
+          {[
+            { text: 'pre-BLVD', defaultColor: '#a6a6a6' },
+            { match1: '#BLVD', match2: '15', color: '#EFDD7C', defaultColor: '#a6a6a6' },
+            { match1: '#BLVD', match2: '16', color: '#8ACE00', defaultColor: '#a6a6a6' },
+            { match1: '#BLVD', match2: '17', color: '#ffffff', defaultColor: '#a6a6a6' },
+            { match1: '#BLVD', match2: '18', color: '#705fa3', gradient: '#FE00A1', defaultColor: '#a6a6a6' }
+          ].map((item, idx) => (
+            <HistoryStretchedItem key={idx} item={item} />
+          ))}
+        </div>
+      </SlideTab>
 
       <SlideTab
         isOpenLandscape={activeTab === 'booking'}
